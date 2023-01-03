@@ -1,0 +1,18 @@
+.card {
+    margin-top: 150px;
+    width: 500px;
+    height: 500px;
+    margin-left: 500px;
+    text-align: center;
+}
+.col-auto{
+    width: 500px;
+}
+
+section{
+    float: left;
+}
+
+aside{
+    float: left;
+}
