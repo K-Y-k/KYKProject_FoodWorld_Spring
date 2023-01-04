@@ -1,5 +1,6 @@
-package kyk.SpringFoodWorldProject.domain.member.entity;
+package kyk.SpringFoodWorldProject.domain.member.repository;
 
+import kyk.SpringFoodWorldProject.domain.member.entity.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -7,7 +8,7 @@ import java.util.*;
 
 @Slf4j
 @Repository
-public class MemberRepository {
+public class MemoryMemberRepository {
     private static Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
 

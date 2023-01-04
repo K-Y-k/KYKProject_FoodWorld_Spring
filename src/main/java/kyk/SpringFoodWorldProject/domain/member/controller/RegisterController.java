@@ -1,7 +1,8 @@
 package kyk.SpringFoodWorldProject.domain.member.controller;
 
 import kyk.SpringFoodWorldProject.domain.member.entity.Member;
-import kyk.SpringFoodWorldProject.domain.member.entity.MemberRepository;
+import kyk.SpringFoodWorldProject.domain.member.repository.MemoryMemberRepository;
+import kyk.SpringFoodWorldProject.domain.member.repository.SpringDataJpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/members")
 public class RegisterController {
 
-    private final MemberRepository memberRepository;
+    private final SpringDataJpaMemberRepository memberRepository;
 
     /**
      *  회원 등록 폼
