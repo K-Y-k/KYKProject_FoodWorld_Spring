@@ -1,11 +1,14 @@
-package kyk.SpringFoodWorldProject.domain.member.repository;
+package kyk.SpringFoodWorldProject.member.repository;
 
-import kyk.SpringFoodWorldProject.domain.member.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+/**
+ * 메모리 형태의 회원 리포지토리
+ */
 @Slf4j
 @Repository
 public class MemoryMemberRepository {

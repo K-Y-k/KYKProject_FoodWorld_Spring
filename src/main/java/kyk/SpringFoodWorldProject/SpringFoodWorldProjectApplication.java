@@ -1,11 +1,11 @@
 package kyk.SpringFoodWorldProject;
 
-import kyk.SpringFoodWorldProject.domain.member.config.SpringDataJpaMemberConfig;
+import kyk.SpringFoodWorldProject.member.MemberConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
-@Import(SpringDataJpaMemberConfig.class)
+@Import(MemberConfig.class)
 @SpringBootApplication
 public class SpringFoodWorldProjectApplication {
 

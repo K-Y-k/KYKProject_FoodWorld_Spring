@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
-    <!--부트 스트랩 연동-->
+    <!--부트 스트랩 적용-->
     <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
-    <!--css 연동-->
+    <!--css 적용-->
     <link rel="stylesheet" type="text/css" href="../css/main_style.css">
 <body>
 <div class="container_main">
@@ -65,32 +65,35 @@
             <h4>&nbsp;&nbsp;&nbsp;FOOD WORLD에</h4>
             <h4>오신 것을 환영합니다!</h4>
             <hr>
+            <form action="" th:action th:object="${member}" method="post">
             <div class="container" style="position:absolute; top: 14%; left: 0%;" id="form">
                 <br>
                 <br>
                 <div class="mb-3">
-                    <input type="email" class="form-control" id="inputEmail" placeholder="이메일" style="width: 250px;"
-                           id="email_input">
+                    <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디" style="width: 250px;">
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="비밀번호"
-                           style="width: 250px;" id="password_input">
+                    <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
+                           style="width: 250px;">
                 </div>
                 <br>
             </div>
+            </form>
             <img src="/image/main_img/logo1.PNG" class="logo" style="width: 240px; height: 150px; display: none;"
                  id="logo">
             <br>
             <br>
             <br>
             <div class="col-auto" style="position:absolute; top: 30%; left: 2%;" id="col-auto">
+                <a href="/members/member_login">
                 <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 7px;" id="login">
                     로그인
                 </button>
+                </a>
                 <button type="submit" class="btn btn-primary mb-3" id="logout"
                         style="width: 100px; margin-left: 10px; display: none;">로그아웃
                 </button>
-                <a href="main_register.html">
+                <a href="/members/member_register">
                     <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 30px;"
                             id="register">회원가입
                     </button>

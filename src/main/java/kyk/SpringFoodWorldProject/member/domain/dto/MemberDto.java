@@ -1,9 +1,9 @@
-package kyk.SpringFoodWorldProject.domain.member.dto;
+package kyk.SpringFoodWorldProject.member.domain.dto;
 
 import lombok.Data;
 
 /**
- * 회원 수정시 사용될 Dto
+ * 회원 수정시 사용될 DTO
  */
 @Data
 public class MemberDto {

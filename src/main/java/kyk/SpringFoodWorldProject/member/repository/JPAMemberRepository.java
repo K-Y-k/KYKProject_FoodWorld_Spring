@@ -1,9 +1,7 @@
-package kyk.SpringFoodWorldProject.domain.member.repository;
+package kyk.SpringFoodWorldProject.member.repository;
 
-import kyk.SpringFoodWorldProject.domain.member.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * SpringDataJpa를 이용한 리포지토리 인터페이스

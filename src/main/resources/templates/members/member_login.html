@@ -1,12 +1,13 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <!--부트 스트랩 적용-->
-  <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
   <link rel="stylesheet" type="text/css" href="../css/member_register_style.css">
+</head>
 <body>
 <header style="position: relative;"> <!--네비게이션바-->
   <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 200px; left: 2%; top: 10%; display: none;" id = "logo2">
@@ -18,7 +19,7 @@
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
             <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 168px; margin-top: 10px;">
-            <a href="free_main.html" class="nav-link text-white" style="font-size: 16px;">
+            <a href="free_main.css" class="nav-link text-white" style="font-size: 16px;">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
             </a>
           </li>
@@ -80,12 +81,6 @@
       </li>
       <hr>
       <li>
-        <a href="#" class="nav-link text-white">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
-        </a>
-      </li>
-      <hr>
-      <li>
         <a href="muckstar_main.html" class="nav-link text-white">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
         </a>
@@ -108,28 +103,39 @@
 </section>
 
 <aside>
-  <div class="card" style="left: -30%;"> <!--회원가입 폼-->
-    <br>
-    <br>
-    <h4 class="tm">회원가입</h4>
-    <br>
-    <div class="container mt-3">
-      <div class="mb-3">
-        <input type="text" class="form-control" placeholder="닉네임" id="name-new">
-      </div>
-      <div class="mb-3">
-        <input type="email" class="form-control" placeholder="아이디" id="email-new">
-      </div>
-      <div class="mb-3">
-
-        <input type="password" class="form-control" placeholder="비밀번호" id="password-new">
-      </div>
+  <div style = "width: 100%; height: 100%;"> <!--로그인 폼-->
+    <div class="card" style="position :absolute; left: 12%;">
       <br>
-      <button type="submit" class="btn btn-primary" id="register">가입하기</button>
+      <br>
+      <div class="container mt-3" style="position :absolute;  top : 10%; left: 0%;">
+        <h4 class="tm">로그인</h4>
+        <br>
+        <br>
+        <form action="item.html" th:action th:object="${loginForm}" method="post">
+          <div class="mb-3">
+            <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{loginId}"/>
+          </div>
+          <div class="mb-3">
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{password}"/>
+          </div>
+          <br>
+          <div class="container mt-3">
+            <button type="submit" class="btn btn-primary">로그인</button> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/members/member_register">
+              <button type="submit" class="btn btn-primary">회원가입</button>
+            </a> <br>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </aside>
 
 <div class = "container mt-3"></div>
+
 </body>
 </html>

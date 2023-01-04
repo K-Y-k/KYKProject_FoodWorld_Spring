@@ -1,8 +1,7 @@
-package kyk.SpringFoodWorldProject.domain.member;
+package kyk.SpringFoodWorldProject.web;
 
-import kyk.SpringFoodWorldProject.domain.member.entity.Member;
-import kyk.SpringFoodWorldProject.domain.member.repository.MemoryMemberRepository;
-import kyk.SpringFoodWorldProject.domain.member.repository.SpringDataJpaMemberRepository;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
