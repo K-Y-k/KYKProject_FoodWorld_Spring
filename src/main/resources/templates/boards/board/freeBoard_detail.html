@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <!--부트 스트랩 적용-->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+  <!--css 적용-->
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_detail_style.css">
+</head>
+
+<body>
+<header style="position: relative;">
+  <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
+  <div class="px-3 py-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <img src = "/image/main_img/write_icon.PNG" width = "50px" height="50px" >
+        <a href="free_main.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
+        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <li>
+            <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
+            <a href="main.html" class="nav-link text-white" style = "font-size: 16px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 120px; margin-top: 10px;">
+            <a href="store_recommend.html" class="nav-link text-white" style = "font-size: 16px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 95px; margin-top: 10px;">
+            <a href="muckstar_main.html" class="nav-link text-white" style = "font-size: 16px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 75px; margin-top: 10px;">
+            <a href="menu_recommend.html" class="nav-link text-white" style = "font-size: 16px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/chat_icon.PNG" width = "50px" height="40px" style="margin-left: 65px; margin-top: 10px;">
+            <a href="chat.html" class="nav-link text-white" style = "font-size: 16px;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+          </li>
+          <li>
+            <h5 id = "userName" style="font-size : 13px; margin-top: 20px; color: white;"></h5>
+            <br/>
+            <button type="submit" class="btn btn-primary" id="logout" style="width: 90px; height: 35px; position :absolute; top: 56%;">로그아웃</button>
+            <a href = "main_login.html" > <button type="submit" class="btn btn-primary" style = "width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id = "login">로그인</button></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<br>
+
+<div class="main" style="margin-left: 400px;">
+  <div class = "card" style="width: 1000px;">
+    <button class="btn btn-danger" id="edit" style = "margin-left: 820px; width: 120px;">글 수정하기</button>
+
+    <span><h6 style="display: inline; white-space: no-wrap;">작성자: </h6><h5 class='name' style="display: inline; white-space: no-wrap;"></h5> </span>
+    <span class="date" style="margin-top: 15px;"></span>
+    <hr>
+    <h3 class="title"></h3>
+    <br>
+    <div class="detail-pic" style="width : 700px; height : 400px;"></div>
+    <br>
+    <br>
+    <h4 class="content"></h4>
+    <hr>
+    <br>
+    <br>
+    <br>
+    <span style="white-space: nowrap;">
+        <button class="btn btnEvent" id="like_btn" style="width: 70px; height: 40px; position: absolute; left: 40%; top: 77.5%;"><img src="/image/muckstargram_img/recommend_icon.PNG" style = "width: 40px;"></button>
+         <span class="like" style ="font-weight: 400; font-size: 25px; position: absolute; left: 48%; top: 78%;"></span>
+        </span>
+    <br>
+    <span style="white-space: nowrap;">
+        <span style ="font-weight: 400; font-size: 20px;">댓글</span>
+        <span class="comment" style ="font-weight: 400; font-size: 20px;"></span>
+      </span>
+    <hr>
+
+    <div class="input-group">
+      <textarea  id="chat-input" rows="3" cols = "115" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
+      <button class="btn btn-secondary" id="reply_send">전송</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <ul class="chat-content">
+    <!--채팅메시지-->
+  </ul>
+
+</div>
+</body>
+</html>

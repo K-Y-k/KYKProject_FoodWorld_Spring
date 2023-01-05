@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--부트 스트랩 적용-->
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <!--css 적용-->
+    <link rel="stylesheet" type="text/css" href="../css/boards/board/board_main_style.css">
+</head>
+
+<body>
+<header style="position: relative;">
+    <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
+    <div class="px-3 py-2 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <img src = "/image/main_img/write_icon.PNG" width = "50px" height="50px" >
+                <a href="free_main.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                    <li>
+                        <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
+                        <a href="main.html" class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+                        </a>
+                    </li>
+                    <li>
+                        <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 120px; margin-top: 10px;">
+                        <a href="store_recommend.html" class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
+                        </a>
+                    </li>
+                    <li>
+                        <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 95px; margin-top: 10px;">
+                        <a href="muckstar_main.html" class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
+                        </a>
+                    </li>
+                    <li>
+                        <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 75px; margin-top: 10px;">
+                        <a href="menu_recommend.html" class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+                        </a>
+                    </li>
+                    <li>
+                        <img src = "/image/main_img/chat_icon.PNG" width = "50px" height="40px" style="margin-left: 65px; margin-top: 10px;">
+                        <a href="chat.html" class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </a>
+                    </li>
+                    <li>
+                        <h5 id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+                        <br/>
+                        <button type="submit" class="btn btn-primary" id="logout" style="width: 90px; height: 35px; position :absolute; top: 56%;">로그아웃</button>
+                        <a href = "main_login.html" > <button type="submit" class="btn btn-primary" style = "width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id = "login">로그인</button></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class = "main" style="width: 100%; position: relative;">
+    <a href = "free_upload.html" ><button class="btn btn-danger mt-3" id="write" style="margin-left: 1250px;">글 작성하기</button></a>
+    <br>
+    <br>
+    <div class = "container1 mt-10" style="margin-left: 510px;"></div>
+
+    <div style="position: absolute; top: 25%;">
+        <p style=" margin-left: 50px;"><img src="image/food/bok.jpg" width="250px" height= "400px"></p>
+    </div>
+
+    <div style="position: absolute; top: 120%; left: 5%;">
+        <p style="margin-left: 410px;"><a href="menu_recommend.html"><img src="image/food/circ.png" width="600px" height= "250px"></a></p>
+    </div>
+</div>
+
+</body>
+</html>
