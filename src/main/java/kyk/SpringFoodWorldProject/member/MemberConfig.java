@@ -17,6 +17,9 @@ import org.springframework.context.annotation.Configuration;
 public class MemberConfig {
     private final JPAMemberRepository repository;
 
+
+    // 빈이 서로에 대해 종속성을 가질 때에는 아래 코드와 같이 해당 종속성을 표현하는 것이다.
+    // 종속성을 표현하는 방법은 하나의 빈 메소드가 다른 메소드를 호출하도록 하는 것이다.
     @Bean
     public MemberService memberService() {
         return new MemberServiceImpl(memberRepository());

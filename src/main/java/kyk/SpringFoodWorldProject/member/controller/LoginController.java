@@ -2,9 +2,11 @@ package kyk.SpringFoodWorldProject.member.controller;
 
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Slf4j
+@Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class LoginController {
@@ -41,7 +44,6 @@ public class LoginController {
             return "members/member_login";
         }
 
-
         // 성공 로직 : 로그인 기능 적용후 멤버에 저장
         Member loginMember = memberService.login(form.getLoginId(), form.getPassword()); // 폼에 입력한 아이디 패스워드 가져와서 멤버로 저장
         log.info("login? {}", loginMember);
@@ -58,6 +60,8 @@ public class LoginController {
         HttpSession session = request.getSession(); // 기본 값이 true이고, false는 없으면 생성 안함
         // 세션에 로그인 회원 정보를 보관한다.
         session.setAttribute("loginMember", loginMember);
+        log.info("로그인 성공");
+        log.info("sessionId={}", session.getId());
 
         return "redirect:/";
     }

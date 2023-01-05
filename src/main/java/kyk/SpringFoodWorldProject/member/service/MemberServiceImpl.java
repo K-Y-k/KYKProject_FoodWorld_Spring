@@ -16,6 +16,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * 회원가입
+     */
     @Override
     public Member Join(Member member) {
         return memberRepository.save(member);
