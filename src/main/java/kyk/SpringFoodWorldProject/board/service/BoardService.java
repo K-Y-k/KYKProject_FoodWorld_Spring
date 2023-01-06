@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 
@@ -27,4 +28,9 @@ public interface BoardService {
      * 글 모두 조회
      */
     List<Board> findAll();
+
+    /**
+     * 글 삭제
+     */
+    void deleteAllByIdInBatch(Long boardId);
 }

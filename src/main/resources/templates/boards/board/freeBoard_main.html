@@ -61,10 +61,58 @@
 </header>
 
 <div class = "main" style="width: 100%; position: relative;">
-    <a href = "free_upload.html" ><button class="btn btn-danger mt-3" id="write" style="margin-left: 1250px;">글 작성하기</button></a>
-    <br>
-    <br>
-    <div class = "container1 mt-10" style="margin-left: 510px;"></div>
+<!--    <form th:object="${itemSearch}" method="get" class="form-inline">-->
+        <div class="row">
+<!--            <div class="col">-->
+<!--                <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명"/>-->
+<!--            </div>-->
+<!--            <div class="col">-->
+<!--                <input type="text" th:field="*{maxPrice}" class="form-control" placeholder="가격제한"/>-->
+<!--            </div>-->
+            <div class="col">
+                <button type="submit" class="btn btn-secondary mb-2">검색</button>
+            </div>
+            <div class="col">
+            </div>
+            <div class="col">
+                <a href = "freeBoard/upload">
+                    <button class="btn btn-danger mt-3" id="write" style="margin-left: 1250px;">글 작성하기
+                    </button>
+                </a>
+            </div>
+        </div>
+<!--    </form>-->
+
+    <hr class="my-4">
+
+    <div class = "container1 mt-10" style="margin-left: 20%;">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>글쓴이</th>
+                    <th>날짜</th>
+                    <th>조회수</th>
+                    <th>좋아요</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="board : ${boards}">
+                    <td th:text="${board.id}">글id </td>
+                    <td>
+                        <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="${board.title}">글 제목</a>
+                    </td>
+                    <td th:text="${board.writer}">글쓴이</td>
+                    <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">글 생성 시간</td>
+                    <td th:text="${board.count}">조회수</td>
+                    <td th:text="${board.likeCount}">좋아요</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <div style="position: absolute; top: 25%;">
         <p style=" margin-left: 50px;"><img src="image/food/bok.jpg" width="250px" height= "400px"></p>

@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.domain.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Getter @Setter
 @Entity
-public class Board {
+public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -22,31 +23,24 @@ public class Board {
     @Column
     private String content;
 
-    @NotEmpty
-    @Column
+    @Column(updatable = false)
     private String writer;
 
-    @NotEmpty
-    @Column
-    private Date createDate;
+    @Column(insertable = false, updatable = false, columnDefinition = "number default 0")
+    private Long count;
 
-    @NotEmpty
-    @Column
-    private int count;
+    @Column(insertable = false, updatable = false, columnDefinition = "number default 0")
+    private Long likeCount;
 
-    @NotEmpty
-    @Column
-    private int likeCount;
+//    @Column(insertable = false, updatable = false, columnDefinition = "date default sysdate")
+//    private Date createDate;
 
     public Board() {
     }
 
-    public Board(String title, String content, String writer, Date createDate, int count, int likeCount) {
+    public Board(String title, String content, String writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.createDate = createDate;
-        this.count = count;
-        this.likeCount = likeCount;
     }
 }

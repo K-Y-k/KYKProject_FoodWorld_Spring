@@ -61,13 +61,21 @@
 </header>
 
 <div style="width: 1900px;">
-    <h2 id = "mtitle"><b>자유게시판 글 작성하기</b></h2>
+    <h2 id = "mtitle" style="width: 100%; margin: 0 auto; position: center;"><b>자유게시판 글 작성하기</b></h2>
+
+    <form action="" th:action th:object="${board}" method="post">
     <div class="container mt-3">
-        <input type="text" class="form-control mt-3" id="title" placeholder="제목">
-        <textarea class="form-control mt-2" id="content" placeholder="내용" rows = "20"></textarea>
+        <input type="text" id="title" class="form-control mt-3" th:field="*{title}" placeholder="제목을 입력해주세요">
+
+        <textarea id="content" th:field="*{content}" class="form-control mt-2" placeholder="내용을 입력해주세요" rows = "20"/>
+
         <input class="form-control mt-2" type="file" id="image">
-        <button class="btn btn-danger mt-3" id="send">글 올리기</button>
+
+        <button class="btn btn-danger mt-3" id="send" type="submit">글 올리기</button>
+        <button class="btn btn-danger mt-3" th:onclick="|location.href='@{/boards/freeBoard}'|"
+                type="button">취소</button>
     </div>
+    </form>
 </div>
 
 </body>

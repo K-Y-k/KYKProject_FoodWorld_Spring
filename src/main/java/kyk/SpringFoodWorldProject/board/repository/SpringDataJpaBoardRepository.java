@@ -45,5 +45,10 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.findAll();
     }
 
+    @Override
+    public void deleteAllByIdInBatch(Long boardId) {
+//        boardRepository.delete(boardId);
+    }
+
 
 }

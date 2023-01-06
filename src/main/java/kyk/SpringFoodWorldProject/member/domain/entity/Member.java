@@ -16,14 +16,14 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "회원 이름은 필수입니다.")
     @Column(length = 10)
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "아이디는 필수입니다.")
     @Column(length = 10)
     private String loginId;
-    @NotEmpty
+    @NotEmpty(message = "비밀번호는 필수입니다.")
     @Column(length = 10)
     private String password;
 

@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
@@ -39,5 +40,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public List<Board> findAll() {
         return boardRepository.findAll();
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(Long boardId) {
+        boardRepository.deleteAllByIdInBatch(boardId);
     }
 }
