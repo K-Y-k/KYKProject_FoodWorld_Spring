@@ -15,7 +15,7 @@ public class BoardDto {
     private Long id;
 
     private String title;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+
     private LocalDateTime createdDate;
 
     private Long count;

@@ -17,7 +17,7 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <img src = "/image/main_img/write_icon.PNG" width = "50px" height="50px" >
-                <a href="free_main.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
+                <a href="/boards/freeBoard" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
                         <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
@@ -61,20 +61,21 @@
 </header>
 
 <div style="width: 1900px;">
-    <h2 id = "mtitle" style="width: 100%; margin: 0 auto; position: center;"><b>자유게시판 글 작성하기</b></h2>
+    <h2 id="mtitle" style="width: 100%; margin: 0 auto; position: center;"><b>자유게시판 글 작성하기</b></h2>
 
-    <form action="" th:action th:object="${board}" method="post">
-    <div class="container mt-3">
-        <input type="text" id="title" class="form-control mt-3" th:field="*{title}" placeholder="제목을 입력해주세요">
+    <form th:action method="post">
+        <div class="container mt-3">
+            <input type="text" id="title" class="form-control mt-3" name="title" placeholder="제목을 입력해주세요">
 
-        <textarea id="content" th:field="*{content}" class="form-control mt-2" placeholder="내용을 입력해주세요" rows = "20"/>
+            <textarea id="content" class="form-control mt-2" name="content" placeholder="내용을 입력해주세요" rows="20"></textarea>
 
-        <input class="form-control mt-2" type="file" id="image">
+            <input class="form-control mt-2" type="file" id="image">
 
-        <button class="btn btn-danger mt-3" id="send" type="submit">글 올리기</button>
-        <button class="btn btn-danger mt-3" th:onclick="|location.href='@{/boards/freeBoard}'|"
-                type="button">취소</button>
-    </div>
+            <button class="btn btn-danger mt-3" id="send" type="submit">글 올리기</button>
+            <button class="btn btn-danger mt-3" th:onclick="|location.href='@{/boards/freeBoard}'|"
+                    type="button">취소
+            </button>
+        </div>
     </form>
 </div>
 

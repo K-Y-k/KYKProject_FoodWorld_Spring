@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <!--부트 스트랩 적용-->
@@ -16,7 +16,7 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <img src = "/image/main_img/write_icon.PNG" width = "50px" height="50px" >
-        <a href="free_main.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
+        <a href="/boards/freeBoard" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
             <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
@@ -59,17 +59,22 @@
   </div>
 </header>
 
-<h2 id="ftitle"><b>자유게시판 글 수정하기</b></h2>
-<form action="" th:action="@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}" method="post">
-  <div class="container mt-3">
-    <input type="text" class="form-control mt-3" id="title" th:value="${board.title}">
-    <textarea class="form-control mt-2" id="content" th:text="${board.content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
+<div style="width: 1900px;">
+  <!--th:action="@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}"-->
+  <h2 id="ftitle"><b>자유게시판 글 수정하기</b></h2>
+  <form action="" th:action method="post">
+    <div class="container mt-3">
+      <input type="text" id="title" class="form-control mt-3" name="title" th:value="${board.title}">
 
-    <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
-    <button class="btn btn-danger mt-3" id="cancel" type="button"
-            th:onclick="|location.href='@{/boards/freeBoard/{boardId}(boardId=${board.id})}'|">
-            취소</button>
-  </div>
-</form>
+      <textarea class="form-control mt-2" id="content" name="content" th:text="${board.content}" rows="20"></textarea>
+      <!--textarea는 th:value가 안되어 th:text로-->
+
+      <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
+      <button class="btn btn-danger mt-3" th:onclick="|location.href='@{/boards/freeBoard/{boardId}(boardId=${board.id})}'|"
+              type="button">취소
+      </button>
+    </div>
+  </form>
+</div>
 </body>
 </html>

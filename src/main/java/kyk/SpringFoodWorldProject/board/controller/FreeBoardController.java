@@ -47,7 +47,8 @@ public class FreeBoardController {
      * 글 등록 폼
      */
     @GetMapping("/freeBoard/upload")
-    public String uploadForm(@ModelAttribute("board") Board board) {
+    public String uploadForm(Model model) {
+        model.addAttribute("board", new Board());
         return "boards/board/freeBoard_upload";
     }
 
@@ -76,7 +77,7 @@ public class FreeBoardController {
      * 글 수정 기능
      */
     @PostMapping("/freeBoard/{boardId}/edit")
-    public String edit(@PathVariable Long boardId, @ModelAttribute BoardUpdateDto updateParam) {
+    public String edit(@PathVariable Long boardId, @ModelAttribute("board") BoardUpdateDto updateParam) {
         boardService.update(boardId, updateParam);
         return "redirect:/boards/freeBoard/{boardId}";
     }
