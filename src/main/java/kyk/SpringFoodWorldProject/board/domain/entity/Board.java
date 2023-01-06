@@ -8,18 +8,16 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
-@Getter @Setter
+@Data
 @Entity
 public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotEmpty
     @Column
     private String title;
 
-    @NotEmpty
     @Column
     private String content;
 

@@ -67,17 +67,17 @@
     <div style="position: relative; width: 50vw; height: 100vh; left:30%;">
       <div class="card" style="position: absolute; width: 50vw; height: 100vh;">
         <button class="btn btn-danger" id="edit" style="position: relative; width: 7vw; height: 5vh; left: 80%;"
-                th:onclick="|location.href='@{/boards/freeBoard/${board.id}/edit}'|"
+                th:onclick="|location.href='@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}'|"
                 type="button">수정
         </button>
 
-        <h3 class="title" th:text="${board.title}"></h3>
-        <span class="row" style="margin-top: 15px;">
-      <div class="col" th:text="${board.writer}" style="display: inline; white-space: no-wrap;"></div>
-      <div class="col" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"
-           style="display: inline; white-space: no-wrap;"></div>
-     <hr style="position: relative; width: 100vw;">
-    </span>
+        <div class="row" style="position: relative; width: 50vw;">
+          <h3 class="title" th:text="${board.title}" style="margin-left: 5%;"></h3>
+          <div class="col" th:text="${board.writer}" style="margin-left: 5%"></div>
+          <div class="col" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"
+               style="margin-left: 40%"></div>
+          <hr>
+        </div>
         <br>
         <!--    <div class="detail-pic" style="width : 700px; height : 400px;"></div>-->
         <br>
@@ -89,20 +89,20 @@
         <br>
         <br>
         <br>
-        <span class="row" style="white-space: nowrap; position: relative; left: 40%; top: 77.5%;">
-          <div class="col">
-            <button class="btn btnEvent" id="like_btn"
-                    style="width: 5vw; height: 5vh;">
-              <img src="/image/muckstargram_img/recommend_icon.PNG">
+
+        <div class="row" style="position: relative; left: 40%; top: 0%; display: inline-block;">
+            <button class="btn btnEvent" id="like_btn" style="width: 5vw; height: 5vh;">
+              <img src="/image/muckstargram_img/recommend_icon.PNG" style="width: 3vw; height: 5vh;">
             </button>
-          </div>
-          <h4 class="col-md1" style="font-weight: 400;" th:text= "${board.likeCount}"></h4>
-        </span>
+          <h4 class="like" style="font-weight: 400;" th:text="${board.likeCount}"></h4>
+        </div>
+
         <br>
+
         <span style="white-space: nowrap;">
-        <span style="font-weight: 400; font-size: 20px;">댓글</span>
-        <span class="comment" style="font-weight: 400; font-size: 20px;"></span>
-      </span>
+          <span style="font-weight: 400; font-size: 20px;">댓글</span>
+          <span class="comment" style="font-weight: 400; font-size: 20px;"></span>
+        </span>
         <hr>
 
         <div class="input-group">

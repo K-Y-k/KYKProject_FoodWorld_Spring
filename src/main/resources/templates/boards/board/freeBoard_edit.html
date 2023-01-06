@@ -6,7 +6,7 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_upload_style.css">
+  <link rel="stylesheet" type="text/css" href="../css/boards/board_upload_style.css">
 </head>
 
 <body>
@@ -59,12 +59,17 @@
   </div>
 </header>
 
-<h2 id = "mtitle"><b>자유게시판 글 수정하기</b></h2>
-<div class="container mt-3">
-  <input type="text" class="form-control mt-3" id="title" placeholder="제목">
-  <textarea class="form-control mt-2" id="content" placeholder="내용" rows = "20"></textarea>
-  <button class="btn btn-danger mt-3" id="send">글 수정완료</button>
-</div>
+<h2 id="ftitle"><b>자유게시판 글 수정하기</b></h2>
+<form action="" th:action="@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}" method="post">
+  <div class="container mt-3">
+    <input type="text" class="form-control mt-3" id="title" th:value="${board.title}">
+    <textarea class="form-control mt-2" id="content" th:text="${board.content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
 
+    <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
+    <button class="btn btn-danger mt-3" id="cancel" type="button"
+            th:onclick="|location.href='@{/boards/freeBoard/{boardId}(boardId=${board.id})}'|">
+            취소</button>
+  </div>
+</form>
 </body>
 </html>

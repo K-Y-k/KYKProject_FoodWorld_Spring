@@ -29,7 +29,6 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void update(Long boardId, BoardUpdateDto updateParam) {
         boardRepository.update(boardId, updateParam);
-
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -54,20 +55,20 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@Valid @ModelAttribute("board") Board board, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "boards/board/freeBoard_upload";
-        }
-
-        boardService.save(board);
+    public String upload(@ModelAttribute("board") Board board, RedirectAttributes redirectAttributes) {
+        Board savedBoard = boardService.save(board);
+        redirectAttributes.addAttribute("boardId", savedBoard.getId());
+        redirectAttributes.addAttribute("status", true);
         return "redirect:/boards/freeBoard";
     }
 
     /**
      * 글 수정 폼
      */
-    @GetMapping("/freeBoard/edit")
-    public String editForm(@ModelAttribute("board") Board board) {
+    @GetMapping("/freeBoard/{boardId}/edit")
+    public String editForm(@PathVariable Long boardId, Model model) {
+        Board board = boardService.findById(boardId).get();
+        model.addAttribute("board", board);
         return "boards/board/freeBoard_edit";
     }
 
@@ -77,7 +78,7 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId, @ModelAttribute BoardUpdateDto updateParam) {
         boardService.update(boardId, updateParam);
-        return "redirect:/boards/{boardId}";
+        return "redirect:/boards/freeBoard/{boardId}";
     }
 
 
