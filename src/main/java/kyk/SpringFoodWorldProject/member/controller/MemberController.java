@@ -21,14 +21,40 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class LoginController {
+public class MemberController {
 
     private final MemberServiceImpl memberService;
+
+    private final SpringDataJpaMemberRepository memberRepository;
+
+
+
+    /**
+     *  회원 등록 폼
+     */
+    @GetMapping("/register")
+    public String memberRegisterForm(@ModelAttribute("member") Member member) {
+        return "members/member_register";
+    }
+
+    /**
+     *  회원 저장 기능
+     */
+    @PostMapping("/register")
+    public String save(@Valid @ModelAttribute Member member, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "members/member_register";
+        }
+
+        memberRepository.save(member);
+        return "redirect:/";
+    }
+
 
     /**
      *  로그인 폼
      */
-    @GetMapping("/member_login")
+    @GetMapping("/login")
     public String memberLoginForm(@ModelAttribute("loginForm") LoginForm form) {
         return "members/member_login";
     }
@@ -37,8 +63,10 @@ public class LoginController {
      *  로그인 처리 기능
      */
     // 서블릿에서도 세션을 지원하는 방식 (HttpServletRequest로 활용)
-    @PostMapping("/member_login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute LoginForm form,
+                        BindingResult bindingResult,
+                        HttpServletRequest request) {
         // 검증 실패 : 오류가 있으면 폼으로 반환
         if (bindingResult.hasErrors()) {
             return "members/member_login";
@@ -65,6 +93,8 @@ public class LoginController {
 
         return "redirect:/";
     }
+
+
 
 
 

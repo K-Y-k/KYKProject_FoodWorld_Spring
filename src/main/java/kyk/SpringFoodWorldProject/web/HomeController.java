@@ -33,7 +33,9 @@ public class HomeController {
      *  메인 폼 + 로그인 세션 체크 기능 (@SessionAttribute 활용)
      */
     @GetMapping("/")
-    public String homeLoginCheck(@SessionAttribute(name="loginMember", required = false) Member loginMember, Model model) {
+    public String homeLoginCheck(@SessionAttribute(name="loginMember", required = false) Member loginMember,
+                                 @ModelAttribute("loginForm") LoginForm form,
+                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
@@ -50,8 +52,10 @@ public class HomeController {
     /**
      * 로그인 기능
      */
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    @PostMapping("/")
+    public String login(@Valid @ModelAttribute LoginForm form,
+                        BindingResult bindingResult,
+                        HttpServletRequest request) {
         // 검증 실패 : 오류가 있으면 폼으로 반환
         if (bindingResult.hasErrors()) {
             return "main";
@@ -68,8 +72,8 @@ public class HomeController {
         }
 
         // 로그인 성공 처리
-        // HttpSession 객체에  request.getSession()로 담으면 모든 것이 해결 됨
-        // 세션이 있으면 있는 세션을 반환하고 없으면 신규 세션을 생성한다. true일 때
+        // HttpSession 객체에  request.getSession()로 담으면 됨
+        // 세션이 있으면 있는 세션을 반환하고 없으면 신규 세션을 생성한다. (true일 때)
         HttpSession session = request.getSession(); // 기본 값이 true이고, false는 없으면 생성 안함
         // 세션에 로그인 회원 정보를 보관한다.
         session.setAttribute("loginMember", loginMember);

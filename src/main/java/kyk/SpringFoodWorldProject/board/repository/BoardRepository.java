@@ -3,6 +3,8 @@ package kyk.SpringFoodWorldProject.board.repository;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +30,11 @@ public interface BoardRepository {
      */
     List<Board> findAll();
 
+
+
     /**
      * 글 삭제
      */
-    void deleteAllByIdInBatch(Long boardId);
+    void delete(Long boardId);
 
 }

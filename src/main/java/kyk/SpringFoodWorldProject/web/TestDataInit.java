@@ -21,8 +21,15 @@ public class TestDataInit {
     @PostConstruct
     public void init() {
         // 회원 데이터 추가
+
+        int i=0;
+
         memberRepository.save(new Member("테스터1", "test1", "test!"));
-        boardRepository.save(new Board("제목", "내용", "작가1"));
+
+        while (i < 5) {
+            boardRepository.save(new Board("제목" + i, "내용" + i, "작가" + i));
+            i++;
+        }
 
     }
 

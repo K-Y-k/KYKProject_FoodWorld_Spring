@@ -7,6 +7,8 @@ import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,8 +43,10 @@ public class BoardServiceImpl implements BoardService{
         return boardRepository.findAll();
     }
 
+
+
     @Override
-    public void deleteAllByIdInBatch(Long boardId) {
-        boardRepository.deleteAllByIdInBatch(boardId);
+    public void delete(Long boardId) {
+        boardRepository.delete(boardId);
     }
 }
