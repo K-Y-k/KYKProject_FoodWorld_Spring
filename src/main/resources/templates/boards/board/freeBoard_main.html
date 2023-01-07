@@ -30,7 +30,7 @@
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
                         <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
-                        <a href="main.html" class="nav-link text-white">
+                        <a href="/" class="nav-link text-white">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
                         </a>
                     </li>
@@ -61,8 +61,19 @@
                     <li>
                         <h5 id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
                         <br/>
-                        <button type="submit" class="btn btn-primary" id="logout" style="width: 90px; height: 35px; position :absolute; top: 56%;">로그아웃</button>
-                        <a href = "main_login.html" > <button type="submit" class="btn btn-primary" style = "width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id = "login">로그인</button></a>
+                        <form th:action="@{/members/logout}" method="post">
+                            <button type="submit" class="btn btn-primary" id="logout"
+                                    style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                                    th:onclick="@{/members/logout}">로그아웃
+                            </button>
+                        </form>
+
+                        <form th:action="@{/members/login}" method="get">
+                            <button type="submit" class="btn btn-primary"
+                                    style="width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id="login"
+                                    th:onclick="@{/members/login}">로그인
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -70,32 +81,8 @@
     </div>
 </header>
 
-<div class = "main" style="width: 100%; position: relative;">
-<!--    <form th:object="${itemSearch}" method="get" class="form-inline">-->
-        <div class="row">
-<!--            <div class="col">-->
-<!--                <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명"/>-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--                <input type="text" th:field="*{maxPrice}" class="form-control" placeholder="가격제한"/>-->
-<!--            </div>-->
-            <div class="col">
-                <button type="submit" class="btn btn-secondary mb-2">검색</button>
-            </div>
-            <div class="col">
-            </div>
-            <div class="col">
-                <a href = "freeBoard/upload">
-                    <button class="btn btn-danger mt-3" id="write" style="margin-left: 1250px;">글 작성하기
-                    </button>
-                </a>
-            </div>
-        </div>
-<!--    </form>-->
-
-    <hr class="my-4">
-
-    <div class = "container1 mt-10" style="margin-left: 20%;">
+<div class = "main" style="width: 100%; height: 80vh;">
+    <div class = "container1" style="position: absolute; width: 50%; top: 20%; margin-left: 25%;">
         <div>
             <table class="table">
                 <thead>
@@ -108,28 +95,58 @@
                     <th>좋아요</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 <tr th:each="board : ${boards}">
-                    <td th:text="${board.id}">글id </td>
+                    <td th:text="${board.id}"></td>
                     <td>
-                        <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="${board.title}">글 제목</a>
+                        <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="${board.title}"></a>
                     </td>
                     <td th:text="${board.writer}">글쓴이</td>
-                    <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">글 생성 시간</td>
+                    <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:text="${board.count}">조회수</td>
                     <td th:text="${board.likeCount}">좋아요</td>
                 </tr>
                 </tbody>
             </table>
+
+            <!--th:block은 따로 태그를 붙일 것이 없을 때 사용-->
+            <div style="position: absolute; left: 30%;">
+            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                <a th:if="${page != nowPage}" th:href="@{/boards/freeBoard(page = ${page - 1})}" th:text="${page}"></a>
+                <strong th:if="${page == nowPage}" th:text="${page}" style="color: red;"></strong>
+            </th:block>
+            </div>
         </div>
     </div>
 
+    <form th:object="${boardSearch}" method="get">
+        <div class="row" style="position: relative; left: 45%; margin-top: 31%;">
+            <div class="col" style="position: absolute; width: 7vw;">
+                <input type="text" th:field="*{writer}" class="form-control" placeholder="글쓴이"/>
+            </div>
+            <div class="col" style="position: absolute; width: 15vw; left: 6%;">
+                <input type="text" th:field="*{title}" class="form-control" placeholder="제목"/>
+            </div>
+            <div class="col" style="position: absolute; left: 20%;">
+                <button type="submit" class="btn btn-secondary">검색</button>
+            </div>
+
+            <div class="col">
+                <button class="btn btn-danger" id="write" style="position: absolute; left: 25%;"
+                        th:onclick="|location.href='@{/boards/freeBoard/upload'|"
+                        type="button">글 작성
+                </button>
+            </div>
+        </div>
+    </form>
+
     <div style="position: absolute; top: 25%;">
-        <p style=" margin-left: 50px;"><img src="image/food/bok.jpg" width="250px" height= "400px"></p>
+        <p style=" margin-left: 15%;"><img src="/image/food/bok.jpg" width="50%" height= "100%"></p>
     </div>
 
-    <div style="position: absolute; top: 120%; left: 5%;">
-        <p style="margin-left: 410px;"><a href="menu_recommend.html"><img src="image/food/circ.png" width="600px" height= "250px"></a></p>
+    <div style="position: absolute; top: 85%; left: 10%;">
+        <p style="margin-left: 410px;"><a href="menu_recommend.html"><img src="/image/food/circ.png" width="100%" height= "100%"></a></p>
     </div>
 </div>
 

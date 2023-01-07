@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import org.springframework.data.domain.Page;
@@ -31,6 +30,7 @@ public interface BoardRepository {
     List<Board> findAll();
 
 
+    Page<Board> pageList(Pageable pageable);
 
     /**
      * 글 삭제

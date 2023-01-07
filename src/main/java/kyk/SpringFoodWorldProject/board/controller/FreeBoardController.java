@@ -1,10 +1,12 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import kyk.SpringFoodWorldProject.board.service.BoardService;
+import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +30,33 @@ import java.util.List;
 @RequestMapping("/boards")
 public class FreeBoardController {
 
-    private final BoardService boardService;
+    private final BoardServiceImpl boardService;
 
     /**
      * 글 모두 조회 폼
      */
     @GetMapping("/freeBoard")
-    public String freeBoards(Model model,
-                             @PageableDefault(page = 0, size = 10, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<Board> boards = boardService.findAll();
+    public String freeBoards(@ModelAttribute("boardSearch")BoardSearchDto boardSearch,
+                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                             Model model) {
+
+        Page<Board> boards = boardService.pageList(pageable);
+
+        int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
+                                                    // pageable은 0부터 시작이기에 1을 더해준 것
+        int startPage = Math.max(nowPage - 4, 1);   // 마이너스가 나오지 않게 max로 최대 1로 초ㅈ정
+        int endPage = Math.min(nowPage + 5, boards.getTotalPages()); // 토탈 페이지보다 넘지 않게 min으로 조정
+
         model.addAttribute("boards", boards);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+        model.addAttribute("next", pageable.next().getPageNumber());
+        model.addAttribute("hasNext", boards.hasNext());
+        model.addAttribute("hasPrev", boards.hasPrevious());
+
         return "boards/board/freeBoard_main";
     }
 
@@ -97,7 +116,8 @@ public class FreeBoardController {
      * 글 수정 기능
      */
     @PostMapping("/freeBoard/{boardId}/edit")
-    public String edit(@PathVariable Long boardId, @ModelAttribute("board") BoardUpdateDto updateParam) {
+    public String edit(@PathVariable Long boardId,
+                       @ModelAttribute("board") BoardUpdateDto updateParam) {
         boardService.update(boardId, updateParam);
         return "redirect:/boards/freeBoard/{boardId}";
     }

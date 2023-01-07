@@ -26,7 +26,7 @@ public class TestDataInit {
 
         memberRepository.save(new Member("테스터1", "test1", "test!"));
 
-        while (i < 5) {
+        while (i < 20) {
             boardRepository.save(new Board("제목" + i, "내용" + i, "작가" + i));
             i++;
         }

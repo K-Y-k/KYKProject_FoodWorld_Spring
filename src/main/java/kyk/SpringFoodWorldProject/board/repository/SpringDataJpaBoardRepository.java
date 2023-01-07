@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,12 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     @Override
     public List<Board> findAll() {
         return boardRepository.findAll();
+    }
+
+
+    @Override
+    public Page<Board> pageList(Pageable pageable) {
+        return boardRepository.findAll(pageable);
     }
 
 

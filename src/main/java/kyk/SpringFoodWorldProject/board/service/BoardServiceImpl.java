@@ -43,7 +43,9 @@ public class BoardServiceImpl implements BoardService{
         return boardRepository.findAll();
     }
 
-
+    public Page<Board> pageList(Pageable pageable) {
+        return boardRepository.pageList(pageable);
+    }
 
     @Override
     public void delete(Long boardId) {

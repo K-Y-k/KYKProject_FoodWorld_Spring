@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface JPABoardRepository extends JpaRepository<Board, Long> {
+import java.util.List;
 
+public interface JPABoardRepository extends JpaRepository<Board, Long> {
+    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
 }
