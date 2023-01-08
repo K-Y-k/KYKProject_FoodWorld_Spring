@@ -22,14 +22,20 @@ public class BoardDto {
 
     private Long likeCount;
 
+    private String titleSearchKeyword;
+
+    private String writerSearchKeyword;
+
     public BoardDto() {
     }
 
-    public BoardDto(Long id, String title, LocalDateTime createdDate, Long count, Long likeCount) {
+    public BoardDto(Long id, String title, LocalDateTime createdDate, Long count, Long likeCount, String titleSearchKeyword, String writerSearchKeyword) {
         this.id = id;
         this.title = title;
         this.createdDate = createdDate;
         this.count = count;
         this.likeCount = likeCount;
+        this.titleSearchKeyword = titleSearchKeyword;
+        this.writerSearchKeyword = writerSearchKeyword;
     }
 }

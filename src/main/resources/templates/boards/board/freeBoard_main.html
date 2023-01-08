@@ -109,24 +109,37 @@
                 </tr>
                 </tbody>
             </table>
-
-            <!--th:block은 따로 태그를 붙일 것이 없을 때 사용-->
-            <div style="position: absolute; left: 30%;">
-            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                <a th:if="${page != nowPage}" th:href="@{/boards/freeBoard(page = ${page - 1})}" th:text="${page}"></a>
-                <strong th:if="${page == nowPage}" th:text="${page}" style="color: red;"></strong>
-            </th:block>
-            </div>
         </div>
     </div>
 
-    <form th:object="${boardSearch}" method="get">
+    <form th:action="@{/boards/freeBoard}" th:object="${boardDto}" method="get">
+        <!--th:block은 따로 태그를 붙일 것이 없을 때 사용-->
+        <div style="position: absolute; top: 70%; left: 40%;">
+            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                <a th:if="${page != nowPage}"
+                   th:href="@{/boards/freeBoard(page = ${page - 1})}" th:text="${page}"></a>
+                <a th:if="${page != nowPage} and ${not #strings.isEmpty(boardDto.titleSearchKeyword)} and ${#strings.isEmpty(boardDto.writerSearchKeyword)}"
+                   th:href="@{/boards/freeBoard(page = ${page - 1}, titleSearchKeyword = ${boardDto.titleSearchKeyword})}"
+                   th:text="${page}"></a>
+                <a th:if="${page != nowPage} and ${not #strings.isEmpty(boardDto.writerSearchKeyword)} and ${#strings.isEmpty(boardDto.titleSearchKeyword)}"
+                   th:href="@{/boards/freeBoard(page = ${page - 1}, writerSearchKeyword = ${boardDto.writerSearchKeyword})}"
+                   th:text="${page}"></a>
+
+                <strong th:if="${page == nowPage} and ${#strings.isEmpty(boardDto.titleSearchKeyword)} and ${#strings.isEmpty(boardDto.writerSearchKeyword)}"
+                        th:text="${page}" style="color: red;"></strong>
+                <strong th:if="${page != nowPage} and ${not #strings.isEmpty(boardDto.titleSearchKeyword)} and ${#strings.isEmpty(boardDto.writerSearchKeyword)}"
+                        th:text="${page}" style="color: red;"></strong>
+                <strong th:if="${page != nowPage} and ${not #strings.isEmpty(boardDto.writerSearchKeyword)} and ${#strings.isEmpty(boardDto.titleSearchKeyword)}"
+                        th:text="${page}" style="color: red;"></strong>
+            </th:block>
+        </div>
+
         <div class="row" style="position: relative; left: 45%; margin-top: 31%;">
             <div class="col" style="position: absolute; width: 7vw;">
-                <input type="text" th:field="*{writer}" class="form-control" placeholder="글쓴이"/>
+                <input type="text" th:if="${#strings.isEmpty(boardDto.writerSearchKeyword)}" th:field="*{writerSearchKeyword}" class="form-control" placeholder="글쓴이"/>
             </div>
             <div class="col" style="position: absolute; width: 15vw; left: 6%;">
-                <input type="text" th:field="*{title}" class="form-control" placeholder="제목"/>
+                <input type="text" th:field="*{titleSearchKeyword}" class="form-control" placeholder="제목"/>
             </div>
             <div class="col" style="position: absolute; left: 20%;">
                 <button type="submit" class="btn btn-secondary">검색</button>
@@ -134,7 +147,7 @@
 
             <div class="col">
                 <button class="btn btn-danger" id="write" style="position: absolute; left: 25%;"
-                        th:onclick="|location.href='@{/boards/freeBoard/upload'|"
+                        th:onclick="|location.href='@{/boards/freeBoard/upload}'|"
                         type="button">글 작성
                 </button>
             </div>

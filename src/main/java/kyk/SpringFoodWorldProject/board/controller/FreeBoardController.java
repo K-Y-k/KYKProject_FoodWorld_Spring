@@ -17,12 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -32,19 +29,30 @@ public class FreeBoardController {
 
     private final BoardServiceImpl boardService;
 
+//    @RequestParam(value = "titleSearchKeyword", required=false) String titleSearchKeyword,
+//    @RequestParam(value = "writerSearchKeyword", required=false) String writerSearchKeyword
+
     /**
      * 글 모두 조회 폼
      */
     @GetMapping("/freeBoard")
-    public String freeBoards(@ModelAttribute("boardSearch")BoardSearchDto boardSearch,
-                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                             Model model) {
+    public String freeBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                             Model model,
+                             @ModelAttribute("boardDto") BoardDto boardDto) {
+        Page<Board> boards = null;
 
-        Page<Board> boards = boardService.pageList(pageable);
+        if (boardDto.getTitleSearchKeyword() == null && boardDto.getWriterSearchKeyword() == null) {
+            boards = boardService.pageList(pageable);
+        } else if (boardDto.getWriterSearchKeyword() == null && boardDto.getTitleSearchKeyword() != null ) {
+            boards = boardService.findByTitleContaining(boardDto.getTitleSearchKeyword(), pageable);
+        } else if (boardDto.getWriterSearchKeyword() != null && boardDto.getTitleSearchKeyword() == null) {
+            boards = boardService.findByWriterContaining(boardDto.getWriterSearchKeyword(), pageable);
+        }
+
 
         int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
                                                     // pageable은 0부터 시작이기에 1을 더해준 것
-        int startPage = Math.max(nowPage - 4, 1);   // 마이너스가 나오지 않게 max로 최대 1로 초ㅈ정
+        int startPage = Math.max(nowPage - 4, 1);   // 마이너스가 나오지 않게 max로 최대 1로 조정
         int endPage = Math.min(nowPage + 5, boards.getTotalPages()); // 토탈 페이지보다 넘지 않게 min으로 조정
 
         model.addAttribute("boards", boards);

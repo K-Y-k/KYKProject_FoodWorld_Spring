@@ -48,12 +48,20 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.findAll();
     }
 
-
     @Override
     public Page<Board> pageList(Pageable pageable) {
         return boardRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
+    }
+
+    @Override
+    public Page<Board> findByWriterContaining(String titleSearchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
+    }
 
     @Override
     public void delete(Long boardId) {

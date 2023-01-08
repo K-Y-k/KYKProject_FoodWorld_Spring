@@ -24,10 +24,14 @@ public class TestDataInit {
 
         int i=0;
 
-        memberRepository.save(new Member("테스터1", "test1", "test!"));
+        while (i < 2) {
+            memberRepository.save(new Member("테스터" + i, "test" + i, "test!" + i));
+            i++;
+        }
+        memberRepository.save(new Member("aaa", "aa", "aa"));
 
         while (i < 20) {
-            boardRepository.save(new Board("제목" + i, "내용" + i, "작가" + i));
+            boardRepository.save(new Board("제목" + (i+2), "내용" + i, "작가" + (i+1)));
             i++;
         }
 
