@@ -55,7 +55,12 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable) {
-        return boardRepository.findByTitleContaining(writerSearchKeyword, pageable);
+        return boardRepository.findByWriterContaining(writerSearchKeyword, pageable);
+    }
+
+    @Override
+    public Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleAndWriter(titleSearchKeyword, writerSearchKeyword, pageable);
     }
 
     @Override

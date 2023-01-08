@@ -60,7 +60,12 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
 
     @Override
     public Page<Board> findByWriterContaining(String titleSearchKeyword, Pageable pageable) {
-        return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
+        return boardRepository.findByWriterContaining(titleSearchKeyword, pageable);
+    }
+
+    @Override
+    public Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleAndWriter(titleSearchKeyword, writerSearchKeyword, pageable);
     }
 
     @Override

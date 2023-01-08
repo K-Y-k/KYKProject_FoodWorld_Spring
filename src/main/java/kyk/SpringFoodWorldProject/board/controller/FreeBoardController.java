@@ -38,17 +38,20 @@ public class FreeBoardController {
     @GetMapping("/freeBoard")
     public String freeBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                              Model model,
-                             @ModelAttribute("boardDto") BoardDto boardDto) {
+                             String writerSearchKeyword,
+                             String titleSearchKeyword) {
         Page<Board> boards = null;
 
-        if (boardDto.getTitleSearchKeyword() == null && boardDto.getWriterSearchKeyword() == null) {
+        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        if (writerSearchKeyword == null && titleSearchKeyword == null) {
             boards = boardService.pageList(pageable);
-        } else if (boardDto.getWriterSearchKeyword() == null && boardDto.getTitleSearchKeyword() != null ) {
-            boards = boardService.findByTitleContaining(boardDto.getTitleSearchKeyword(), pageable);
-        } else if (boardDto.getWriterSearchKeyword() != null && boardDto.getTitleSearchKeyword() == null) {
-            boards = boardService.findByWriterContaining(boardDto.getWriterSearchKeyword(), pageable);
+        } else if (writerSearchKeyword.equals("") && titleSearchKeyword != null) {
+            boards = boardService.findByTitleContaining(titleSearchKeyword, pageable);
+        } else if (writerSearchKeyword != null && titleSearchKeyword.equals("")) {
+            boards = boardService.findByWriterContaining(writerSearchKeyword, pageable);
+        } else {
+            boards = boardService.findByTitleAndWriter(titleSearchKeyword, writerSearchKeyword, pageable);
         }
-
 
         int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
                                                     // pageable은 0부터 시작이기에 1을 더해준 것
@@ -60,19 +63,21 @@ public class FreeBoardController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
-        model.addAttribute("next", pageable.next().getPageNumber());
-        model.addAttribute("hasNext", boards.hasNext());
-        model.addAttribute("hasPrev", boards.hasPrevious());
+//        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+//        model.addAttribute("next", pageable.next().getPageNumber());
+//        model.addAttribute("hasNext", boards.hasNext());
+//        model.addAttribute("hasPrev", boards.hasPrevious());
 
         return "boards/board/freeBoard_main";
     }
+
 
     /**
      * 글 상세 조회 폼
      */
     @GetMapping("/freeBoard/{boardId}")
-    public String board(@PathVariable long boardId, Model model) {
+    public String board(@PathVariable long boardId,
+                        Model model) {
         Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);
         return "boards/board/freeBoard_detail";
@@ -103,18 +108,21 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") Board board, RedirectAttributes redirectAttributes) {
+    public String upload(@ModelAttribute("board") Board board,
+                         RedirectAttributes redirectAttributes) {
         Board savedBoard = boardService.save(board);
         redirectAttributes.addAttribute("boardId", savedBoard.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/boards/freeBoard";
     }
 
+
     /**
      * 글 수정 폼
      */
     @GetMapping("/freeBoard/{boardId}/edit")
-    public String editForm(@PathVariable Long boardId, Model model) {
+    public String editForm(@PathVariable Long boardId,
+                           Model model) {
         Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);
         return "boards/board/freeBoard_edit";

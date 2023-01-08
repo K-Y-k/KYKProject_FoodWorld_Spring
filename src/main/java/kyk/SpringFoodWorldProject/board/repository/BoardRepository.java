@@ -39,6 +39,7 @@ public interface BoardRepository {
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
+    Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
 
     /**
      * 글 삭제

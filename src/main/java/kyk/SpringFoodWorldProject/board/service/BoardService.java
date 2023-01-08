@@ -41,6 +41,7 @@ public interface BoardService {
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
+    Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
 
 
     /**

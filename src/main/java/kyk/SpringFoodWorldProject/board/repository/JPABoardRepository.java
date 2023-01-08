@@ -13,5 +13,6 @@ public interface JPABoardRepository extends JpaRepository<Board, Long> {
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
+    Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
 
 }
