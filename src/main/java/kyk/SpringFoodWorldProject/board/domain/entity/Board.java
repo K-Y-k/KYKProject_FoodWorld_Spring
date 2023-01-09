@@ -30,6 +30,12 @@ public class Board extends BaseTimeEntity{
     @Column(insertable = false, updatable = false, columnDefinition = "number default 0")
     private Long likeCount;
 
+    @Column(updatable = false)
+    private String fileName;
+
+    @Column(updatable = false)
+    private String filePath;
+
 //    @Column(insertable = false, updatable = false, columnDefinition = "date default sysdate")
 //    private Date createDate;
 

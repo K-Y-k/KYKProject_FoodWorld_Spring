@@ -18,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -109,10 +110,10 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/upload")
     public String upload(@ModelAttribute("board") Board board,
-                         RedirectAttributes redirectAttributes) {
-        Board savedBoard = boardService.save(board);
-        redirectAttributes.addAttribute("boardId", savedBoard.getId());
-        redirectAttributes.addAttribute("status", true);
+                         MultipartFile file,
+                         RedirectAttributes redirectAttributes) throws Exception {
+        boardService.upload(board, file);
+
         return "redirect:/boards/freeBoard";
     }
 
@@ -122,6 +123,7 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
+                           MultipartFile file,
                            Model model) {
         Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);

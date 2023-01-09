@@ -112,7 +112,8 @@
         </div>
         <hr>
         <br>
-        <!--    <div class="detail-pic" style="width : 700px; height : 400px;"></div>-->
+        <a th:href="@{${board.filePath}}"> 다운</a>
+        <img th:src="@{${board.filePath}}">
         <br>
         <br>
         <h4 class="content" th:text="${board.content}"></h4>

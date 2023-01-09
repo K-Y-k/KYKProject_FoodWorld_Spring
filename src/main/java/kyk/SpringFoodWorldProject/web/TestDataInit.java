@@ -34,6 +34,8 @@ public class TestDataInit {
             boardRepository.save(new Board("제목" + (i+2), "내용" + i, "작가" + (i+1)));
             i++;
         }
+        boardRepository.save(new Board("제목", "so", "작가10"));
+
 
     }
 

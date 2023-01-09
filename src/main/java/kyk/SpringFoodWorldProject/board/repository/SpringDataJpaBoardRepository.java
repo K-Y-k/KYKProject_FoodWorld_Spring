@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,7 +23,7 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     private final JPABoardRepository boardRepository;
 
     @Override
-    public Board save(Board board) {
+    public Board save(Board board){
         return boardRepository.save(board);
     }
 

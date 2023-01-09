@@ -10,10 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -24,8 +28,23 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
 
     @Override
-    public Board save(Board board) {
-        return boardRepository.save(board);
+    public void upload(Board board, MultipartFile file) throws IOException {
+        // 파일경로 지정
+        String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+
+        // 파일에 이름을 붙일 랜덤으로 식별자 지정
+        UUID uuid = UUID.randomUUID();
+        String fileName = uuid + "_" + file.getOriginalFilename();
+
+        // 파일경로와 파일이름 지정한 객체 생성
+        File saveFile = new File(fullPath, fileName);
+        file.transferTo(saveFile);
+
+        // DB에 저장
+        board.setFileName(fileName);
+        board.setFilePath("/files/" + fileName);
+
+        boardRepository.save(board);
     }
 
     @Override
