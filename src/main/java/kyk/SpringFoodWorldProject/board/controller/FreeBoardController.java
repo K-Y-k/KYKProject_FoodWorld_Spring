@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+
 
 @Slf4j
 @Controller
@@ -63,6 +65,8 @@ public class FreeBoardController {
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+
+        model.addAttribute("localDateTime", LocalDateTime.now());
 
 //        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
 //        model.addAttribute("next", pageable.next().getPageNumber());

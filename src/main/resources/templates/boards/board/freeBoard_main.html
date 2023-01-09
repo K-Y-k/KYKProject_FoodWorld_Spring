@@ -81,87 +81,116 @@
     </div>
 </header>
 
-<div class = "main" style="width: 100%; height: 80vh;">
-    <div class = "container1" style="position: absolute; width: 50%; top: 20%; margin-left: 25%;">
-        <div>
+<div class="main" style="width: 100%; height: 80vh;">
+    <div class="container row"
+         style="position: absolute; width: 50%; top: 20%; margin-left: 25%; float: none; margin: 100 auto;">
+        <div style="position: relative;">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>글쓴이</th>
-                    <th>날짜</th>
-                    <th>조회수</th>
-                    <th>좋아요</th>
+                    <th class="col-md-1" style="text-align: center; margin: 0 auto;">번호</th>
+                    <th class="col-md-6" style="text-align: center; margin: 0 auto;">제목</th>
+                    <th class="col-md-1" style="text-align: center; margin: 0 auto;">글쓴이</th>
+                    <th class="col-md-2" style="text-align: center; margin: 0 auto;">날짜</th>
+                    <th class="col-md-1" style="text-align: center; margin: 0 auto;">조회수</th>
+                    <th class="col-md-1" style="text-align: center; margin: 0 auto;">좋아요</th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr th:each="board : ${boards}">
-                    <td th:text="${board.id}"></td>
+                    <td class="col-md-1" style="text-align: center; margin: 0 auto;"
+                        th:text="${board.id}"></td>
                     <td>
-                        <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="${board.title}"></a>
+                        <a class="col-md-6" style="text-align: center; margin: 0 auto;"
+                           th:href="@{|/boards/freeBoard/${board.id}|}" th:text="${board.title}"></a>
                     </td>
-                    <td th:text="${board.writer}">글쓴이</td>
-                    <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                    <td th:text="${board.count}">조회수</td>
-                    <td th:text="${board.likeCount}">좋아요</td>
+
+                    <td class="col-md-1" style="text-align: center; margin: 0 auto;"
+                        th:text="${board.writer}">글쓴이
+                    </td>
+
+                    <td class="col-md-2"
+                        th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
+                        style="text-align: center; margin: 0 auto;"
+                        th:text="${#temporals.format(board.createdDate, 'HH:mm')}"></td>
+                    <td class="col-md-2"
+                        th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
+                        style="text-align: center; margin: 0 auto;"
+                        th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd')}"></td>
+
+                    <td class="col-md-1" style="text-align: center; margin: 0 auto;"
+                        th:text="${board.count}">조회수
+                    </td>
+                    <td class="col-md-1" style="text-align: center; margin: 0 auto;"
+                        th:text="${board.likeCount}">좋아요
+                    </td>
                 </tr>
                 </tbody>
             </table>
+
+            <!--페이지 (th:block은 따로 태그를 붙일 것이 없을 때 사용)-->
+            <div style="position: absolute; left: 40%;">
+                <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <a th:if="${page != nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
+                       th:href="@{/boards/freeBoard(page = ${page - 1})}"
+                       th:text="${page}"></a>
+                    <a th:if="${page != nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
+                       th:href="@{/boards/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
+                       th:text="${page}"></a>
+                    <a th:if="${page != nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
+                       th:href="@{/boards/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
+                       th:text="${page}"></a>
+
+                    <strong th:if="${page == nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
+                            th:text="${page}" style="color: red;"></strong>
+                    <strong th:if="${page == nowPage} and ${not #strings.isEmpty(param.titleSearchKeyword)} and ${#strings.isEmpty(param.writerSearchKeyword)}"
+                            th:text="${page}" style="color: red;"></strong>
+                    <strong th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
+                            th:text="${page}" style="color: red;"></strong>
+                </th:block>
+
+                <form th:action="@{/boards/freeBoard}" method="get">
+                    <div class="row" style="">
+                        <div class="col-md-1" style="width: 6vw;">
+                            <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
+                        </div>
+
+                        <div class="col-md-2" style="width: 12vw;">
+                            <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
+                        </div>
+
+                        <div class="col-md-1" style="width: 5vw;">
+                            <button type="submit" class="btn btn-secondary">검색</button>
+                        </div>
+
+                        <div class="col-md-1" style="width: 6vw;">
+                            <button class="btn btn-danger" id="write"
+                                    th:onclick="|location.href='@{/boards/freeBoard/upload}'|"
+                                    type="button">글 작성
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div style="position: absolute; top: 120%; left: 18%;">
+            <p style="">
+                <a href="menu_recommend.html">
+                    <img src="/image/food/circ.png" width="60%;" height="60%;">
+                </a>
+            </p>
+        </div>
+
+        <div style="position: absolute; top: 10%; right: 40%;">
+            <p style=""><img src="/image/food/bok.jpg" width="25%;" height= "55%;"></p>
         </div>
     </div>
-
-        <!--th:block은 따로 태그를 붙일 것이 없을 때 사용-->
-        <div style="position: absolute; top: 70%; left: 40%;">
-            <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                <a th:if="${page != nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                   th:href="@{/boards/freeBoard(page = ${page - 1})}"
-                   th:text="${page}"></a>
-                <a th:if="${page != nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
-                   th:href="@{/boards/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                   th:text="${page}"></a>
-                <a th:if="${page != nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                   th:href="@{/boards/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                   th:text="${page}"></a>
-
-                <strong th:if="${page == nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                        th:text="${page}" style="color: red;"></strong>
-                <strong th:if="${page == nowPage} and ${not #strings.isEmpty(param.titleSearchKeyword)} and ${#strings.isEmpty(param.writerSearchKeyword)}"
-                        th:text="${page}" style="color: red;"></strong>
-                <strong th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                        th:text="${page}" style="color: red;"></strong>
-            </th:block>
-        </div>
-
-    <form th:action="@{/boards/freeBoard}" method="get">
-        <div class="row" style="position: relative; left: 45%; margin-top: 31%;">
-            <div class="col" style="position: absolute; width: 7vw;">
-                <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
-            </div>
-            <div class="col" style="position: absolute; width: 15vw; left: 6%;">
-                <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
-            </div>
-            <div class="col" style="position: absolute; left: 20%;">
-                <button type="submit" class="btn btn-secondary">검색</button>
-            </div>
-
-            <div class="col">
-                <button class="btn btn-danger" id="write" style="position: absolute; left: 25%;"
-                        th:onclick="|location.href='@{/boards/freeBoard/upload}'|"
-                        type="button">글 작성
-                </button>
-            </div>
-        </div>
-    </form>
-
-    <div style="position: absolute; top: 25%;">
-        <p style=" margin-left: 15%;"><img src="/image/food/bok.jpg" width="50%" height= "100%"></p>
-    </div>
-
-    <div style="position: absolute; top: 85%; left: 10%;">
-        <p style="margin-left: 410px;"><a href="menu_recommend.html"><img src="/image/food/circ.png" width="100%" height= "100%"></a></p>
-    </div>
+<!--    <div style="position: absolute; top: 25%;">-->
+<!--        <p style=" margin-left: 15%;"><img src="/image/food/bok.jpg" width="50%" height= "100%"></p>-->
+<!--    </div>-->
 </div>
 
 </body>
