@@ -81,11 +81,9 @@
     </div>
 </header>
 
-<div class="main" style="width: 100%; height: 80vh;">
-    <div class="container row"
-         style="position: absolute; width: 50%; top: 20%; margin-left: 25%; float: none; margin: 100 auto;">
-        <div style="position: relative;">
-            <table class="table">
+<div class="main" style="position: relative; width: 100vw; height: 80vh;">
+    <div class="container row" style="float: none; margin: 100 auto;">
+            <table class="table" style="position: absolute; top: 10%; width: 50vw; height: 40vh; left: 25%;">
                 <thead>
                 <tr>
                     <th class="col-md-1" style="text-align: center; margin: 0 auto;">번호</th>
@@ -130,7 +128,7 @@
             </table>
 
             <!--페이지 (th:block은 따로 태그를 붙일 것이 없을 때 사용)-->
-            <div style="position: absolute; left: 40%;">
+            <div style="position: absolute; top: 75%; left: 40%;">
                 <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
                     <a th:if="${page != nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
                        th:href="@{/boards/freeBoard(page = ${page - 1})}"
@@ -149,7 +147,9 @@
                     <strong th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
                             th:text="${page}" style="color: red;"></strong>
                 </th:block>
+            </div>
 
+            <div style="position: absolute; top: 3%; left: 47%;">
                 <form th:action="@{/boards/freeBoard}" method="get">
                     <div class="row" style="">
                         <div class="col-md-1" style="width: 6vw;">
@@ -173,24 +173,19 @@
                     </div>
                 </form>
             </div>
-
-        </div>
-
-        <div style="position: absolute; top: 120%; left: 18%;">
-            <p style="">
-                <a href="menu_recommend.html">
-                    <img src="/image/food/circ.png" width="60%;" height="60%;">
-                </a>
-            </p>
-        </div>
-
-        <div style="position: absolute; top: 10%; right: 40%;">
-            <p style=""><img src="/image/food/bok.jpg" width="25%;" height= "55%;"></p>
-        </div>
     </div>
-<!--    <div style="position: absolute; top: 25%;">-->
-<!--        <p style=" margin-left: 15%;"><img src="/image/food/bok.jpg" width="50%" height= "100%"></p>-->
-<!--    </div>-->
+
+
+    <div style="position: absolute; top: 85%; left: 35%;">
+        <a href="menu_recommend.html">
+            <img src="/image/food/circ.png" width="80%;" height="30%;">
+        </a>
+    </div>
+
+    <div style="position: absolute; top: 10%; right: 70%;">
+       <img src="/image/food/bok.jpg" width="40%;" height="80%;">
+    </div>
+
 </div>
 
 </body>
