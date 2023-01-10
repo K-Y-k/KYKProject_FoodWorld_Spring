@@ -30,6 +30,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
 
+    @Override
     public Board save(Board board) {
         return boardRepository.save(board);
     }

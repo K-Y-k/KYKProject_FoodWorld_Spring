@@ -13,6 +13,8 @@ import java.util.Optional;
 
 public interface BoardService {
 
+    Board save(Board board);
+
     /**
      * 글 저장
      */
