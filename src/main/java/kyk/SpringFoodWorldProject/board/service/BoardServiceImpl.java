@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;

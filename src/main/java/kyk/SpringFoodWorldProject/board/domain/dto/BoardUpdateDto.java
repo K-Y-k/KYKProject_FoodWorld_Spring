@@ -16,14 +16,11 @@ public class BoardUpdateDto {
     private String title;
     private String content;
 
-    private int count;
-
     public BoardUpdateDto() {
     }
 
-    public BoardUpdateDto(String title, String content, int count) {
+    public BoardUpdateDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.count = count;
     }
 }

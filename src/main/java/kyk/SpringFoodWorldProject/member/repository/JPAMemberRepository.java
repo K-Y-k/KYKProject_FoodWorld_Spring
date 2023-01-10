@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *  메서드 이름과 관련된 기능 파악해서 자동 제공
  */
 public interface JPAMemberRepository extends JpaRepository<Member, Long> {
+    Member findByName(String name);
 
 }

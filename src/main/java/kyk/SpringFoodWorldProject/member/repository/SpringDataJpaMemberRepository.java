@@ -31,6 +31,11 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
     }
 
     @Override
+    public Member findByName(String name) {
+        return repository.findByName(name);
+    }
+
+    @Override
     public List<Member> findAll() {
         return repository.findAll();
     }

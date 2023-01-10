@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -16,8 +15,8 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class SpringDataJpaBoardRepository implements BoardRepository {
 
     private final JPABoardRepository boardRepository;

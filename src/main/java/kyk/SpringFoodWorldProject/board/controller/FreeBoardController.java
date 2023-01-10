@@ -1,8 +1,10 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentResponseDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -75,10 +79,21 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/{boardId}")
     public String board(@PathVariable long boardId,
+                        @SessionAttribute(name="loginMember", required = false) Member loginMember,
                         Model model) {
         boardService.updateCount(boardId);
-
         Board board = boardService.findById(boardId).get();
+
+//        List<CommentResponseDto> comments = boardDto.getComments();
+//
+//
+//        if (comments != null && !comments.isEmpty()) {
+//            model.addAttribute("comments", comments);
+//        }
+//
+//        model.addAttribute("writer", loginMember.getName());
+
+
         model.addAttribute("board", board);
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "boards/board/freeBoard_detail";
@@ -132,7 +147,7 @@ public class FreeBoardController {
     @GetMapping("/freeBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
                            Model model) {
-        Board board = boardService.findById(boardId).get();
+        Optional<Board> board = boardService.findById(boardId);
         model.addAttribute("board", board);
         return "boards/board/freeBoard_edit";
     }
@@ -152,8 +167,18 @@ public class FreeBoardController {
      * 글 삭제 기능
      */
     @GetMapping("/freeBoard/{boardId}/delete")
-    public String delete(@PathVariable Long boardId) {
-        boardService.delete(boardId);
+    public String delete(@PathVariable Long boardId,
+                         @SessionAttribute("loginMember") Member member,
+                         Model model) {
+        Board board = boardService.findById(boardId).get();
+        if (board.getMember().getId() == member.getId()) {
+            boardService.delete(boardId);
+        } else {
+            model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
+            model.addAttribute("redirectUrl", "/members/freeBoard");
+            return "messages";
+        }
+
         return "redirect:/boards/freeBoard";
     }
 
