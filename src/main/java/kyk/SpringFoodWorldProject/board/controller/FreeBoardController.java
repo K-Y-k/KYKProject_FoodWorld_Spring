@@ -1,16 +1,11 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
-import kyk.SpringFoodWorldProject.board.service.BoardService;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.TypeCache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,8 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -53,7 +46,7 @@ public class FreeBoardController {
         } else if (writerSearchKeyword != null && titleSearchKeyword.equals("")) {
             boards = boardService.findByWriterContaining(writerSearchKeyword, pageable);
         } else {
-            boards = boardService.findByTitleAndWriter(titleSearchKeyword, writerSearchKeyword, pageable);
+            boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
         }
 
         int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
@@ -83,8 +76,11 @@ public class FreeBoardController {
     @GetMapping("/freeBoard/{boardId}")
     public String board(@PathVariable long boardId,
                         Model model) {
+        boardService.updateCount(boardId);
+
         Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "boards/board/freeBoard_detail";
     }
 
@@ -113,10 +109,18 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") Board board,
-                         MultipartFile file,
-                         RedirectAttributes redirectAttributes) throws Exception {
-        boardService.upload(board, file);
+    public String upload(@ModelAttribute("board") Board board) throws Exception {
+        boardService.save(board);
+//
+//        UploadFile attachFile = boardService.storeFile(board.getAttachFile());
+//        List<UploadFile> storeImageFiles = boardService.storeFiles(board.getImageFiles());
+//
+//        Board boardDto = new Board();
+//        boardDto.setTitle(board.getTitle());
+//        boardDto.setContent(board.getContent());
+//        boardDto.setAttachFile((MultipartFile) attachFile);
+//
+//        boardService.save(boardDto);
 
         return "redirect:/boards/freeBoard";
     }
@@ -127,7 +131,6 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
-                           MultipartFile file,
                            Model model) {
         Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);

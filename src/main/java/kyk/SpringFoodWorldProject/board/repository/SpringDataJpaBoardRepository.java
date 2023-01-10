@@ -30,7 +30,8 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     @Override
     public void update(Long boardId, BoardUpdateDto updateParam) {
         // board를 찾음
-        Board findBoard = boardRepository.findById(boardId).orElseThrow();
+        Board findBoard = boardRepository.findById(boardId).orElseThrow((() ->
+                new IllegalStateException("해당 게시글이 존재하지 않습니다.")));
 
         // 변경 값으로 설정
         // 따로 저장하지 않아도 바꾸기만 해도 자동으로 적용된다.
@@ -65,13 +66,18 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
-        return boardRepository.findByTitleAndWriter(titleSearchKeyword, writerSearchKeyword, pageable);
+    public Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
     }
 
     @Override
     public void delete(Long boardId) {
         boardRepository.deleteById(boardId);
+    }
+
+    @Override
+    public int updateCount(Long boardId) {
+        return boardRepository.updateCount(boardId);
     }
 
 

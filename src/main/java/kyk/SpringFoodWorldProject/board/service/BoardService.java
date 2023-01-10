@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import org.springframework.data.domain.Page;
@@ -43,11 +42,18 @@ public interface BoardService {
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
-    Page<Board> findByTitleAndWriter(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
-
+    Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
 
     /**
      * 글 삭제
      */
     void delete(Long boardId);
+
+
+    /**
+     * 조회수 카운트
+     */
+    int updateCount(Long boardId);
+
+
 }

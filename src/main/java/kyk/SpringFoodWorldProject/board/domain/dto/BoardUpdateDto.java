@@ -1,21 +1,29 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 글 수정시 전송될 전송객체
  */
-@Data
+@Getter @Setter
 public class BoardUpdateDto {
 
     private String title;
     private String content;
 
+    private int count;
+
     public BoardUpdateDto() {
     }
 
-    public BoardUpdateDto(String title, String content) {
+    public BoardUpdateDto(String title, String content, int count) {
         this.title = title;
         this.content = content;
+        this.count = count;
     }
 }
