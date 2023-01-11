@@ -1,5 +1,7 @@
 package kyk.SpringFoodWorldProject.member.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +11,10 @@ import javax.validation.constraints.NotEmpty;
 /**
  * 회원 엔티티
  */
-@Getter @Setter
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @Entity
 public class Member {
 

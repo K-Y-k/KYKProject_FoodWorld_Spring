@@ -1,13 +1,17 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberDto;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,34 +33,44 @@ import java.util.UUID;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public Board save(Board board) {
         return boardRepository.save(board);
     }
 
-    @Override
-    public void upload(Board board, MultipartFile file) throws IOException {
-        if(!file.isEmpty()) {
-            // 파일경로 지정
-            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+//    public Board upload(String memberName, BoardDto boardDto) {
+//        Member member = memberRepository.findByName(memberName);
+//        Board board = boardRepository.findById(boardDto.getId()).get();
+//        board.setMember(member);
+//
+//        return boardRepository.save(board);
+//    }
 
-            // 파일에 이름을 붙일 랜덤으로 식별자 지정
-            UUID uuid = UUID.randomUUID();
-            String fileName = uuid + "_" + file.getOriginalFilename();
 
-            // 파일경로와 파일이름 지정한 객체 생성 및 저장
-            File saveFile = new File(fullPath, fileName);
-            file.transferTo(saveFile);
-
-            // DB에 저장
-            board.setFileName(fileName);
-            board.setFilePath("/files/" + fileName);
-
-        }
-//        boardRepository.save(board);
-        return;
-    }
+//    @Override
+//    public void upload(Board board, MultipartFile file) throws IOException {
+//        if(!file.isEmpty()) {
+//            // 파일경로 지정
+//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+//
+//            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+//            UUID uuid = UUID.randomUUID();
+//            String fileName = uuid + "_" + file.getOriginalFilename();
+//
+//            // 파일경로와 파일이름 지정한 객체 생성 및 저장
+//            File saveFile = new File(fullPath, fileName);
+//            file.transferTo(saveFile);
+//
+//            // DB에 저장
+//            board.setFileName(fileName);
+//            board.setFilePath("/files/" + fileName);
+//
+//        }
+////        boardRepository.save(board);
+//        return;
+//    }
 
 
     /**

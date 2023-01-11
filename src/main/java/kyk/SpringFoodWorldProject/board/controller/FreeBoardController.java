@@ -127,9 +127,10 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") Board board,
+    public String upload(@ModelAttribute("board") BoardDto board,
                          @SessionAttribute("loginMember") Member member) throws Exception {
-        boardService.save(board);
+
+        boardService.save(board.toEntity());
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
 //
@@ -177,7 +178,8 @@ public class FreeBoardController {
                          @SessionAttribute("loginMember") Member member,
                          Model model) {
         Board board = boardService.findById(boardId).get();
-        if (board.getMember().getId() == member.getId()) {
+
+        if (board.getMember().getId().equals(member.getId())) {
             boardService.delete(boardId);
         } else {
             model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");

@@ -48,13 +48,15 @@ public class Board extends BaseTimeEntity{
 
 
 
-    @Column(updatable = false)
-    private String fileName;
+//    @Column(updatable = false)
+//    private String fileName;
 
-    @Column(updatable = false)
-    private String filePath;
+//    @Column(updatable = false)
+//    private String filePath;
+
 //    @Column(updatable = false)
 //    private MultipartFile attachFile;
+
 //    @Column(updatable = false)
 //    private List<MultipartFile> imageFiles;
 

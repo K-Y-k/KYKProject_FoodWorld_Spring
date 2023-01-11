@@ -3,8 +3,12 @@ package kyk.SpringFoodWorldProject.board.repository;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberDto;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +18,9 @@ public interface BoardRepository {
      * 글 저장
      */
     Board save(Board board);
+
+//    Board upload(String name, BoardDto board);
+
 
     /**
      * 글 수정
@@ -56,5 +63,6 @@ public interface BoardRepository {
      * 좋아요 카운트
      */
     int updateLikeCount(Long boardId);
+
 
 }

@@ -4,8 +4,10 @@ import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ public interface BoardService {
     /**
      * 글 저장
      */
-    void upload(Board board, MultipartFile file) throws IOException;
+//    void upload(Board board, MultipartFile file) throws IOException;
 
     /**
      * 글 수정
@@ -63,5 +65,6 @@ public interface BoardService {
      * 좋아요 카운트
      */
     int updateLikeCount(Long boardId);
+
 
 }

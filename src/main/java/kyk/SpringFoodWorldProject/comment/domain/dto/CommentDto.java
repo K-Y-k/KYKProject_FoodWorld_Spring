@@ -17,7 +17,7 @@ public class CommentDto {
     private String content;
     private Member member;
     private Board board;
-    private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+//    private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
 
 
     // Dto -> Entity

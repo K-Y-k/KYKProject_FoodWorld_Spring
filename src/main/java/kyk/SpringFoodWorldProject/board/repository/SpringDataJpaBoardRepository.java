@@ -3,10 +3,14 @@ package kyk.SpringFoodWorldProject.board.repository;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberDto;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.repository.JPAMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -21,10 +25,13 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
 
     private final JPABoardRepository boardRepository;
 
+    private final JPAMemberRepository memberRepository;
+
     @Override
     public Board save(Board board) {
         return boardRepository.save(board);
     }
+
 
     @Override
     public void update(Long boardId, BoardUpdateDto updateParam) {

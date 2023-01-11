@@ -18,15 +18,21 @@ import org.springframework.context.annotation.Configuration;
 public class BoardConfig {
 
     private final JPABoardRepository boardRepository;
+    private final JPAMemberRepository memberRepository;
 
     @Bean
     public BoardService boardService() {
-        return new BoardServiceImpl(boardRepository());
+        return new BoardServiceImpl(boardRepository(), memberRepository());
     }
 
     @Bean
     public BoardRepository boardRepository() {
-        return new SpringDataJpaBoardRepository(boardRepository);
+        return new SpringDataJpaBoardRepository(boardRepository, memberRepository);
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        return new SpringDataJpaMemberRepository(memberRepository);
     }
 
 }

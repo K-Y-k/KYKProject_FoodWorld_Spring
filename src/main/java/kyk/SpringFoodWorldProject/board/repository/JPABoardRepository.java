@@ -39,8 +39,8 @@ public interface JPABoardRepository extends JpaRepository<Board, Long> {
 
 //    @Modifying
 //    @Transactional
-//    @Query(value = "insert into Board b (b.title, b.content, b.member.name) VALUES(:#{boardDto.title}, :#{boardDto.content}, :#{boardDto.member.name})", nativeQuery = true)
-//    int save(BoardDto boardDto);
+//    @Query(value = "insert into Board b (b.id, b.title, b.content, b.member.name) VALUES(:#{boardDto.id}, :#{boardDto.title}, :#{boardDto.content}, :#{boardDto.member.name}, 0, 0, :#{boardDto.member.id}, null)", nativeQuery = true)
+//    int upload(@Param("boardDto") BoardDto boardDto);
 
 
 }
