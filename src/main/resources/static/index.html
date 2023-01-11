@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
     <!--부트 스트랩 적용-->
     <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
     <!--css 적용-->
-    <link rel="stylesheet" type="text/css" href="../css/main_style.css">
+    <link rel="stylesheet" type="text/css" href="main_style.css" th:href="@{/main_style.css}">
 </head>
+
 <body>
 <div class="container_main">
     <header style="position: relative;"> <!--네비게이션바-->
@@ -21,7 +22,7 @@
                     <li style="position: relative; left: -7%;">
                         <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
                              style="margin-left: 27px; margin-top: 10px;">
-                        <a href="free_main.html" class="nav-link text-white" style="font-size: 16px;">
+                        <a href="/boards/freeBoard" class="nav-link text-white" style="font-size: 16px;">
                             <span>자유게시판</span>
                         </a>
                     </li>
@@ -66,44 +67,42 @@
             <h4>&nbsp;&nbsp;&nbsp;FOOD WORLD에</h4>
             <h4>오신 것을 환영합니다!</h4>
             <hr>
+
+            <form action="" th:action th:object="${loginForm}" method="post">
             <div class="container" style="position:absolute; top: 14%; left: 0%;" id="form">
                 <br>
                 <br>
                 <div class="mb-3">
-                    <input type="email" class="form-control" id="inputEmail" placeholder="이메일" style="width: 250px;"
-                           id="email_input">
+                    <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디" style="width: 250px;">
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="비밀번호"
-                           style="width: 250px;" id="password_input">
+                    <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호" style="width: 250px;">
                 </div>
                 <br>
             </div>
-            <img src="/image/main_img/logo1.PNG" class="logo" style="width: 240px; height: 150px; display: none;"
-                 id="logo">
+
             <br>
             <br>
             <br>
+
             <div class="col-auto" style="position:absolute; top: 30%; left: 2%;" id="col-auto">
                 <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 7px;" id="login">
                     로그인
                 </button>
-                <button type="submit" class="btn btn-primary mb-3" id="logout"
-                        style="width: 100px; margin-left: 10px; display: none;">로그아웃
+                <button class="btn btn-primary mb-3" style="width: 100px; margin-left: 30px;"
+                        id="register" th:onclick="|location.href='@{/members/register}'|"
+                        type="button" >회원가입
                 </button>
-                <a href="/members/member_register">
-                    <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 30px;"
-                            id="register">회원가입
-                    </button>
-                </a> <br>
-
             </div>
+            </form>
+
+            <br>
             <br>
 
             <div class="nav nav-pills flex-column mb-auto" style="position:absolute; top: 38%; left: 0%; width: 100%;">
                 <hr>
                 <li class="nav-item">
-                    <a href="free_main.html" class="nav-link text-white">
+                    <a href="/boards/freeBoard" class="nav-link text-white">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
                     </a>
                 </li>
@@ -277,13 +276,12 @@
 
             <br>
 
-            <img id="menu_img" src="/image/menu_img/00.PNG" width=250px height=250px style="margin-left: 45px;
-                                                                                                      font-size: 50px;
-                                                                                                      color: rgb(179, 41, 41);">
+            <img id="menu_img" src="/image/menu_img/00.PNG" width=250px height=250px style="margin-left: 45px; font-size: 50px; color: rgb(179, 41, 41);">
 
             <br/>
 
-            <h3 class="color1" style="color: rgb(24, 114, 69);">메뉴</h3> <h4 id="menu_name"></h4>
+            <h3 class="color1" style="color: rgb(24, 114, 69);">메뉴</h3>
+            <h4 id="menu_name"></h4>
 
             <br>
 
