@@ -6,7 +6,7 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/boards/board_detail_style.css">
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_detail_style.css" th:href="@{/board_detail_style.css}">
 </head>
 
 <body>
@@ -126,7 +126,9 @@
 
         <div class="row" style="position: absolute; left: 43%; top: 62%;">
           <div class="col" style="">
-            <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;">
+            <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;"
+                    th:onclick="|location.href='@{/boards/freeBoard/{boardId}/like(boardId=${board.id})}'|"
+                    type="button">
               <img src="/image/muckstargram_img/recommend_icon.PNG" style="width: 3vw; height: 5vh;">
             </button>
           </div>

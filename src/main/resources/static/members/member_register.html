@@ -1,12 +1,13 @@
 <!DOCTYPE HTML>
-<html>
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <!--부트 스트랩 적용-->
-  <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
   <link rel="stylesheet" type="text/css" href="../css/members/member_register_style.css">
+</head>
 
 <body>
 <header style="position: relative;"> <!--네비게이션바-->
@@ -115,18 +116,33 @@
     <h4 class="tm">회원가입</h4>
     <br>
     <div class="container mt-3">
-      <div class="mb-3">
-        <input type="text" class="form-control" placeholder="닉네임" id="name-new">
-      </div>
-      <div class="mb-3">
-        <input type="email" class="form-control" placeholder="아이디" id="email-new">
-      </div>
-      <div class="mb-3">
+      <form action="" th:action th:object="${member}" method="post">
+        <div class="mb-3">
+          <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="닉네임"
+                 th:errorclass="field-error">
+          <div class="field-error" th:errors="*{name}"/>
+        </div>
+        <div class="mb-3">
+          <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디"
+                 th:errorclass="field-error">
+          <div class="field-error" th:errors="*{loginId}"/>
+        </div>
+        <div class="mb-3">
+          <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호 (6자리 이상)"
+                 th:errorclass="field-error">
+          <div class="field-error" th:errors="*{password}"/>
+        </div>
 
-        <input type="password" class="form-control" placeholder="비밀번호" id="password-new">
-      </div>
-      <br>
-      <button type="submit" class="btn btn-primary" id="register">가입하기</button>
+        <br>
+
+        <div class="col">
+          <button class="w-100 btn btn-primary" id="register" type="submit">가입하기</button>
+          <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='index.html'"
+                  th:onclick="|location.href='@{/}'|"
+                  type="button">취소
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </aside>

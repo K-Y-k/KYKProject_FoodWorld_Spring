@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <!--부트 스트랩 적용-->
-  <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
   <link rel="stylesheet" type="text/css" href="../css/members/member_register_style.css">
 </head>
@@ -111,17 +112,25 @@
         <h4 class="tm">로그인</h4>
         <br>
         <br>
-        <div class="mb-3">
-          <input type="email" class="form-control" id="inputEmail" placeholder="이메일">
-        </div>
-        <div class="mb-3">
-          <input type="password" class="form-control" id="inputPassword" placeholder="비밀번호">
-        </div>
-        <br>
-        <div class="container mt-3">
-          <button type="submit" class="btn btn-primary" id="login">로그인</button> &nbsp;&nbsp;&nbsp;&nbsp;
-          <a href = "main_register.html" ><button type="submit" class="btn btn-primary">회원가입</button></a> <br>
-        </div>
+        <form action="item.html" th:action th:object="${loginForm}" method="post">
+          <div class="mb-3">
+            <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{loginId}"/>
+          </div>
+          <div class="mb-3">
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="*{password}"/>
+          </div>
+          <br>
+          <div class="container mt-3">
+            <button type="submit" class="btn btn-primary">로그인</button> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/members/register">
+              <button type="button" class="btn btn-primary">회원가입</button>
+            </a> <br>
+          </div>
+        </form>
       </div>
     </div>
   </div>

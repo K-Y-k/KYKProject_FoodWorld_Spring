@@ -1,10 +1,10 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
+import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +54,8 @@ public class BoardServiceImpl implements BoardService{
             board.setFilePath("/files/" + fileName);
 
         }
-        boardRepository.save(board);
+//        boardRepository.save(board);
+        return;
     }
 
 
@@ -173,6 +174,11 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public int updateCount(Long boardId) {
         return boardRepository.updateCount(boardId);
+    }
+
+    @Override
+    public int updateLikeCount(Long boardId) {
+        return boardRepository.updateLikeCount(boardId);
     }
 
 }

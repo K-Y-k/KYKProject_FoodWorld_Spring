@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -12,9 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -124,8 +127,11 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") Board board) throws Exception {
+    public String upload(@ModelAttribute("board") Board board,
+                         @SessionAttribute("loginMember") Member member) throws Exception {
         boardService.save(board);
+
+//        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
 //
 //        UploadFile attachFile = boardService.storeFile(board.getAttachFile());
 //        List<UploadFile> storeImageFiles = boardService.storeFiles(board.getImageFiles());
@@ -147,7 +153,7 @@ public class FreeBoardController {
     @GetMapping("/freeBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
                            Model model) {
-        Optional<Board> board = boardService.findById(boardId);
+        Board board = boardService.findById(boardId).get();
         model.addAttribute("board", board);
         return "boards/board/freeBoard_edit";
     }
@@ -182,6 +188,19 @@ public class FreeBoardController {
         return "redirect:/boards/freeBoard";
     }
 
+
+    /**
+     * 글 좋아요 기능
+     */
+    @GetMapping("/freeBoard/{boardId}/like")
+    public String like(@PathVariable Long boardId,
+                       Model model,
+                       RedirectAttributes redirectAttributes) {
+        boardService.updateLikeCount(boardId);
+        redirectAttributes.addAttribute("boardId", boardId);
+
+        return "redirect:/boards/freeBoard/{boardId}";
+    }
 
 
 

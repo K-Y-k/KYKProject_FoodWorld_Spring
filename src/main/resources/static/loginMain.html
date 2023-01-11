@@ -6,7 +6,9 @@
   <!--부트 스트랩 적용-->
   <link href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/main_style.css">
+  <link rel="stylesheet" type="text/css" href="../css/main_style.css" th:href="@{/css/main_style.css}">
+</head>
+
 <body>
 <div class="container_main">
   <header style="position: relative;"> <!--네비게이션바-->
@@ -20,7 +22,7 @@
           <li style="position: relative; left: -7%;">
             <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
                  style="margin-left: 27px; margin-top: 10px;">
-            <a href="free_main.html" class="nav-link text-white" style="font-size: 16px;">
+            <a href="/boards/freeBoard" class="nav-link text-white" style="font-size: 16px;">
               <span>자유게시판</span>
             </a>
           </li>
@@ -62,26 +64,25 @@
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 275px; height: 110vh">
       <hr>
       <div class="mb-3">
-        <h4 th:text="|로그인: ${member.name}|"style="width: 250px;">???님 FOODWORLD에 오신 것을 환영합니다!</h4>
+        <h4 style="width: 100%; margin: 0 auto;" th:text="|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${member.name}님|">???님</h4>
+        <h4 style="width: 100%; margin: 0 auto;">&nbsp;&nbsp;&nbsp;FOODWORLD에</h4>
+        <h4 style="width: 100%; margin: 0 auto;">오신 것을 환영합니다!</h4>
       </div>
       <hr>
-        <div class="container" style="position:absolute; top: 14%; left: 0%;" id="form">
-          <br>
-          <br>
-          <br>
-        </div>
 
-      <img src="/image/main_img/logo1.PNG" class="logo" style="width: 240px; height: 150px;"
+      <img src="/image/main_img/logo1.PNG" class="logo" style="width: 250px; height: 160px;"
            id="logo">
 
       <br>
       <br>
       <br>
 
-      <div class="col-auto" style="position:absolute; top: 32%; left: 15%;" id="col-auto">
-        <button type="submit" class="btn btn-primary mb-3" id="logout"
-                style="width: 100px; margin-left: 10px;">로그아웃
-        </button>
+      <div class="col-auto" style="position:absolute; top: 35%; left: 15%;" id="col-auto">
+        <form th:action="@{/members/logout}" method="post">
+          <button type="submit" class="btn btn-primary mb-3"
+                  style="width: 100px; margin-left: 10px;">로그아웃
+          </button>
+        </form>
       </div>
 
       <br>
@@ -89,7 +90,7 @@
       <div class="nav nav-pills flex-column mb-auto" style="position:absolute; top: 38%; left: 0%; width: 100%;">
         <hr>
         <li class="nav-item">
-          <a href="free_main.html" class="nav-link text-white">
+          <a href="/boards/freeBoard" class="nav-link text-white">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
           </a>
         </li>

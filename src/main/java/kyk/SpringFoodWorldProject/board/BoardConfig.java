@@ -5,6 +5,10 @@ import kyk.SpringFoodWorldProject.board.repository.JPABoardRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import kyk.SpringFoodWorldProject.board.service.BoardService;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.repository.JPAMemberRepository;
+import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
+import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BoardConfig {
 
-    private final JPABoardRepository repository;
+    private final JPABoardRepository boardRepository;
 
     @Bean
     public BoardService boardService() {
@@ -22,6 +26,7 @@ public class BoardConfig {
 
     @Bean
     public BoardRepository boardRepository() {
-        return new SpringDataJpaBoardRepository(repository);
+        return new SpringDataJpaBoardRepository(boardRepository);
     }
+
 }

@@ -1,32 +1,39 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
  * 전체 글 조회시 전송 객체
  */
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter @Setter
 public class BoardDto {
 
     private Long id;
 
+    @NotEmpty
     private String title;
 
-    private LocalDateTime createdDate;
+    @NotEmpty
+    private String content;
 
-    private Long count;
+    private Member member;
 
-    private Long likeCount;
+    private String createdDate;
 
-    private String titleSearchKeyword;
 
-    private String writerSearchKeyword;
-
+    public Board toEntity() {
+        Board board = Board.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .member(member)
+                .build();
+        return board;
+    }
 }

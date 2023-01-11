@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     private final JPABoardRepository boardRepository;
 
     @Override
-    public Board save(Board board){
+    public Board save(Board board) {
         return boardRepository.save(board);
     }
 
@@ -77,6 +77,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     @Override
     public int updateCount(Long boardId) {
         return boardRepository.updateCount(boardId);
+    }
+
+    @Override
+    public int updateLikeCount(Long boardId) {
+        return boardRepository.updateLikeCount(boardId);
     }
 
 
