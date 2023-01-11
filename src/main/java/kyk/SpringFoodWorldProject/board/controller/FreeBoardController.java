@@ -32,8 +32,6 @@ public class FreeBoardController {
 
     private final BoardServiceImpl boardService;
 
-//    @RequestParam(value = "titleSearchKeyword", required=false) String titleSearchKeyword,
-//    @RequestParam(value = "writerSearchKeyword", required=false) String writerSearchKeyword
 
     /**
      * 글 모두 조회 폼
@@ -57,9 +55,9 @@ public class FreeBoardController {
         }
 
         int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
-                                                    // pageable은 0부터 시작이기에 1을 더해준 것
-        int startPage = Math.max(nowPage - 4, 1);   // 마이너스가 나오지 않게 max로 최대 1로 조정
-        int endPage = Math.min(nowPage + 5, boards.getTotalPages()); // 토탈 페이지보다 넘지 않게 min으로 조정
+                                                    // pageable의 index는 0부터 시작이기에 1을 더해준 것
+        int startPage = Math.max(1, nowPage - 2);   // 마이너스가 나오지 않게 max로 최대 1로 조정
+        int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 토탈 페이지보다 넘지 않게 min으로 조정
 
         model.addAttribute("boards", boards);
         model.addAttribute("nowPage", nowPage);
@@ -68,10 +66,12 @@ public class FreeBoardController {
 
         model.addAttribute("localDateTime", LocalDateTime.now());
 
-//        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
-//        model.addAttribute("next", pageable.next().getPageNumber());
-//        model.addAttribute("hasNext", boards.hasNext());
-//        model.addAttribute("hasPrev", boards.hasPrevious());
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+        model.addAttribute("next", pageable.next().getPageNumber());
+
+        // 이전 다음의 여부
+        model.addAttribute("hasPrev", boards.hasPrevious());
+        model.addAttribute("hasNext", boards.hasNext());
 
         return "boards/board/freeBoard_main";
     }
@@ -178,14 +178,15 @@ public class FreeBoardController {
                          @SessionAttribute("loginMember") Member member,
                          Model model) {
         Board board = boardService.findById(boardId).get();
+        boardService.delete(boardId);
 
-        if (board.getMember().getId().equals(member.getId())) {
-            boardService.delete(boardId);
-        } else {
-            model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
-            model.addAttribute("redirectUrl", "/members/freeBoard");
-            return "messages";
-        }
+//        if (board.getMember().getId().equals(member.getId())) {
+//            boardService.delete(boardId);
+//        } else {
+//            model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
+//            model.addAttribute("redirectUrl", "/members/freeBoard");
+//            return "messages";
+//        }
 
         return "redirect:/boards/freeBoard";
     }
