@@ -4,15 +4,14 @@ import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comments;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class SpringDataJpaCommentRepository implements CommentRepository{
 
     private final JPACommentRepository commentRepository;

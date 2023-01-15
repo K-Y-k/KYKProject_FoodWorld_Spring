@@ -10,11 +10,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
-@AllArgsConstructor
 @Builder
-@Getter
-@Setter
+@Getter @Setter
 @Entity
+@AllArgsConstructor
 public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)

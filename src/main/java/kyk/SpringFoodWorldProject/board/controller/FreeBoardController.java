@@ -64,12 +64,14 @@ public class FreeBoardController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
+        // 현재 시간 비교를 위해
         model.addAttribute("localDateTime", LocalDateTime.now());
 
+        // 이전, 다음으로 적용
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
 
-        // 이전 다음의 여부
+        // 이전, 다음 페이지의 존재 여부
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
 

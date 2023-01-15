@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.member.controller;
 
+import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
@@ -32,21 +33,20 @@ public class MemberController {
     /**
      *  회원 등록 폼
      */
-    @GetMapping("/register")
+    @GetMapping("/join")
     public String memberRegisterForm(@ModelAttribute("member") Member member) {
-        return "members/member_register";
+        return "members/member_join";
     }
 
     /**
      *  회원 저장 기능
      */
-    @PostMapping("/register")
-    public String save(@Valid @ModelAttribute Member member, BindingResult bindingResult) {
+    @PostMapping("/join")
+    public String save(@Valid @ModelAttribute JoinForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "members/member_register";
+            return "members/member_join";
         }
-
-        memberRepository.save(member);
+        memberService.join(form);
         return "redirect:/";
     }
 
@@ -83,11 +83,10 @@ public class MemberController {
         }
 
         // 로그인 성공 처리
-        // HttpSession 객체에  request.getSession()로 담으면 모든 것이 해결 됨
-        // 세션이 있으면 있는 세션을 반환하고 없으면 신규 세션을 생성한다. true일 때
-        HttpSession session = request.getSession(); // 기본 값이 true이고, false는 없으면 생성 안함
-        // 세션에 로그인 회원 정보를 보관한다.
+        // 세션을 생성해서 세션에 로그인 회원 정보를 보관한다.
+        HttpSession session = request.getSession();
         session.setAttribute("loginMember", loginMember);
+
         log.info("로그인 성공");
         log.info("sessionId={}", session.getId());
 
@@ -100,7 +99,7 @@ public class MemberController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) { // SessionManager에서 request로 사용
         // false는 세션이 있으면 기존 세션 반환, 세션이 없으면 null을 반환
-        // true는 세션이 있으면 기존 세션 반환, 세션이 없으면 새로운 세션 생성
+        //  true는 세션이 있으면 기존 세션 반환, 세션이 없으면 새로운 세션 생성
         HttpSession session = request.getSession(false); // 로그아웃은 없으면 생성할 필요 없기에 false를 넣음
 
         if (session != null) { // 세션이 있으면
@@ -110,8 +109,5 @@ public class MemberController {
 
         return "redirect:/";
     }
-
-
-
 
 }
