@@ -5,16 +5,22 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // @Builder에 의해서 생성자가 생성되므로 (매개변수를 가지는 생성자가 하나라도 정의 되어있는 경우) 기본 생성자는 자동으로 추가되지 않는다.
 public class JoinForm {
     private Long id;
-    @NotNull(message = "닉네임을 입력해주세요")
+    @NotEmpty(message = "닉네임을 입력해주세요")
+    @Size(min = 6, max = 10)
     private String name;
-    @NotNull(message = "아이디를 입력해주세요")
+
+    @Size(min = 6, max = 10, message = "최소 6글자 최대 10글자입니다.")
+    @NotEmpty(message = "아이디를 입력해주세요")
     private String loginId;
-    @NotNull(message = "비밀번호를 입력해주세요")
+
+    @Size(min = 6, max = 10)
+    @NotEmpty(message = "비밀번호를 입력해주세요")
     private String password;
 
 

@@ -34,7 +34,7 @@ public class MemberController {
      *  회원 등록 폼
      */
     @GetMapping("/join")
-    public String memberRegisterForm(@ModelAttribute("member") Member member) {
+    public String memberRegisterForm(@ModelAttribute("member") JoinForm form) { // 컨트롤러에서 뷰로 넘어갈 때 이 데이터를 넣어 보낸다.
         return "members/member_join";
     }
 
@@ -42,7 +42,7 @@ public class MemberController {
      *  회원 저장 기능
      */
     @PostMapping("/join")
-    public String save(@Valid @ModelAttribute JoinForm form, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute("member") JoinForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "members/member_join";
         }
