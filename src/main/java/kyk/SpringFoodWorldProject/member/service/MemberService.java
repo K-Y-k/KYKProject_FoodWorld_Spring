@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.member.service;
 
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,5 +30,6 @@ public interface MemberService {
      * 회원 모두 조회
      */
     List<Member> findAll();
+
 
 }

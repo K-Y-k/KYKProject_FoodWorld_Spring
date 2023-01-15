@@ -2,21 +2,21 @@ package kyk.SpringFoodWorldProject.member.controller;
 
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -46,6 +46,7 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "members/member_join";
         }
+
         memberService.join(form);
         return "redirect:/";
     }
@@ -106,6 +107,45 @@ public class MemberController {
             session.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
             log.info("로그아웃 완료");
         }
+
+        return "redirect:/";
+    }
+
+
+    /**
+     *  프로필 수정 폼
+     */
+    @GetMapping("/profile/{memberId}")
+    public String memberProfileForm(@PathVariable Long memberId, Model model) {
+        Member member = memberService.findById(memberId).get();
+        model.addAttribute("member", member);
+        return "members/member_profile";
+    }
+
+    /**
+     * 프로필 기능
+     */
+    @PostMapping("/profile/{memberId}")
+    public String memberProfile(@PathVariable Long memberId,
+                                @ModelAttribute("member") UpdateForm form,
+                                HttpServletRequest request) {
+        // 업데이트 적용 아이디를 반환한 것을 가져온 이유는 아래 새로 재갱신하기 위해서!
+        Long changeMemberId = memberService.changeProfile(memberId, form);
+
+
+        // 메인페이지의 이름 동기화시키기 위해 로그아웃후 로그인을 새로 거치고 리다이렉트
+        HttpSession getSession = request.getSession(false);
+
+        if (getSession != null) { // 세션이 있으면
+            getSession.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
+            log.info("로그아웃 완료");
+        }
+
+        Member member = memberService.findById(memberId).get();
+        Member loginMember = memberService.login(member.getLoginId(), member.getPassword());
+
+        HttpSession createSession = request.getSession();
+        createSession.setAttribute("loginMember", loginMember);
 
         return "redirect:/";
     }

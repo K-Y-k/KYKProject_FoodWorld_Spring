@@ -1,5 +1,7 @@
 package kyk.SpringFoodWorldProject.member.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 
 import java.util.List;

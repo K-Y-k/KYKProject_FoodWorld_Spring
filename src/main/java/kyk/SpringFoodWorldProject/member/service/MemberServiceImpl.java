@@ -1,9 +1,12 @@
 package kyk.SpringFoodWorldProject.member.service;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +17,10 @@ import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -73,6 +78,19 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findById(Long memberId) {
         return memberRepository.findById(memberId);
     }
+
+
+    /**
+     * 회원 수정
+     */
+    public Long changeProfile(Long memberId, UpdateForm form) {
+        Member member = memberRepository.findById(memberId).get();
+        member.changeProfile(form.getName(), form.getLoginId(), form.getPassword());
+
+        log.info("회원 변경");
+        return member.getId();
+    }
+
 
 }
 

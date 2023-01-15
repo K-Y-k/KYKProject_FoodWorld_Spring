@@ -1,10 +1,12 @@
 package kyk.SpringFoodWorldProject.member.domain.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-@Data
+@Getter @Setter
 public class LoginForm {
     @NotEmpty(message = "아이디를 입력해주세요")
     private String loginId;

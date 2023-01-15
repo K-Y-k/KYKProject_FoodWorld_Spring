@@ -107,7 +107,7 @@
   <div class="card" style="left: -30%;"> <!--회원가입 폼-->
     <br>
     <br>
-    <h4 class="tm">회원가입</h4>
+    <h4 class="tm">프로필 수정</h4>
     <br>
     <div class="container mt-3">
       <form action="" th:action th:object="${member}" method="post">
@@ -116,13 +116,15 @@
                  th:errorclass="field-error">
           <div class="field-error" style="color: red;" th:errors="*{name}"/>
         </div>
+
         <div class="mb-3">
           <input type="text" th:field="*{loginId}" class="form-control" placeholder="아이디(3자리 이상)"
                  th:errorclass="field-error">
           <div class="field-error" style="color: red;" th:errors="*{loginId}"/>
         </div>
+
         <div class="mb-3">
-          <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호(3자리 이상)"
+          <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호 (3자리 이상)"
                  th:errorclass="field-error">
           <div class="field-error" style="color: red;" th:errors="*{password}"/>
         </div>
@@ -130,7 +132,7 @@
         <br>
 
         <div class="col">
-          <button class="w-100 btn btn-primary" id="register" type="submit">가입하기</button>
+          <button class="w-100 btn btn-primary" type="submit">수정완료</button>
           <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='index.html'"
                   th:onclick="|location.href='@{/}'|"
                   type="button">취소

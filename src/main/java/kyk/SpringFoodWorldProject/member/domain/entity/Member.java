@@ -20,7 +20,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 10)
+    @Column(length = 7)
     private String name;
 
     @Column(length = 10)
@@ -32,6 +32,12 @@ public class Member {
 
     @Builder
     public Member(String name, String loginId, String password) {
+        this.name = name;
+        this.loginId = loginId;
+        this.password = password;
+    }
+
+    public void changeProfile(String name, String loginId, String password){
         this.name = name;
         this.loginId = loginId;
         this.password = password;
