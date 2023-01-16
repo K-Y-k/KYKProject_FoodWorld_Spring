@@ -116,7 +116,8 @@ public class MemberController {
      *  프로필 수정 폼
      */
     @GetMapping("/profile/{memberId}")
-    public String memberProfileForm(@PathVariable Long memberId, Model model) {
+    public String memberProfileForm(@PathVariable Long memberId,
+                                    Model model) {
         Member member = memberService.findById(memberId).get();
         model.addAttribute("member", member);
         return "members/member_profile";

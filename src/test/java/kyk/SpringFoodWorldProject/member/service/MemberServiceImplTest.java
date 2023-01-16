@@ -1,15 +1,18 @@
 package kyk.SpringFoodWorldProject.member.service;
 
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -68,8 +71,8 @@ class MemberServiceImplTest {
     @Test
     void findAll() {
         // given
-        Member member1 = new Member("memberA", "id1", "paw1");
-        Member member2 = new Member("memberB", "id2", "paw2");
+        Member member1 = new Member("memberA", "id1", "pw1");
+        Member member2 = new Member("memberB", "id2", "pw2");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -87,7 +90,7 @@ class MemberServiceImplTest {
     @Test
     void login() {
         // given
-        Member member1 = new Member("memberA", "id1", "paw1");
+        Member member1 = new Member("memberA", "id1", "pw1");
         Member savedMember = memberRepository.save(member1);
 
         // when
@@ -98,6 +101,22 @@ class MemberServiceImplTest {
     }
 
 
-    
+    /**
+     * 프로필 수정
+     */
+    @Test
+    void changeProfile() {
+        // given
+        Member member1 = new Member("memberA", "id1", "pw1");
+        Member savedMember = memberRepository.save(member1);
+
+        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw");
+
+        // when
+        Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);
+
+        // then
+        assertThat(updateMemberId).isEqualTo(savedMember.getId());
+    }
 
 }
