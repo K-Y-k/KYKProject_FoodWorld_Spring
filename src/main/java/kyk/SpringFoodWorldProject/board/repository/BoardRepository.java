@@ -18,11 +18,6 @@ public interface BoardRepository {
 
 
     /**
-     * 글 수정
-     */
-    void update(Long boardId, BoardUpdateDto boardUpdateDto);
-
-    /**
      * 글 id로 조회
      */
     Optional<Board> findById(Long id);
@@ -53,11 +48,5 @@ public interface BoardRepository {
      * 조회수 카운트
      */
     int updateCount(Long boardId);
-
-    /**
-     * 좋아요 카운트
-     */
-    int updateLikeCount(Long boardId);
-
 
 }

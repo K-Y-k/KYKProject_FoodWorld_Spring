@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.domain.dto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentResponseDto;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  *  별도의 전달 객체를 활용해 연관관계를 맺은 엔티티간의 무한참조를 방지한다.
  *  (comments 필드의 List 타입을 DTO 클래스로해서 엔티티간 무한 참조를 방지)
  */
-@Getter
+@Getter @Setter
 public class BoardResponseDto {
     private Long id;
     private String title;

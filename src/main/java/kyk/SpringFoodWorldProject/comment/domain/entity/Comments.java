@@ -18,6 +18,7 @@ public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "comment_id")
     private Long id;
 
     @Column(nullable = false)

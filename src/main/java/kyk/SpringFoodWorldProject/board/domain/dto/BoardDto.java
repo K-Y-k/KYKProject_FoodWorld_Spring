@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * 전체 글 조회시 전송 객체
+ * 글 저장 전송객체
  */
-@Getter @Setter
+@Getter
 public class BoardDto {
 
     private Long id;
@@ -22,17 +22,13 @@ public class BoardDto {
     @NotEmpty
     private String content;
 
-    private Member member;
-
-    private String createdDate;
+    private LocalDateTime createdDate;
 
 
     public Board toEntity() {
         Board board = Board.builder()
-                .id(id)
                 .title(title)
                 .content(content)
-                .member(member)
                 .build();
         return board;
     }

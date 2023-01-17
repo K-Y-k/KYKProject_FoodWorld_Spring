@@ -22,19 +22,13 @@ public interface JPABoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
 
 
+    // 트랜잭션 스크립트 패턴
     /**
      * 조회수 카운트
      */
     @Modifying // @Query 어노테이션에서 작성된 select를 제외한 insert, update, delete 쿼리 사용시 필요한 어노테이션
     @Query("update Board b set b.count = b.count + 1 where b.id = :boardId")
     int updateCount(Long boardId);
-
-    /**
-     * 좋아요 카운트
-     */
-    @Modifying
-    @Query("update Board b set b.likeCount = b.likeCount + 1 where b.id = :boardId")
-    int updateLikeCount(@Param("boardId")Long boardId);
 
 
 //    @Modifying

@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public interface BoardService {
 
-    Board save(Board board);
+    Board upload(Long memberId, BoardDto boardDto);
 
     /**
      * 글 저장
@@ -20,7 +21,7 @@ public interface BoardService {
     /**
      * 글 수정
      */
-    void update(Long boardId, BoardUpdateDto boardUpdateDto);
+    Long updateBoard(Long boardId, BoardUpdateDto boardUpdateDto);
 
     /**
      * 글 id로 조회

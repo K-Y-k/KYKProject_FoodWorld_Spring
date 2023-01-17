@@ -7,6 +7,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentResponseDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import java.util.Optional;
 public class FreeBoardController {
 
     private final BoardServiceImpl boardService;
+    private final MemberServiceImpl memberService;
 
 
     /**
@@ -86,7 +88,8 @@ public class FreeBoardController {
     public String board(@PathVariable long boardId,
                         @SessionAttribute(name="loginMember", required = false) Member loginMember,
                         Model model) {
-        boardService.updateCount(boardId);
+        boardService.updateCount(boardId); // 조회수 상승
+
         Board board = boardService.findById(boardId).get();
 
 //        List<CommentResponseDto> comments = boardDto.getComments();
@@ -129,10 +132,10 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") BoardDto board,
+    public String upload(@ModelAttribute("board") BoardDto boardDto,
                          @SessionAttribute("loginMember") Member member) throws Exception {
 
-        boardService.save(board.toEntity());
+        boardService.upload(member.getId(), boardDto);
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
 //
@@ -167,7 +170,7 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
                        @ModelAttribute("board") BoardUpdateDto updateParam) {
-        boardService.update(boardId, updateParam);
+        boardService.updateBoard(boardId, updateParam);
         return "redirect:/boards/freeBoard/{boardId}";
     }
 
@@ -179,7 +182,7 @@ public class FreeBoardController {
     public String delete(@PathVariable Long boardId,
                          @SessionAttribute("loginMember") Member member,
                          Model model) {
-        Board board = boardService.findById(boardId).get();
+
         boardService.delete(boardId);
 
 //        if (board.getMember().getId().equals(member.getId())) {

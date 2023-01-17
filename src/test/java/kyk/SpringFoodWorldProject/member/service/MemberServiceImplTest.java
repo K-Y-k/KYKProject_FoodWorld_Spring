@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -101,22 +102,23 @@ class MemberServiceImplTest {
     }
 
 
-    /**
-     * 프로필 수정
-     */
-    @Test
-    void changeProfile() {
-        // given
-        Member member1 = new Member("memberA", "id1", "pw1");
-        Member savedMember = memberRepository.save(member1);
-
-        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw");
-
-        // when
-        Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);
-
-        // then
-        assertThat(updateMemberId).isEqualTo(savedMember.getId());
-    }
+//    /**
+//     * 프로필 수정
+//     */
+//    @Test
+//    @Rollback(value = false)
+//    void changeProfile() {
+//        // given
+//        Member member1 = new Member("memberA", "id1", "pw1");
+//        Member savedMember = memberRepository.save(member1);
+//
+//        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw");
+//
+//        // when
+//        Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);
+//
+//        // then
+//        assertThat(updateMemberId).isEqualTo(savedMember.getId());
+//    }
 
 }

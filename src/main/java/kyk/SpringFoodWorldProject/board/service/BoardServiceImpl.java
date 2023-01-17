@@ -1,11 +1,14 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.UUID;
 /**
  * 서비스를 스프링 JPA 구현체로 구현
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,7 +36,14 @@ public class BoardServiceImpl implements BoardService{
     private final MemberRepository memberRepository;
 
     @Override
-    public Board save(Board board) {
+    public Board upload(Long memberId, BoardDto boardDto) {
+        Member findMember = memberRepository.findById(memberId).orElseThrow();
+
+
+
+        board = Board.createBoard(findMember, boardDto);
+
+        log.info("board={}", board);
         return boardRepository.save(board);
     }
 
@@ -140,11 +151,21 @@ public class BoardServiceImpl implements BoardService{
         return originalFilename.substring(pos + 1);
     }
 
-
     @Override
-    public void update(Long boardId, BoardUpdateDto updateParam) {
-        boardRepository.update(boardId, updateParam);
+    public Long updateBoard(Long boardId, BoardUpdateDto updateParam) {
+        Board findBoard = findById(boardId).orElseThrow();
+
+        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent());
+
+        log.info("수정완료");
+        return findBoard.getId();
     }
+
+    public void createBoard(Long boardId, BoardDto boardDto) {
+        Board findBoard = findById(boardId).orElseThrow();
+        findBoard.updateBoard(boardDto.getTitle(), boardDto.getContent());
+    }
+
 
     @Override
     public Optional<Board> findById(Long id) {
@@ -163,32 +184,49 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable) {
+        log.info("제목 검색");
+
         return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
     }
 
     @Override
     public Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable) {
+        log.info("작가 검색");
+
         return boardRepository.findByWriterContaining(writerSearchKeyword, pageable);
     }
 
     @Override
     public Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
+        log.info("작가, 제목 동시 검색");
+
         return boardRepository.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
     }
 
     @Override
     public void delete(Long boardId) {
+        log.info("삭제 완료");
+
         boardRepository.delete(boardId);
     }
 
     @Override
     public int updateCount(Long boardId) {
+        log.info("조회수 증가");
+
         return boardRepository.updateCount(boardId);
     }
 
+
     @Override
     public int updateLikeCount(Long boardId) {
-        return boardRepository.updateLikeCount(boardId);
+        Board findBoard = findById(boardId).orElseThrow();
+        findBoard.updateLikeCount(findBoard.getLikeCount());
+
+        log.info("조회수 증가");
+        return findBoard.getLikeCount();
     }
+
+
 
 }

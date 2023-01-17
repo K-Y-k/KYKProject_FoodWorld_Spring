@@ -37,6 +37,9 @@ public class Member {
         this.password = password;
     }
 
+    
+    // 비즈니스 로직
+    // 변경 감지로 프로필 업데이트
     public void changeProfile(String name, String loginId, String password){
         this.name = name;
         this.loginId = loginId;

@@ -27,7 +27,7 @@ public class BoardConfig {
 
     @Bean
     public BoardRepository boardRepository() {
-        return new SpringDataJpaBoardRepository(boardRepository, memberRepository);
+        return new SpringDataJpaBoardRepository(boardRepository);
     }
 
     @Bean
