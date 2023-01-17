@@ -6,30 +6,24 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
  * 글 저장 전송객체
  */
-@Getter
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardDto {
-
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "제목을 입력해주세요")
+    @Size(max = 60, message = "최대 50글자입니다.")
     private String title;
 
-    @NotEmpty
+    @NotEmpty(message = "내용을 입력해주세요")
+    @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
 
-    private LocalDateTime createdDate;
-
-
-    public Board toEntity() {
-        Board board = Board.builder()
-                .title(title)
-                .content(content)
-                .build();
-        return board;
-    }
 }

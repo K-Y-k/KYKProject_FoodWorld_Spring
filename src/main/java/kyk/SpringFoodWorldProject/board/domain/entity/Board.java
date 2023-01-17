@@ -1,19 +1,17 @@
 package kyk.SpringFoodWorldProject.board.domain.entity;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comments;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Getter
+@Getter @Setter
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -62,8 +60,7 @@ public class Board extends BaseTimeEntity{
 //    private List<MultipartFile> imageFiles;
 
 
-    public Board() {
-    }
+
 
     public Board(String title, String content, String writer) {
         this.title = title;
@@ -77,13 +74,6 @@ public class Board extends BaseTimeEntity{
         this.member = member;
     }
 
-    public static Board createBoard(Member member, BoardDto boardDto) {
-        Board board = new Board();
-        board.setMember(member);
-        board.setCreatedDate(LocalDateTime.now());
-        return board;
-    }
-
 
     public void updateBoard(String title, String content){
         this.title = title;
@@ -91,7 +81,7 @@ public class Board extends BaseTimeEntity{
     }
 
     public void updateLikeCount(int likeCount){
-        this.count += likeCount;
+        this.likeCount = likeCount + 1;
     }
 
 }

@@ -35,26 +35,25 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 글 등록
+     */
     @Override
-    public Board upload(Long memberId, BoardDto boardDto) {
+    public Long upload(Long memberId, BoardDto boardDto) {
         Member findMember = memberRepository.findById(memberId).orElseThrow();
 
+        Board board = Board.builder()
+                        .title(boardDto.getTitle())
+                        .content(boardDto.getContent())
+                        .writer(findMember.getName())
+                        .member(findMember)
+                        .build();
 
+        log.info("createBoard={}", board);
+        Board uploadBoard = boardRepository.save(board);
 
-        board = Board.createBoard(findMember, boardDto);
-
-        log.info("board={}", board);
-        return boardRepository.save(board);
+        return uploadBoard.getId();
     }
-
-//    public Board upload(String memberName, BoardDto boardDto) {
-//        Member member = memberRepository.findByName(memberName);
-//        Board board = boardRepository.findById(boardDto.getId()).get();
-//        board.setMember(member);
-//
-//        return boardRepository.save(board);
-//    }
-
 
 //    @Override
 //    public void upload(Board board, MultipartFile file) throws IOException {
@@ -151,6 +150,9 @@ public class BoardServiceImpl implements BoardService{
         return originalFilename.substring(pos + 1);
     }
 
+    /**
+     * 글 수정
+     */
     @Override
     public Long updateBoard(Long boardId, BoardUpdateDto updateParam) {
         Board findBoard = findById(boardId).orElseThrow();
@@ -160,12 +162,6 @@ public class BoardServiceImpl implements BoardService{
         log.info("수정완료");
         return findBoard.getId();
     }
-
-    public void createBoard(Long boardId, BoardDto boardDto) {
-        Board findBoard = findById(boardId).orElseThrow();
-        findBoard.updateBoard(boardDto.getTitle(), boardDto.getContent());
-    }
-
 
     @Override
     public Optional<Board> findById(Long id) {
@@ -223,7 +219,7 @@ public class BoardServiceImpl implements BoardService{
         Board findBoard = findById(boardId).orElseThrow();
         findBoard.updateLikeCount(findBoard.getLikeCount());
 
-        log.info("조회수 증가");
+        log.info("좋아요 증가");
         return findBoard.getLikeCount();
     }
 

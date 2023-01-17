@@ -21,18 +21,20 @@ public class TestDataInit {
     @PostConstruct
     public void init() {
         // 회원 데이터 추가
+        int memberCount = 1;
 
-        int i=0;
-
-        while (i < 2) {
-            memberRepository.save(new Member("테스터" + i, "test" + i, "test!" + i));
-            i++;
+        while (memberCount < 3) {
+            memberRepository.save(new Member("테스터" + memberCount, "test" + memberCount, "test!" + memberCount));
+            memberCount++;
         }
         memberRepository.save(new Member("aaa", "aa", "aa"));
 
-        while (i < 20) {
-            boardRepository.save(new Board("제목" + (i+2), "내용" + i, "작가" + (i+1)));
-            i++;
+
+        // 게시글 데이터 추가
+        int boardCount = 1;
+        while (boardCount < 20) {
+            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1)));
+            boardCount++;
         }
         boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용" , "작가10"));
 

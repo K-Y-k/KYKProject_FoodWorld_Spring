@@ -14,15 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -124,7 +121,7 @@ public class FreeBoardController {
 
         log.info("로그인 성공한 상태 {}", loginMember);
 
-        model.addAttribute("board", new Board());
+        model.addAttribute("board", new BoardDto());
         return "boards/board/freeBoard_upload";
     }
 
@@ -134,7 +131,8 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/upload")
     public String upload(@ModelAttribute("board") BoardDto boardDto,
                          @SessionAttribute("loginMember") Member member) throws Exception {
-
+        log.info("boardDto={}", boardDto);
+        log.info("loginMember={}", member);
         boardService.upload(member.getId(), boardDto);
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
@@ -202,7 +200,7 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/{boardId}/like")
     public String like(@PathVariable Long boardId,
-                       Model model,
+                       @ModelAttribute("board") Board board,
                        RedirectAttributes redirectAttributes) {
         boardService.updateLikeCount(boardId);
         redirectAttributes.addAttribute("boardId", boardId);

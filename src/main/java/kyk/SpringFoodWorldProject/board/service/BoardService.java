@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface BoardService {
 
-    Board upload(Long memberId, BoardDto boardDto);
+    Long upload(Long memberId, BoardDto boardDto);
 
     /**
      * 글 저장
