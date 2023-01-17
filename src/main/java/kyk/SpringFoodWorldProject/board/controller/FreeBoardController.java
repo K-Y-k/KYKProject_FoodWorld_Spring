@@ -110,6 +110,7 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/upload")
     public String uploadForm(@SessionAttribute(name="loginMember", required = false) Member loginMember,
+                             @ModelAttribute("board") BoardDto boardDto,
                              Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
@@ -121,7 +122,6 @@ public class FreeBoardController {
 
         log.info("로그인 성공한 상태 {}", loginMember);
 
-        model.addAttribute("board", new BoardDto());
         return "boards/board/freeBoard_upload";
     }
 

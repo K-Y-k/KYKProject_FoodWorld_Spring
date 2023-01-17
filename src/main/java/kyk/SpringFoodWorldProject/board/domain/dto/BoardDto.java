@@ -10,10 +10,10 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
- * 글 저장 전송객체
+ * 글 저장 전송 객체
  */
 @Getter @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class BoardDto {
     private Long id;
@@ -25,5 +25,16 @@ public class BoardDto {
     @NotEmpty(message = "내용을 입력해주세요")
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
+
+
+    // 엔티티에 @setter를 사용하지 않기 위해 dto에서 엔티티로 변환해주는 메서드 적용
+    public Board toEntity(Member member) {
+        return Board.builder()
+                .title(title)
+                .content(content)
+                .writer(member.getName())
+                .member(member)
+                .build();
+    }
 
 }

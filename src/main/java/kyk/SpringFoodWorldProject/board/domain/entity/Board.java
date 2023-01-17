@@ -8,10 +8,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Builder
-@Getter @Setter
-@Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -58,8 +58,6 @@ public class Board extends BaseTimeEntity{
 
 //    @Column(updatable = false)
 //    private List<MultipartFile> imageFiles;
-
-
 
 
     public Board(String title, String content, String writer) {

@@ -37,7 +37,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        // init() 클래스로 임의로 생성된 회원과 게시글들이 있어서 id가 25번째인 글임
+        // when : TestDataInit() 클래스로 임의로 생성된 회원과 게시글들이 있어서 id가 25번째인 글임
         BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
 
         // when
@@ -45,8 +45,7 @@ class BoardServiceImplTest {
 
         Board findUploadBoard = boardService.findById(uploadBoardId).get();
 
-        // then : 등록한 속성들 비교
-        assertThat(uploadBoardId).isEqualTo(boardDto.getId());
+        // then : 등록한 속성들로 비교
         assertThat(findUploadBoard.getTitle()).isEqualTo(boardDto.getTitle());
         assertThat(findUploadBoard.getContent()).isEqualTo(boardDto.getContent());
     }
@@ -58,20 +57,14 @@ class BoardServiceImplTest {
     @Test
     void updateBoard() {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
-
-        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
-
         BoardUpdateDto updateDto = new BoardUpdateDto("수정한 제목", "수정한 내용");
 
-        // when
-        Long updateBoardId = boardService.updateBoard(25L, updateDto);
+        // when : 기존에 생성된 게시글 중의 id를 하나 넣음
+        Long updateBoardId = boardService.updateBoard(23L, updateDto);
         Board updateBoard = boardService.findById(updateBoardId).get();
 
         // then
-        assertThat(updateBoardId).isEqualTo(boardDto.getId());
+        assertThat(updateBoardId).isEqualTo(23L);
         assertThat(updateBoard.getTitle()).isEqualTo(updateDto.getTitle());
         assertThat(updateBoard.getContent()).isEqualTo(updateDto.getContent());
     }
@@ -82,7 +75,7 @@ class BoardServiceImplTest {
      */
     @Test
     void findAll() {
-        // given : 이미 init() 클래스로 글이 19개 생성되어 있음
+        // given : 이미 TestDataInit() 클래스로 글이 19개 생성되어 있음
         // when
         List<Board> boards = boardService.findAll();
 
@@ -90,8 +83,9 @@ class BoardServiceImplTest {
         assertThat(boards.size()).isEqualTo(20);
     }
 
+
     /**
-     *
+     * 페이지 처리 테스트
      */
     @Test
     void pageList() {
@@ -134,7 +128,7 @@ class BoardServiceImplTest {
     void findByWriterContaining() {
         // given
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        String writerKeyword = "작가10";
+        String writerKeyword = "작";
 
         // when
         Page<Board> result = boardService.findByWriterContaining(writerKeyword, pageable);

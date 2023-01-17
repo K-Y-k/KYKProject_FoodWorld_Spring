@@ -42,12 +42,7 @@ public class BoardServiceImpl implements BoardService{
     public Long upload(Long memberId, BoardDto boardDto) {
         Member findMember = memberRepository.findById(memberId).orElseThrow();
 
-        Board board = Board.builder()
-                        .title(boardDto.getTitle())
-                        .content(boardDto.getContent())
-                        .writer(findMember.getName())
-                        .member(findMember)
-                        .build();
+        Board board = boardDto.toEntity(findMember);
 
         log.info("createBoard={}", board);
         Board uploadBoard = boardRepository.save(board);
