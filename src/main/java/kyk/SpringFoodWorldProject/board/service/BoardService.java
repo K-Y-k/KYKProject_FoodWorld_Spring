@@ -56,10 +56,9 @@ public interface BoardService {
      */
     int updateCount(Long boardId);
 
+
     /**
-     * 좋아요 카운트
+     * 좋아요 개수 최신화
      */
-    int updateLikeCount(Long boardId);
-
-
+    void updateLikeCount(Long boardId, int likeCount);
 }

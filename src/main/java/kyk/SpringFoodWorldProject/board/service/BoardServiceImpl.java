@@ -209,15 +209,12 @@ public class BoardServiceImpl implements BoardService{
     }
 
 
-    @Override
-    public int updateLikeCount(Long boardId) {
+    public void updateLikeCount(Long boardId, int likeCount) {
         Board findBoard = findById(boardId).orElseThrow();
-        findBoard.updateLikeCount(findBoard.getLikeCount());
 
-        log.info("좋아요 증가");
-        return findBoard.getLikeCount();
+        findBoard.updateLikeCount(likeCount);
+
+        log.info("좋아요 최신화 완료");
     }
-
-
 
 }

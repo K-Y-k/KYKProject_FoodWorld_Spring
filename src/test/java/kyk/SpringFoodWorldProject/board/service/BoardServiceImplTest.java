@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.service;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import org.junit.jupiter.api.Assertions;
@@ -26,6 +27,8 @@ class BoardServiceImplTest {
 
     @Autowired SpringDataJpaMemberRepository memberRepository;
     @Autowired BoardServiceImpl boardService;
+
+    @Autowired LikeServiceImpl likeService;
 
     /**
      * 글 등록 테스트
@@ -198,4 +201,36 @@ class BoardServiceImplTest {
         // then
         assertThat(count).isEqualTo(1);
     }
+
+
+    /**
+     * 좋아요 적용 테스트
+     */
+    @Test
+    void like() {
+        // given
+        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member savedMember = memberRepository.save(member1);
+
+        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+
+        Board findUploadBoard = boardService.findById(uploadBoardId).get();
+
+        // when : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
+        likeService.saveLike(savedMember.getId(), uploadBoardId);
+        int likeCount = likeService.countByBoard_Id(uploadBoardId);
+
+        // then : 적용됨
+        assertThat(likeCount).isEqualTo(1);
+
+
+        // when : 전에 해당 게시글을 좋아요 누른적이 있었던 회원일 때
+        likeService.saveLike(savedMember.getId(), uploadBoardId);
+        int likeCount2 = likeService.countByBoard_Id(uploadBoardId);
+
+        // then : 취소됨
+        assertThat(likeCount2).isEqualTo(0);
+    }
+
 }

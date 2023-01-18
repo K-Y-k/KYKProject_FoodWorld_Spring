@@ -30,7 +30,7 @@ public class Board extends BaseTimeEntity{
     @Column(insertable = false, updatable = false, columnDefinition = "integer default 0", nullable = false)
     private int count;
 
-    @Column(insertable = false, updatable = false, columnDefinition = "integer default 0", nullable = false)
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private int likeCount;
 
     // Fetch 전략의 기본값은 EAGER(즉시 로딩)이지만 필요하지 않은 쿼리도 JPA에서 함께 조회하기 때문에 N+1 문제를 야기할 수 있어,
@@ -73,13 +73,14 @@ public class Board extends BaseTimeEntity{
     }
 
 
+    // 변경 감지 메서드
     public void updateBoard(String title, String content){
         this.title = title;
         this.content = content;
     }
 
     public void updateLikeCount(int likeCount){
-        this.likeCount = likeCount + 1;
+        this.likeCount = likeCount;
     }
 
 }

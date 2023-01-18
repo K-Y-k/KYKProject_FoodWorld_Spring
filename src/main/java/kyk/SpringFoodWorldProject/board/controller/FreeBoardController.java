@@ -1,13 +1,11 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentResponseDto;
+import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
-import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,7 +27,7 @@ import java.time.LocalDateTime;
 public class FreeBoardController {
 
     private final BoardServiceImpl boardService;
-    private final MemberServiceImpl memberService;
+    private final LikeServiceImpl likeService;
 
 
     /**
@@ -43,11 +41,11 @@ public class FreeBoardController {
         Page<Board> boards = null;
 
         // 키워드의 컬럼에 따른 페이징된 게시글 출력
-        if (writerSearchKeyword == null && titleSearchKeyword == null) {
+        if (writerSearchKeyword == null && titleSearchKeyword == null) {           // 검색 자체를 하지 않았을 때
             boards = boardService.pageList(pageable);
-        } else if (writerSearchKeyword.equals("") && titleSearchKeyword != null) {
+        } else if (writerSearchKeyword.equals("") && titleSearchKeyword != null) { // 제목만 검색했을 때
             boards = boardService.findByTitleContaining(titleSearchKeyword, pageable);
-        } else if (writerSearchKeyword != null && titleSearchKeyword.equals("")) {
+        } else if (writerSearchKeyword != null && titleSearchKeyword.equals("")) { // 글쓴이만 검색했을 때
             boards = boardService.findByWriterContaining(writerSearchKeyword, pageable);
         } else {
             boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
@@ -82,12 +80,19 @@ public class FreeBoardController {
      * 글 상세 조회 폼
      */
     @GetMapping("/freeBoard/{boardId}")
-    public String board(@PathVariable long boardId,
+    public String board(@PathVariable Long boardId,
                         @SessionAttribute(name="loginMember", required = false) Member loginMember,
                         Model model) {
         boardService.updateCount(boardId); // 조회수 상승
 
         Board board = boardService.findById(boardId).get();
+
+        // 게시글의 번호를 가진 좋아요 row의 개수 가져와서 보냄
+        int likeCount = likeService.countByBoard_Id(boardId);
+        model.addAttribute("likeCount", likeCount);
+
+        // 좋아요 개수 업데이트
+        boardService.updateLikeCount(boardId, likeCount);
 
 //        List<CommentResponseDto> comments = boardDto.getComments();
 //
@@ -100,6 +105,8 @@ public class FreeBoardController {
 
 
         model.addAttribute("board", board);
+
+        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "boards/board/freeBoard_detail";
     }
@@ -115,13 +122,13 @@ public class FreeBoardController {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
+
             model.addAttribute("message", "회원만 글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
         }
 
-        log.info("로그인 성공한 상태 {}", loginMember);
-
+        log.info("로그인 상태 {}", loginMember);
         return "boards/board/freeBoard_upload";
     }
 
@@ -178,31 +185,58 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/{boardId}/delete")
     public String delete(@PathVariable Long boardId,
-                         @SessionAttribute("loginMember") Member member,
+                         @SessionAttribute("loginMember") Member loginMember,
                          Model model) {
+        Board findBoard = boardService.findById(boardId).orElseThrow();
 
-        boardService.delete(boardId);
-
-//        if (board.getMember().getId().equals(member.getId())) {
-//            boardService.delete(boardId);
-//        } else {
-//            model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
-//            model.addAttribute("redirectUrl", "/members/freeBoard");
-//            return "messages";
-//        }
+        if (findBoard.getMember().getId().equals(loginMember.getId())) {
+            boardService.delete(boardId);
+        } else {
+            model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
+            model.addAttribute("redirectUrl", "/boards/freeBoard");
+            return "messages";
+        }
 
         return "redirect:/boards/freeBoard";
     }
 
 
+//    /**
+//     * 글 좋아요 체크 기능
+//     */
+//    @GetMapping("/freeBoard/{boardId}/like")
+//    public String like(@PathVariable Long boardId,
+//                       @SessionAttribute("loginMember") Member loginMember,
+//                       RedirectAttributes redirectAttributes,
+//                       Model model) {
+//        Board findBoard = boardService.findById(boardId).orElseThrow();
+//
+//        likeService.findLike(loginMember.getId(), boardId);
+//        redirectAttributes.addAttribute("boardId", boardId);
+//
+//        return "redirect:/boards/freeBoard/{boardId}";
+//    }
+
+
     /**
-     * 글 좋아요 기능
+     * 글 좋아요 업데이트
      */
-    @GetMapping("/freeBoard/{boardId}/like")
-    public String like(@PathVariable Long boardId,
-                       @ModelAttribute("board") Board board,
-                       RedirectAttributes redirectAttributes) {
-        boardService.updateLikeCount(boardId);
+    @GetMapping ("/freeBoard/{boardId}/like")
+    public String likeUpdate(@PathVariable Long boardId,
+                             @SessionAttribute(value = "loginMember", required = false) Member loginMember,
+                             RedirectAttributes redirectAttributes,
+                             Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "회원만 글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+
+        likeService.saveLike(loginMember.getId(), boardId);
         redirectAttributes.addAttribute("boardId", boardId);
 
         return "redirect:/boards/freeBoard/{boardId}";

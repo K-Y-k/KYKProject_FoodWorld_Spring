@@ -49,4 +49,5 @@ public interface BoardRepository {
      */
     int updateCount(Long boardId);
 
+
 }
