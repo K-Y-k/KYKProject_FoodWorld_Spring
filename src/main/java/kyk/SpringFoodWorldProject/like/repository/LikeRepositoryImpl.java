@@ -38,4 +38,5 @@ public class LikeRepositoryImpl implements LikeRepository{
         return likeRepository.countByBoard_Id(boardId);
     }
 
+
 }

@@ -4,6 +4,10 @@ import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentResponseDto;
+import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Slf4j
@@ -28,6 +33,8 @@ public class FreeBoardController {
 
     private final BoardServiceImpl boardService;
     private final LikeServiceImpl likeService;
+
+    private final CommentServiceImpl commentService;
 
 
     /**
@@ -82,10 +89,11 @@ public class FreeBoardController {
     @GetMapping("/freeBoard/{boardId}")
     public String board(@PathVariable Long boardId,
                         @SessionAttribute(name="loginMember", required = false) Member loginMember,
+                        @ModelAttribute("comment") CommentDto commentDto,
                         Model model) {
         boardService.updateCount(boardId); // 조회수 상승
 
-        Board board = boardService.findById(boardId).get();
+        Board board = boardService.findById(boardId).orElseThrow();
 
         // 게시글의 번호를 가진 좋아요 row의 개수 가져와서 보냄
         int likeCount = likeService.countByBoard_Id(boardId);
@@ -94,21 +102,47 @@ public class FreeBoardController {
         // 좋아요 개수 업데이트
         boardService.updateLikeCount(boardId, likeCount);
 
-//        List<CommentResponseDto> comments = boardDto.getComments();
-//
-//
-//        if (comments != null && !comments.isEmpty()) {
-//            model.addAttribute("comments", comments);
-//        }
-//
-//        model.addAttribute("writer", loginMember.getName());
 
+        // 댓글 가져오기
+        List<Comment> comments = board.getComment();
+
+        if (comments != null && !comments.isEmpty()) {
+            model.addAttribute("comments", comments);
+        }
 
         model.addAttribute("board", board);
+
+        String nlString = System.getProperty("line.separator").toString();
+        model.addAttribute("nlString", nlString);
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "boards/board/freeBoard_detail";
+    }
+
+    /**
+     * 댓글 등록
+     */
+    @PostMapping("/freeBoard/{boardId}/comment")
+    public String commentUpload(@PathVariable Long boardId,
+                                @SessionAttribute(name="loginMember", required = false) Member loginMember,
+                                @ModelAttribute("comment") CommentDto commentDto,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+        
+        commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        log.info("댓글 저장 성공");
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        return "redirect:/boards/freeBoard/{boardId}";
     }
 
 
@@ -132,12 +166,13 @@ public class FreeBoardController {
         return "boards/board/freeBoard_upload";
     }
 
+
     /**
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String upload(@ModelAttribute("board") BoardDto boardDto,
-                         @SessionAttribute("loginMember") Member member) throws Exception {
+    public String boardUpload(@ModelAttribute("board") BoardDto boardDto,
+                              @SessionAttribute("loginMember") Member member) throws Exception {
         log.info("boardDto={}", boardDto);
         log.info("loginMember={}", member);
         boardService.upload(member.getId(), boardDto);

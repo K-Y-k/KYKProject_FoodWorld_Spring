@@ -3,6 +3,8 @@ package kyk.SpringFoodWorldProject.board.service;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
@@ -30,6 +32,8 @@ class BoardServiceImplTest {
 
     @Autowired LikeServiceImpl likeService;
 
+    @Autowired CommentServiceImpl commentService;
+
     /**
      * 글 등록 테스트
      */
@@ -40,8 +44,8 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        // when : TestDataInit() 클래스로 임의로 생성된 회원과 게시글들이 있어서 id가 25번째인 글임
-        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
+        // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
+        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
 
         // when
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
@@ -103,7 +107,6 @@ class BoardServiceImplTest {
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
         Assertions.assertEquals(result.getTotalElements(), 20, "페이지 객체에 담긴 모든 게시글 개수");
         System.out.println("NEXT: " + result.nextPageable());
-
     }
 
 
@@ -168,7 +171,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
+        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -192,7 +195,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
+        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -212,25 +215,47 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(25L, "등록한 제목", "등록한 내용");
+        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
-        Board findUploadBoard = boardService.findById(uploadBoardId).get();
-
-        // when : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
+        // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
         likeService.saveLike(savedMember.getId(), uploadBoardId);
         int likeCount = likeService.countByBoard_Id(uploadBoardId);
 
-        // then : 적용됨
+        // then1 : +1이 적용됨
         assertThat(likeCount).isEqualTo(1);
 
 
-        // when : 전에 해당 게시글을 좋아요 누른적이 있었던 회원일 때
+        // when2 : 전에 해당 게시글을 좋아요 누른적이 있었던 회원일 때
         likeService.saveLike(savedMember.getId(), uploadBoardId);
         int likeCount2 = likeService.countByBoard_Id(uploadBoardId);
 
-        // then : 취소됨
+        // then2 : -1로 취소됨
         assertThat(likeCount2).isEqualTo(0);
     }
+
+
+    /**
+     * 댓글 작성 기능
+     */
+    @Test
+    void comment () {
+        // given
+        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member savedMember = memberRepository.save(member1);
+
+        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+
+        CommentDto commentDto = new CommentDto(28L, "안녕하세요 댓글");
+
+        // when
+        Long savedComment = commentService.saveComment(savedMember.getId(), uploadBoardId, commentDto);
+
+        // then
+        assertThat(savedComment).isEqualTo(commentDto.getId());
+    }
+
+
 
 }

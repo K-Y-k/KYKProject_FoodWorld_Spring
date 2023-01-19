@@ -1,20 +1,24 @@
 package kyk.SpringFoodWorldProject.comment.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
-import kyk.SpringFoodWorldProject.comment.domain.entity.Comments;
+import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,32 +29,33 @@ public class CommentServiceImpl implements CommentService{
     private final BoardRepository boardRepository;
 
     @Override
-    public Comments save(Comments comment) {
+    public Comment save(Comment comment) {
        return commentRepository.save(comment);
     }
 
-    public Long commentSave(String name, Long id, CommentDto dto) {
-        Member member = memberRepository.findByName(name);
-        Board board = boardRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + id));
+    public Long saveComment(Long memberId, Long boardId, CommentDto dto) {
+        Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + boardId));
+        Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + boardId));
 
-        dto.setMember(member);
-        dto.setBoard(board);
-
-        Comments comment = dto.toEntity();
+        Comment comment = dto.toEntity(memberEntity, boardEntity);
         commentRepository.save(comment);
 
-        return dto.getId();
+        return comment.getId();
     }
 
     @Override
-    public List<Comments> pageList(Pageable pageable) {
+    public List<Comment> pageList(Pageable pageable) {
         return commentRepository.pageList(pageable);
     }
 
     @Override
-    public void update(Long commentId, CommentUpdateDto updateParam) {
-        commentRepository.update(commentId, updateParam);
+    public void updateComment(Long commentId, CommentUpdateDto updateParam) {
+        Comment findComment = commentRepository.findById(commentId).orElseThrow();
+        findComment.updateComment(updateParam.getContent());
+
+        log.info("댓글 수정완료");
     }
 
     @Override

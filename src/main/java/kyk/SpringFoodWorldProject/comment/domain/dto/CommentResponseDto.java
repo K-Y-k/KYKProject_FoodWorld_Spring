@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.comment.domain.dto;
 
-import kyk.SpringFoodWorldProject.comment.domain.entity.Comments;
+import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -15,10 +15,9 @@ public class CommentResponseDto {
     private Long boardId;
 
     // Entity -> Dto
-    public CommentResponseDto(Comments comment) {
+    public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
-        this.createdDate = comment.getCreatedDate();
         this.writer = comment.getWriter();
         this.boardId = comment.getBoard().getId();
     }

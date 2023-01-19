@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.domain.entity;
 
-import kyk.SpringFoodWorldProject.comment.domain.entity.Comments;
+import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
@@ -8,9 +8,9 @@ import javax.persistence.*;
 import java.util.List;
 
 @Builder
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Board extends BaseTimeEntity{
 
@@ -43,7 +43,7 @@ public class Board extends BaseTimeEntity{
     // 게시글이 삭제되면 댓글 또한 삭제되어야 하기 때문에 CascadeType.REMOVE 속성을 사용
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
-    private List<Comments> comment;
+    private List<Comment> comment;
 
 
 
@@ -60,10 +60,11 @@ public class Board extends BaseTimeEntity{
 //    private List<MultipartFile> imageFiles;
 
 
-    public Board(String title, String content, String writer) {
+    public Board(String title, String content, String writer, Member member) {
         this.title = title;
         this.content = content;
         this.writer = writer;
+        this.member = member;
     }
 
 
