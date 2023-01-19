@@ -112,9 +112,6 @@ public class FreeBoardController {
 
         model.addAttribute("board", board);
 
-        String nlString = System.getProperty("line.separator").toString();
-        model.addAttribute("nlString", nlString);
-
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "boards/board/freeBoard_detail";
