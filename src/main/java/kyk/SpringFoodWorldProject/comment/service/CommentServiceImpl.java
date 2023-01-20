@@ -2,7 +2,7 @@ package kyk.SpringFoodWorldProject.comment.service;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService{
        return commentRepository.save(comment);
     }
 
-    public Long saveComment(Long memberId, Long boardId, CommentDto dto) {
+    public Long saveComment(Long memberId, Long boardId, CommentUploadDto dto) {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 로그인 상태가 아닙니다." + memberId));
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->

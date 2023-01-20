@@ -39,13 +39,32 @@ public class BoardServiceImpl implements BoardService{
      * 글 등록
      */
     @Override
-    public Long upload(Long memberId, BoardUploadDto boardDto) {
+    public Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
-        Board board = boardDto.toEntity(findMember);
+        String fileName = null;
+        String filePath = "/files/";
 
-        log.info("createBoard={}", board);
+        if (file != null && !file.isEmpty()) {
+            log.info("파일 가져와짐");
+            
+            // 파일경로 지정
+            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
+//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+
+            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+            UUID uuid = UUID.randomUUID();
+            fileName = uuid + "_" + file.getOriginalFilename();
+
+            // 파일경로와 파일이름 지정한 객체 생성 및 저장
+            File saveFile = new File(fullPath, fileName);
+            file.transferTo(saveFile);
+        }
+
+        Board board = boardDto.toEntity(findMember, fileName, filePath + fileName);
+
+        log.info("uploadBoard={}", board);
         Board uploadBoard = boardRepository.save(board);
 
         return uploadBoard.getId();
@@ -86,9 +105,7 @@ public class BoardServiceImpl implements BoardService{
         for (MultipartFile multipartFile : multipartFiles) {
             // 파일이 비어있지 않으면
             if (!multipartFile.isEmpty()) {
-//                // storeFile호출해서 multipartFile를 넣어준 uploadFile을 리스트에 담아줘야한다.
-//                UploadFile uploadFile = storeFile(multipartFile);
-//                storeFileResult.add(uploadFile));
+                // storeFile호출해서 multipartFile를 넣어준 uploadFile을 리스트에 담아줘야한다.
                 storeFileResult.add(storeFile(multipartFile));
             }
         }
@@ -122,7 +139,7 @@ public class BoardServiceImpl implements BoardService{
 //        // 최종적으로 저장할 파일명
 //        String storeFileName = uuid + "." + ext;
 
-        // 위 작업을 한 메서드를 적용한 storeFileName
+        // 위 작업을 한 메서드를 적용한 것
         String storeFileName = createStoreFileName(originalFilename);
 
         // 파일 경로명으로 변환 및 UploadFile 객체로 반환

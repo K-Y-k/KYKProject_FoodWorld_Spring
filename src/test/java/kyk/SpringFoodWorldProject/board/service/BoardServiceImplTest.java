@@ -3,7 +3,7 @@ package kyk.SpringFoodWorldProject.board.service;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,9 +30,7 @@ class BoardServiceImplTest {
 
     @Autowired SpringDataJpaMemberRepository memberRepository;
     @Autowired BoardServiceImpl boardService;
-
     @Autowired LikeServiceImpl likeService;
-
     @Autowired CommentServiceImpl commentService;
 
     /**
@@ -39,16 +38,17 @@ class BoardServiceImplTest {
      */
     @Test
 //    @Rollback(value = false)
-    void upload() {
+    void upload() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+
 
         // when
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         Board findUploadBoard = boardService.findById(uploadBoardId).get();
 
@@ -166,13 +166,13 @@ class BoardServiceImplTest {
      * 글 삭제 테스트
      */
     @Test
-    void delete() {
+    void delete() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when
         boardService.delete(uploadBoardId);
@@ -190,13 +190,13 @@ class BoardServiceImplTest {
      * 조회수 증가 테스트
      */
     @Test
-    void updateCount() {
+    void updateCount() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when
         int count = boardService.updateCount(uploadBoardId);
@@ -210,13 +210,13 @@ class BoardServiceImplTest {
      * 좋아요 적용 테스트
      */
     @Test
-    void like() {
+    void like() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
         likeService.saveLike(savedMember.getId(), uploadBoardId);
@@ -239,15 +239,15 @@ class BoardServiceImplTest {
      * 댓글 작성 기능
      */
     @Test
-    void comment () {
+    void comment() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
-        CommentDto commentDto = new CommentDto(28L, "안녕하세요 댓글");
+        CommentUploadDto commentDto = new CommentUploadDto(37L, "안녕하세요 댓글");
 
         // when
         Long savedComment = commentService.saveComment(savedMember.getId(), uploadBoardId, commentDto);

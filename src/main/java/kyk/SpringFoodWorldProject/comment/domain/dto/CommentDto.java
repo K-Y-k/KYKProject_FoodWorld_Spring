@@ -1,32 +1,31 @@
 package kyk.SpringFoodWorldProject.comment.domain.dto;
 
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
-import kyk.SpringFoodWorldProject.member.domain.entity.Member;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
-@Getter
+import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Getter
 public class CommentDto {
     private Long id;
-    @NotEmpty(message = "내용을 입력해주세요")
-    @Size(max = 250, message = "최대 250글자입니다.")
     private String content;
+    private LocalDateTime createdDate;
+    private String writer;
+    private Long boardId;
 
 
-    // Dto -> Entity
-    public Comment toEntity(Member member, Board board) {
-        return Comment.builder()
-                .content(content)
-                .writer(member.getName())
-                .member(member)
-                .board(board)
-                .build();
-    }
+//    public CommentDto(Comment comment) {
+//        this.id = comment.getId();
+//        this.content = comment.getContent();
+//        this.writer = comment.getWriter();
+//        this.createdDate = comment.getCreatedDate();
+//        this.boardId = comment.getBoard().getId();
+//    }
+
+
 
 }

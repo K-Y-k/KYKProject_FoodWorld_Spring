@@ -1,11 +1,14 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * 글 저장 전송 객체
@@ -24,14 +27,20 @@ public class BoardUploadDto {
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
 
+    private String fileName;
+
+    private String filePath;
+
 
     // 엔티티에 @setter를 사용하지 않기 위해 dto에서 엔티티로 변환해주는 메서드 적용
-    public Board toEntity(Member member) {
+    public Board toEntity(Member member, String fileName, String filePath) {
         return Board.builder()
                 .title(title)
                 .content(content)
                 .writer(member.getName())
                 .member(member)
+                .fileName(fileName)
+                .filePath(filePath)
                 .build();
     }
 

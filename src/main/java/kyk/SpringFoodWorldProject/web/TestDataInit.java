@@ -2,7 +2,7 @@ package kyk.SpringFoodWorldProject.web;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
@@ -40,8 +40,8 @@ public class TestDataInit {
 
 
         // 댓글 데이터 추가
-        commentService.saveComment(savedMember1.getId(), savedBoard.getId(), new CommentDto(1L,"안녕하세요"));
-        commentService.saveComment(savedMember2.getId(), savedBoard.getId(), new CommentDto(2L,"안녕하세요2"));
+        commentService.saveComment(savedMember1.getId(), savedBoard.getId(), new CommentUploadDto(1L,"안녕하세요"));
+        commentService.saveComment(savedMember2.getId(), savedBoard.getId(), new CommentUploadDto(2L,"안녕하세요2"));
 
 
     }

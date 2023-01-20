@@ -5,13 +5,15 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface BoardService {
 
-    Long upload(Long memberId, BoardUploadDto boardDto);
+    Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException;
 
     /**
      * 글 저장

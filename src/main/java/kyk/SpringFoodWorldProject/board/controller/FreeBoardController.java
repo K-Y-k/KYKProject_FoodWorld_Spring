@@ -3,8 +3,10 @@ package kyk.SpringFoodWorldProject.board.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
@@ -18,8 +20,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,17 +60,17 @@ public class FreeBoardController {
             boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
         }
 
-        int nowPage = pageable.getPageNumber() + 1; // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
-                                                    // pageable의 index는 0부터 시작이기에 1을 더해준 것
-        int startPage = Math.max(1, nowPage - 2);   // 마이너스가 나오지 않게 max로 최대 1로 조정
-        int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 토탈 페이지보다 넘지 않게 min으로 조정
+        int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
+                                                                     // pageable의 index는 0부터 시작이기에 1을 더해준 것
+        int startPage = Math.max(1, nowPage - 2);                    // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
+        int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
 
         model.addAttribute("boards", boards);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        // 현재 시간 비교를 위해
+        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
 
         // 이전, 다음으로 적용
@@ -110,7 +114,7 @@ public class FreeBoardController {
 
         model.addAttribute("board", board);
 
-        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기위해서 현재 시간을 객체로 담아 보낸 것
+        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
 
         return "boards/board/freeBoard_detail";
@@ -122,7 +126,7 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name="loginMember", required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentDto commentDto,
+                                @ModelAttribute("comment") CommentUploadDto commentDto,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
@@ -167,10 +171,12 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/upload")
     public String boardUpload(@ModelAttribute("board") BoardUploadDto boardDto,
-                              @SessionAttribute("loginMember") Member member) throws Exception {
-        log.info("boardDto={}", boardDto);
-        log.info("loginMember={}", member);
-        boardService.upload(member.getId(), boardDto);
+                              @SessionAttribute("loginMember") Member member,
+                              MultipartFile file) throws IOException {
+
+        boardService.upload(member.getId(), boardDto, file);
+
+
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
 //
@@ -194,7 +200,8 @@ public class FreeBoardController {
     @GetMapping("/freeBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
                            Model model) {
-        Board board = boardService.findById(boardId).get();
+        Board board = boardService.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
         model.addAttribute("board", board);
         return "boards/board/freeBoard_edit";
     }
