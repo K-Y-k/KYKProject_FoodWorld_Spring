@@ -50,8 +50,8 @@ public class BoardServiceImpl implements BoardService{
             log.info("파일 가져와짐");
             
             // 파일경로 지정
-            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
-//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+//            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
+            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
 
             // 파일에 이름을 붙일 랜덤으로 식별자 지정
             UUID uuid = UUID.randomUUID();
