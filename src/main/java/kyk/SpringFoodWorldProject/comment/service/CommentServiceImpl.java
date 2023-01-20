@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.comment.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,12 +33,13 @@ public class CommentServiceImpl implements CommentService{
 
     public Long saveComment(Long memberId, Long boardId, CommentDto dto) {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + boardId));
+                new IllegalArgumentException("댓글 쓰기 실패: 로그인 상태가 아닙니다." + memberId));
         Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + boardId));
 
         Comment comment = dto.toEntity(memberEntity, boardEntity);
         commentRepository.save(comment);
+        log.info("댓글 저장 성공");
 
         return comment.getId();
     }
@@ -52,7 +51,9 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void updateComment(Long commentId, CommentUpdateDto updateParam) {
-        Comment findComment = commentRepository.findById(commentId).orElseThrow();
+        Comment findComment = commentRepository.findById(commentId).orElseThrow(() ->
+                new IllegalArgumentException("댓글 수정 실패: 헤딩 댓글이 존재하지 않습니다." + commentId));
+
         findComment.updateComment(updateParam.getContent());
 
         log.info("댓글 수정완료");

@@ -1,17 +1,11 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardResponseDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 public interface JPABoardRepository extends JpaRepository<Board, Long> {
     /**

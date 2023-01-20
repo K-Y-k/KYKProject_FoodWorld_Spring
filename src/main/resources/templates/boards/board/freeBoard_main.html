@@ -58,22 +58,27 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </a>
                     </li>
+
                     <li>
-                        <h5 id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+                        <h5 th:if="${session.loginMember != null}"
+                            th:text="${session.loginMember.name}+ '님 접속중'"
+                            id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+
                         <br/>
+
                         <form th:action="@{/members/logout}" method="post">
-                            <button type="submit" class="btn btn-primary" id="logout"
+                            <button th:if="${session.loginMember != null}"
+                                    type="submit" class="btn btn-primary" id="logout"
                                     style="width: 90px; height: 35px; position :absolute; top: 56%;"
                                     th:onclick="@{/members/logout}">로그아웃
                             </button>
                         </form>
 
-                        <form th:action="@{/members/login}" method="get">
-                            <button type="submit" class="btn btn-primary"
-                                    style="width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id="login"
-                                    th:onclick="@{/members/login}">로그인
-                            </button>
-                        </form>
+                        <button th:if="${session.loginMember == null}"
+                                type="submit" class="btn btn-primary"
+                                style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                                th:onclick="|location.href='@{/members/login}'|">로그인
+                        </button>
                     </li>
                 </ul>
             </div>

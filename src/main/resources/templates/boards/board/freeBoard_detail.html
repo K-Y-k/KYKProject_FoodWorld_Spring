@@ -49,22 +49,27 @@
             </a>
           </li>
 
-          <h5 id="userName" style="font-size : 13px; margin-top: 20px; color: white;"></h5>
-          <br/>
-          <form th:action="@{/members/logout}" method="post">
-            <button type="submit" class="btn btn-primary" id="logout"
-                    style="width: 90px; height: 35px; position :absolute; top: 56%;"
-                    th:onclick="@{/members/logout}">로그아웃
-            </button>
-          </form>
+            <li>
+                <h5 th:if="${session.loginMember != null}"
+                    th:text="${session.loginMember.name}+ '님 접속중'"
+                    id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
 
-          <form th:action="@{/members/login}" method="get">
-            <button type="submit" class="btn btn-primary"
-                    style="width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id="login"
-                    th:onclick="@{/members/login}">로그인
-            </button>
-          </form>
-          </li>
+                <br/>
+
+                <form th:action="@{/members/logout}" method="post">
+                    <button th:if="${session.loginMember != null}"
+                            type="submit" class="btn btn-primary" id="logout"
+                            style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                            th:onclick="@{/members/logout}">로그아웃
+                    </button>
+                </form>
+
+                <button th:if="${session.loginMember == null}"
+                        type="submit" class="btn btn-primary"
+                        style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                        th:onclick="|location.href='@{/members/login}'|">로그인
+                </button>
+            </li>
         </ul>
       </div>
     </div>
@@ -77,14 +82,16 @@
       <div class="card" style="position: relative; width: 50vw; left: 35%;">
           <div class="row">
             <div class="col" style="position: absolute; left: 82%;">
-              <button class="btn btn-danger" id="edit"
+              <button th:if="${session.loginMember != null && session.loginMember.id == board.member.id}"
+                      class="btn btn-danger" id="edit"
                       th:onclick="|location.href='@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}'|"
                       type="button">수정
               </button>
             </div>
 
             <div class="col" style="position: absolute; left: 90%;">
-              <button class="btn btn-danger" id="delete"
+              <button th:if="${session.loginMember != null && session.loginMember.id == board.member.id}"
+                      class="btn btn-danger" id="delete"
                       th:onclick="|location.href='@{/boards/freeBoard/{boardId}/delete(boardId=${board.id})}'|"
                       type="button">삭제
               </button>
@@ -92,11 +99,11 @@
           </div>
 
 
-          <h3 class="title" th:text="${board.title}" style="margin-left: 5%; margin-top: 5%;"></h3>
+          <h3 class="title" th:text="${board.title}" style="margin-left: 2%; margin-top: 5%;"></h3>
 
 
           <div class="row">
-              <div class="col" style="margin-left: 5%">
+              <div class="col" style="margin-left: 2%">
                   <th:block th:text="${board.writer}" style="float: left"/>
               </div>
 
@@ -117,7 +124,7 @@
           <br>
           <br>
 
-          <h4 class="content" th:text="${board.content}" style="margin-left: 5%;"></h4>
+          <h4 class="content" th:text="${board.content}" style="margin-left: 2%;"></h4>
 
           <br>
           <br>
@@ -141,7 +148,8 @@
 
           <span class="input-group">
               <div style="font-weight: 400; font-size: 20px; margin-left: 2%;">댓글</div>
-              <div class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${#lists.size(comments)} + ')'"></div>
+              <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${#lists.size(comments)} + ')'"></div>
+              <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + 0 + ')'"></div>
           </span>
 
           <hr>

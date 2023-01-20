@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.member.service;
 
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
@@ -10,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+
 
 @Slf4j
 @Service
@@ -43,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
     private void validateDuplicateMember(Member memberEntity) {
         // 문제가 있으면 EXCEPTION
         // 같은 로그인 아이디가 있는지 찾음
-        // 반환형태가 Optional<Member>이므로 이렇게 바로 작성가능
+        // 반환형태가 Optional<Member>이므로 이렇게 예와처리 가능
         memberRepository.findByLoginId(memberEntity.getLoginId())
                 .ifPresent(m-> {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");

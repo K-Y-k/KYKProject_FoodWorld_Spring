@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
@@ -39,8 +39,9 @@ public class BoardServiceImpl implements BoardService{
      * 글 등록
      */
     @Override
-    public Long upload(Long memberId, BoardDto boardDto) {
-        Member findMember = memberRepository.findById(memberId).orElseThrow();
+    public Long upload(Long memberId, BoardUploadDto boardDto) {
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
         Board board = boardDto.toEntity(findMember);
 
@@ -210,7 +211,8 @@ public class BoardServiceImpl implements BoardService{
 
 
     public void updateLikeCount(Long boardId, int likeCount) {
-        Board findBoard = findById(boardId).orElseThrow();
+        Board findBoard = findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("좋아요 업데이트 실패: 게시글을 찾지 못했습니다." + boardId));
 
         findBoard.updateLikeCount(likeCount);
 

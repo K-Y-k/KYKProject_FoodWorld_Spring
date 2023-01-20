@@ -3,7 +3,6 @@ package kyk.SpringFoodWorldProject.member.repository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

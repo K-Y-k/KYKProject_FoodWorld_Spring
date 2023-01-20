@@ -5,9 +5,7 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 /**
  * 글 저장 전송 객체
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class BoardDto {
+public class BoardUploadDto {
     private Long id;
 
     @NotEmpty(message = "제목을 입력해주세요")

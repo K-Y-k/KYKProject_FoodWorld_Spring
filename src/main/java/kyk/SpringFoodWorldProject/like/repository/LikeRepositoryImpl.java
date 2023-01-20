@@ -1,14 +1,8 @@
 package kyk.SpringFoodWorldProject.like.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
-import kyk.SpringFoodWorldProject.like.domain.dto.LikeDto;
 import kyk.SpringFoodWorldProject.like.domain.entity.Like;
-import kyk.SpringFoodWorldProject.member.domain.entity.Member;
-import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

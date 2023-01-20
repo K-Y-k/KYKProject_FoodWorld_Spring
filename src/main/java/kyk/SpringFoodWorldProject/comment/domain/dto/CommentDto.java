@@ -18,8 +18,6 @@ public class CommentDto {
     @Size(max = 250, message = "최대 250글자입니다.")
     private String content;
 
-//    private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
-
 
     // Dto -> Entity
     public Comment toEntity(Member member, Board board) {

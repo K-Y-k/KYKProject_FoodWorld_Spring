@@ -1,11 +1,8 @@
 package kyk.SpringFoodWorldProject.member.domain.entity;
 
-import antlr.build.ANTLR;
-import com.fasterxml.classmate.AnnotationOverrides;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
 /**
  * 회원 엔티티

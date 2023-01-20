@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
@@ -45,7 +45,7 @@ class BoardServiceImplTest {
         Member savedMember = memberRepository.save(member1);
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
-        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
 
         // when
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
@@ -171,7 +171,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -195,7 +195,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -215,7 +215,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
@@ -244,7 +244,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardDto boardDto = new BoardDto(27L, "등록한 제목", "등록한 내용");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         CommentDto commentDto = new CommentDto(28L, "안녕하세요 댓글");

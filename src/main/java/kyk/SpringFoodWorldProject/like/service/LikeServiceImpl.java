@@ -2,15 +2,11 @@ package kyk.SpringFoodWorldProject.like.service;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
-import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
-import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.like.domain.dto.LikeDto;
 import kyk.SpringFoodWorldProject.like.domain.entity.Like;
 import kyk.SpringFoodWorldProject.like.repository.LikeRepository;
-import kyk.SpringFoodWorldProject.like.repository.LikeRepositoryImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
-import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -4,10 +4,8 @@ import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor

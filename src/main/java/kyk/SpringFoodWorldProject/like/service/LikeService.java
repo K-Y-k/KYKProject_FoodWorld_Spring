@@ -1,9 +1,5 @@
 package kyk.SpringFoodWorldProject.like.service;
 
-import kyk.SpringFoodWorldProject.like.domain.entity.Like;
-
-import java.util.Optional;
-
 public interface LikeService {
 
     /**
