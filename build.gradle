@@ -28,6 +28,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// 서버 재시작 없이 바로 정적 리소스를 적용하기위해
+	compileOnly("org.springframework.boot:spring-boot-devtools")
+
 
 	// 롬복
 	compileOnly 'org.projectlombok:lombok'

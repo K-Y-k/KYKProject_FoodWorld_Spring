@@ -13,12 +13,10 @@ import java.util.Optional;
 
 public interface BoardService {
 
-    Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException;
-
     /**
      * 글 저장
      */
-//    void upload(Board board, MultipartFile file) throws IOException;
+    Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException;
 
     /**
      * 글 수정

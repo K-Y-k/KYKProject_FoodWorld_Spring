@@ -19,10 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -150,7 +152,7 @@ public class FreeBoardController {
      */
     @GetMapping("/freeBoard/upload")
     public String uploadForm(@SessionAttribute(name="loginMember", required = false) Member loginMember,
-                             @ModelAttribute("board") BoardUploadDto boardDto,
+                             @ModelAttribute("uploadForm") BoardUploadDto boardDto,
                              Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
@@ -170,9 +172,12 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String boardUpload(@ModelAttribute("board") BoardUploadDto boardDto,
+    public String boardUpload(@Valid @ModelAttribute("uploadForm") BoardUploadDto boardDto, BindingResult bindingResult,
                               @SessionAttribute("loginMember") Member member,
                               MultipartFile file) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "boards/board/freeBoard_upload";
+        }
 
         boardService.upload(member.getId(), boardDto, file);
 

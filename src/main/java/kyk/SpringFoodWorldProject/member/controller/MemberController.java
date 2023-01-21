@@ -34,7 +34,7 @@ public class MemberController {
      *  회원 등록 폼
      */
     @GetMapping("/join")
-    public String memberRegisterForm(@ModelAttribute("member") JoinForm form) { // 컨트롤러에서 뷰로 넘어갈 때 이 데이터를 넣어 보낸다.
+    public String memberRegisterForm(@ModelAttribute("joinForm") JoinForm form) { // 컨트롤러에서 뷰로 넘어갈 때 이 데이터를 넣어 보낸다.
         return "members/member_join";
     }
 
@@ -42,7 +42,7 @@ public class MemberController {
      *  회원 저장 기능
      */
     @PostMapping("/join")
-    public String save(@Valid @ModelAttribute("member") JoinForm form, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "members/member_join";
         }
@@ -119,7 +119,7 @@ public class MemberController {
     public String memberProfileForm(@PathVariable Long memberId,
                                     Model model) {
         Member member = memberService.findById(memberId).get();
-        model.addAttribute("member", member);
+        model.addAttribute("updateForm", member);
         return "members/member_profile";
     }
 
@@ -128,18 +128,21 @@ public class MemberController {
      */
     @PostMapping("/profile/{memberId}")
     public String memberProfile(@PathVariable Long memberId,
-                                @ModelAttribute("member") UpdateForm form,
+                                @Valid @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
                                 HttpServletRequest request) {
-        // 업데이트 적용 아이디를 반환한 것을 가져온 이유는 아래 새로 재갱신하기 위해서!
+        if (bindingResult.hasErrors()) {
+            return "members/member_profile";
+        }
+
+        // 업데이트 적용 아이디를 반환한 것을 가져온 이유는 아래 새로 재갱신하기 위해서
         Long changeMemberId = memberService.changeProfile(memberId, form);
 
 
         // 메인페이지의 이름 동기화시키기 위해 로그아웃후 로그인을 새로 거치고 리다이렉트
         HttpSession getSession = request.getSession(false);
 
-        if (getSession != null) { // 세션이 있으면
+        if (getSession != null) {    // 세션이 있으면
             getSession.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
-            log.info("로그아웃 완료");
         }
 
         Member member = memberService.findById(memberId).get();

@@ -114,14 +114,12 @@
         <br>
         <form action="item.html" th:action th:object="${loginForm}" method="post">
           <div class="mb-3">
-            <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{loginId}"/>
+            <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디">
+            <div class="field-error" style="color: red;" th:errors="*{loginId}"></div>
           </div>
           <div class="mb-3">
-            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{password}"/>
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호">
+            <div class="field-error" style="color: red;" th:errors="*{password}"></div>
           </div>
           <br>
           <div class="container mt-3">

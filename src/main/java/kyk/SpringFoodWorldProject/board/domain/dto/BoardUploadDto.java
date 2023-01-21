@@ -1,21 +1,18 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 /**
  * 글 저장 전송 객체
  */
-@Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter
 public class BoardUploadDto {
     private Long id;
 

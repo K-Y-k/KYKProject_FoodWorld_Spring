@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService{
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
         String fileName = null;
-        String filePath = "/files/";
+        String filePath = null;
 
         if (file != null && !file.isEmpty()) {
             log.info("파일 가져와짐");
@@ -60,9 +60,13 @@ public class BoardServiceImpl implements BoardService{
             // 파일경로와 파일이름 지정한 객체 생성 및 저장
             File saveFile = new File(fullPath, fileName);
             file.transferTo(saveFile);
+
+            filePath = "/files/" + fileName;
         }
 
-        Board board = boardDto.toEntity(findMember, fileName, filePath + fileName);
+
+
+        Board board = boardDto.toEntity(findMember, fileName, filePath);
 
         log.info("uploadBoard={}", board);
         Board uploadBoard = boardRepository.save(board);

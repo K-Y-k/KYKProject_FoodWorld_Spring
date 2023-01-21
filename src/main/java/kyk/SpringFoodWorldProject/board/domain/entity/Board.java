@@ -38,21 +38,25 @@ public class Board extends BaseTimeEntity{
     // Fetch 전략의 기본값은 EAGER(즉시 로딩)이지만 필요하지 않은 쿼리도 JPA에서 함께 조회하기 때문에 N+1 문제를 야기할 수 있어,
     // Fetch 전략을 LAZY(지연 로딩)로 설정
     @ManyToOne(fetch = FetchType.LAZY) // Board 입장에서는 member와 다대일 관계이므로
-    @JoinColumn(name = "member_id")    // Board 엔티티는 Member 엔티티의 id 필드를 "user_id"라는 이름으로 외래 키를 가짐
+    @JoinColumn(name = "member_id")    // Board 엔티티는 Member 엔티티의 id 필드를 "member_id"라는 이름으로 외래 키를 가짐
     private Member member;
 
     // 양방향 관계를 맺어줌
     // 게시글이 삭제되면 댓글 또한 삭제되어야 하기 때문에 CascadeType.REMOVE 속성을 사용
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comment;
 
-//    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    private List<File> files;
 
     private String fileName;
 
     private String filePath;
+
+//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    private FileStore file;
+
+//    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    private List<FileStore> imageFiles;
 
     public Board(String title, String content, String writer, Member member) {
         this.title = title;

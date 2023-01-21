@@ -5,6 +5,7 @@
 //import org.springframework.web.multipart.MultipartFile;
 //
 //import javax.persistence.*;
+//import java.util.ArrayList;
 //import java.util.List;
 //
 //@Builder
@@ -12,18 +13,28 @@
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 //@Getter
 //@Entity
-//public class File {
+//public class FileStore {
 //
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "file_id")
 //    private Long id;
 //
-//    @Column(updatable = false)
-//    private UploadFile attachFile;
+//    @Column(nullable = false)
+//    private String originFileName;
 //
-//    @Column(updatable = false)
-//    private List<UploadFile> imageFiles;
+//    @Column(nullable = false)
+//    private String filePath;
+//
+//    @Column(nullable = false)
+//    private String savedName;
+//
+//    private Long fileSize;
+//
+////    @Column
+////    private UploadFile attachFile;
+////    @Column
+////    private List<UploadFile> imageFiles;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "member_id")
