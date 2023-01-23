@@ -3,10 +3,8 @@ package kyk.SpringFoodWorldProject.board.domain.entity;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -47,9 +45,7 @@ public class Board extends BaseTimeEntity{
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comment;
 
-
     private String fileName;
-
     private String filePath;
 
 //    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

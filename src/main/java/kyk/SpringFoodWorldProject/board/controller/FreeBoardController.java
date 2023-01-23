@@ -3,7 +3,6 @@ package kyk.SpringFoodWorldProject.board.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
@@ -63,7 +62,7 @@ public class FreeBoardController {
         }
 
         int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
-                                                                     // pageable의 index는 0부터 시작이기에 1을 더해준 것
+        // pageable의 index는 0부터 시작이기에 1을 더해준 것
         int startPage = Math.max(1, nowPage - 2);                    // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
         int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
 
@@ -139,7 +138,7 @@ public class FreeBoardController {
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
         }
-        
+
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
 
         redirectAttributes.addAttribute("boardId", boardId);

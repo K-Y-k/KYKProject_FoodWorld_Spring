@@ -9,6 +9,7 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
+    @Value("${ImgLocation}")
+    private String imgLocation;
+
     /**
      * 글 등록
      */
@@ -48,23 +52,21 @@ public class BoardServiceImpl implements BoardService{
 
         if (file != null && !file.isEmpty()) {
             log.info("파일 가져와짐");
-            
+
             // 파일경로 지정
-//            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
-            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+            filePath = imgLocation;
+//            filePath = "C:\\Users\\KOR\\IdeaProjects\\file";
+//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
 
             // 파일에 이름을 붙일 랜덤으로 식별자 지정
             UUID uuid = UUID.randomUUID();
             fileName = uuid + "_" + file.getOriginalFilename();
 
             // 파일경로와 파일이름 지정한 객체 생성 및 저장
-            File saveFile = new File(fullPath, fileName);
-            file.transferTo(saveFile);
+            file.transferTo(new File(filePath, fileName));
 
-            filePath = "/files/" + fileName;
+            filePath = "/C:/Users/KOR/IdeaProjects/file/" + fileName;
         }
-
-
 
         Board board = boardDto.toEntity(findMember, fileName, filePath);
 
@@ -73,6 +75,60 @@ public class BoardServiceImpl implements BoardService{
 
         return uploadBoard.getId();
     }
+
+//    public String getFullPath(String fileName) {
+//        filePath = "C:\\Users\\KOR\\IdeaProjects\\file\\";
+//        return filePath + fileName;
+//    }
+
+//    @Override
+//    public Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException {
+//        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+//                new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
+//
+//        filePath = null;
+//        String fileName = null;
+//
+//        if (file != null && !file.isEmpty()) {
+//            log.info("파일 가져와짐");
+//
+//            // 파일경로 지정
+////            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
+////            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 현재 프로젝트의 경로로 담아줌
+//
+////            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+////            String uuid = UUID.randomUUID().toString();
+////            fileName = uuid + "_" + file.getOriginalFilename();
+//
+//            String originalFilename = file.getOriginalFilename();
+//            fileName = createStoreFileName(originalFilename);
+//
+//            // 파일경로와 파일이름 지정한 객체 생성 및 저장
+//            file.transferTo(new File(getFullPath(fileName)));
+//            log.info("file = {}", file.getOriginalFilename());
+//
+//        }
+//
+//        Board board = boardDto.toEntity(findMember, fileName, filePath);
+//
+//        log.info("uploadBoard={}", board);
+//        Board uploadBoard = boardRepository.save(board);
+//
+//        return uploadBoard.getId();
+//    }
+    private String createStoreFileName(String originalFilename) {
+        String ext = extractedExt(originalFilename);
+        String uuid = UUID.randomUUID().toString();
+        return uuid + "." + ext;
+
+    }
+    private String extractedExt(String originalFilename) {
+        // 마지막 .뒤의 위치를 가져온다.
+        int pos = originalFilename.lastIndexOf(".");
+        // 위를 활용하여 확장자를 가져온다.
+        return originalFilename.substring(pos + 1);
+    }
+
 
 //    @Override
 //    public void upload(Board board, MultipartFile file) throws IOException {
@@ -98,74 +154,60 @@ public class BoardServiceImpl implements BoardService{
 //    }
 
 
-    /**
-     * 여러 개의 이미지 업로드
-     */
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
-        // ArrayList로 저장 결과 변수 선언
-        List<UploadFile> storeFileResult = new ArrayList<>();
-
-        // 루프를 돌려 파일을 모두 찾고 반환
-        for (MultipartFile multipartFile : multipartFiles) {
-            // 파일이 비어있지 않으면
-            if (!multipartFile.isEmpty()) {
-                // storeFile호출해서 multipartFile를 넣어준 uploadFile을 리스트에 담아줘야한다.
-                storeFileResult.add(storeFile(multipartFile));
-            }
-        }
-        return storeFileResult;
-    }
-
-    public String getFullPath(String filename) {
-        return System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + filename;
-    }
-
-    /**
-     * 하나의 파일 저장 MultipartFile을 받아와 UploadFile로 변환
-     */
-    public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
-
-        // 비어있으면 널로 반환
-        if (multipartFile.isEmpty()) {
-            return null;
-        }
-
-        // 비어있지 않으면
-        // 사용자가 업로드한 파일명 가져오고 ex) image.png
-        String originalFilename = multipartFile.getOriginalFilename();
-
-//        // 확장자를 가져오기 : 나중에 서버에서 구분하기 쉽게하려고 ex) png
-//        String ext = extractedExt(originalFilename);
+//    /**
+//     * 여러 개의 이미지 업로드
+//     */
+//    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+//        // ArrayList로 저장 결과 변수 선언
+//        List<UploadFile> storeFileResult = new ArrayList<>();
 //
-//        // 서버에 저장하는 파일명 = 유효Id로 ex) "qwe-qwe-123-qwe-qqwe.png"
-//        String uuid = UUID.randomUUID().toString();
+//        // 루프를 돌려 파일을 모두 찾고 반환
+//        for (MultipartFile multipartFile : multipartFiles) {
+//            // 파일이 비어있지 않으면
+//            if (!multipartFile.isEmpty()) {
+//                // storeFile호출해서 multipartFile를 넣어준 uploadFile을 리스트에 담아줘야한다.
+//                storeFileResult.add(storeFile(multipartFile));
+//            }
+//        }
+//        return storeFileResult;
+//    }
 //
-//        // 최종적으로 저장할 파일명
-//        String storeFileName = uuid + "." + ext;
+//    public String getFullPath(String filename) {
+//        return System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + filename;
+//    }
+//
+//    /**
+//     * 하나의 파일 저장 MultipartFile을 받아와 UploadFile로 변환
+//     */
+//    public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
+//
+//        // 비어있으면 널로 반환
+//        if (multipartFile.isEmpty()) {
+//            return null;
+//        }
+//
+//        // 비어있지 않으면
+//        // 사용자가 업로드한 파일명 가져오고 ex) image.png
+//        String originalFilename = multipartFile.getOriginalFilename();
+//
+////        // 확장자를 가져오기 : 나중에 서버에서 구분하기 쉽게하려고 ex) png
+////        String ext = extractedExt(originalFilename);
+////
+////        // 서버에 저장하는 파일명 = 유효Id로 ex) "qwe-qwe-123-qwe-qqwe.png"
+////        String uuid = UUID.randomUUID().toString();
+////
+////        // 최종적으로 저장할 파일명
+////        String storeFileName = uuid + "." + ext;
+//
+//        // 위 작업을 한 메서드를 적용한 것
+//        String storeFileName = createStoreFileName(originalFilename);
+//
+//        // 파일 경로명으로 변환 및 UploadFile 객체로 반환
+//        multipartFile.transferTo(new File(getFullPath(storeFileName)));
+//        return new UploadFile(originalFilename, storeFileName);
+//
+//    }
 
-        // 위 작업을 한 메서드를 적용한 것
-        String storeFileName = createStoreFileName(originalFilename);
-
-        // 파일 경로명으로 변환 및 UploadFile 객체로 반환
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        return new UploadFile(originalFilename, storeFileName);
-
-    }
-
-    private String createStoreFileName(String originalFilename) {
-        String ext = extractedExt(originalFilename);
-        String uuid = UUID.randomUUID().toString();
-        return uuid + "." + ext;
-    }
-
-    private String extractedExt(String originalFilename) {
-        // 마지막 .뒤의 위치를 가져온다.
-        int pos = originalFilename.lastIndexOf(".");
-        // 가져온 위치를 잘라서 확장자를 가져온다.
-//        String ext = originalFilename.substring(pos + 1);
-//        return ext;
-        return originalFilename.substring(pos + 1);
-    }
 
     /**
      * 글 수정

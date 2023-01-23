@@ -31,10 +31,10 @@
 //
 //    private Long fileSize;
 //
-////    @Column
-////    private UploadFile attachFile;
-////    @Column
-////    private List<UploadFile> imageFiles;
+//    @Column
+//    private UploadFile attachFile;
+//    @Column
+//    private List<UploadFile> imageFiles;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "member_id")
