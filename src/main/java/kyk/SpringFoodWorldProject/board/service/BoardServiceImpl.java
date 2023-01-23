@@ -36,8 +36,8 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
-    @Value("${ImgLocation}")
-    private String imgLocation;
+    @Value("${file.location}")
+    private String fileLocation;
 
     /**
      * 글 등록
@@ -53,18 +53,18 @@ public class BoardServiceImpl implements BoardService{
         if (file != null && !file.isEmpty()) {
             log.info("파일 가져와짐");
 
-            // 파일경로 지정
-            filePath = imgLocation;
-//            filePath = "C:\\Users\\KOR\\IdeaProjects\\file";
-//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+            // 실제 파일 저장하는 경로 지정
+            filePath = fileLocation;
+//            filePath= System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
 
             // 파일에 이름을 붙일 랜덤으로 식별자 지정
             UUID uuid = UUID.randomUUID();
             fileName = uuid + "_" + file.getOriginalFilename();
 
-            // 파일경로와 파일이름 지정한 객체 생성 및 저장
+            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
             file.transferTo(new File(filePath, fileName));
 
+            // DB에 저장할 경로
             filePath = "/C:/Users/KOR/IdeaProjects/file/" + fileName;
         }
 

@@ -3,22 +3,23 @@ package kyk.SpringFoodWorldProject.member.domain.dto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JoinForm {
-    @NotEmpty(message = "닉네임을 입력해주세요")
+    @NotBlank(message = "닉네임을 입력해주세요")
     @Size(min = 2, max = 7, message = "최소 2글자, 최대 7글자입니다.")
     private String name;
 
+    @NotBlank(message = "아이디를 입력해주세요")
     @Size(min = 3, max = 10, message = "최소 3글자, 최대 10글자입니다.")
-    @NotEmpty(message = "아이디를 입력해주세요")
     private String loginId;
 
+    @NotBlank(message = "비밀번호를 입력해주세요")
     @Size(min = 3, max = 10, message = "최소 3글자, 최대 10글자입니다.")
-    @NotEmpty(message = "비밀번호를 입력해주세요")
     private String password;
 
 

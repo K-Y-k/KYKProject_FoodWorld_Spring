@@ -118,8 +118,9 @@
           <hr>
           <br>
 
-          <a th:if="${board.filePath != null}" th:href="@{|/${board.filePath}|}" style="margin-left: 85%;"> 첨부파일</a>
-          <img th:if="${board.filePath != null}" th:src="@{|/photo/${board.filePath}|}" style="margin-left: 2%;">
+          <a th:if="${board.filePath != null}" th:href="@{|/fileUpload/${board.fileName}|}" style="margin-left: 85%;"> 첨부파일</a>
+          <img th:if="${board.filePath != null}" th:src="@{|/fileUpload/${board.fileName}|}" style="margin-left: 2%;">
+
 
           <br>
           <br>

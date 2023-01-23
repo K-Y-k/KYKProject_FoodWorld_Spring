@@ -4,6 +4,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -16,11 +17,11 @@ import javax.validation.constraints.Size;
 public class BoardUploadDto {
     private Long id;
 
-    @NotEmpty(message = "제목을 입력해주세요")
+    @NotBlank(message = "제목을 입력해주세요")
     @Size(max = 60, message = "최대 50글자입니다.")
     private String title;
 
-    @NotEmpty(message = "내용을 입력해주세요")
+    @NotBlank(message = "내용을 입력해주세요")
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
 
