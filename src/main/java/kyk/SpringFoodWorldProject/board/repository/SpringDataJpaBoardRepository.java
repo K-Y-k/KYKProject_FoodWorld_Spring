@@ -38,23 +38,23 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Page<Board> pageList(Pageable pageable) {
-        return boardRepository.findAll(pageable);
+    public Page<Board> findPageListByBoardType(Pageable pageable, String boardType) {
+        return boardRepository.findPageListByBoardType(pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable) {
-        return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
+    public Page<Board> findByTitleContainingAndBoardTypeContaining(String titleSearchKeyword, Pageable pageable, String boardType) {
+        return boardRepository.findByTitleContainingAndBoardTypeContaining(titleSearchKeyword, pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByWriterContaining(String titleSearchKeyword, Pageable pageable) {
-        return boardRepository.findByWriterContaining(titleSearchKeyword, pageable);
+    public Page<Board> findByWriterContainingAndBoardTypeContaining(String titleSearchKeyword, Pageable pageable, String boardType) {
+        return boardRepository.findByWriterContainingAndBoardTypeContaining(titleSearchKeyword, pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
-        return boardRepository.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
+    public Page<Board> findByTitleContainingAndWriterContainingAndBoardTypeContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType) {
+        return boardRepository.findByTitleContainingAndWriterContainingAndBoardTypeContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
     }
 
     @Override

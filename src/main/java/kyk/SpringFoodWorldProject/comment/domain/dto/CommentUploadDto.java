@@ -11,10 +11,10 @@ import javax.validation.constraints.Size;
 /**
  * 댓글 등록 Dto
  */
-@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Getter
 public class CommentUploadDto {
     private Long id;
     @NotEmpty(message = "내용을 입력해주세요")

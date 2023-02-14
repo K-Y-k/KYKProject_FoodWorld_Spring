@@ -11,9 +11,10 @@ public interface JPABoardRepository extends JpaRepository<Board, Long> {
     /**
      * 키워드 검색에 따른 검색
      */
-    Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
-    Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
-    Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
+    Page<Board> findPageListByBoardType(Pageable pageable, String boardType);
+    Page<Board> findByTitleContainingAndBoardTypeContaining(String titleSearchKeyword, Pageable pageable, String boardType);
+    Page<Board> findByWriterContainingAndBoardTypeContaining(String writerSearchKeyword, Pageable pageable, String boardType);
+    Page<Board> findByTitleContainingAndWriterContainingAndBoardTypeContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
 
 
     // 트랜잭션 스크립트 패턴

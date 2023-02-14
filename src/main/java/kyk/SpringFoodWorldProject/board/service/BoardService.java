@@ -37,14 +37,14 @@ public interface BoardService {
     /**
      * 글 페이징 처리
      */
-    Page<Board> pageList(Pageable pageable);
+    Page<Board> findPageListByBoardType(Pageable pageable, String boardType);
 
     /**
      * 글 검색
      */
-    Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable);
-    Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable);
-    Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable);
+    Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable, String boardType);
+    Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable, String boardType);
+    Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
 
     /**
      * 글 삭제

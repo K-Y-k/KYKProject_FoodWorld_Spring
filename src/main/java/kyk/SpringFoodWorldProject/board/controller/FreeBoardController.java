@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -49,16 +50,17 @@ public class FreeBoardController {
                              String writerSearchKeyword,
                              String titleSearchKeyword) {
         Page<Board> boards = null;
+        String boardType = "freeBoard";
 
         // 키워드의 컬럼에 따른 페이징된 게시글 출력
         if (writerSearchKeyword == null && titleSearchKeyword == null) {  // 검색 자체를 하지 않았을 때 : 검색을 클릭할 때 url로 파라미터가 표현되므로 검색 클릭 안했을 때는 null
-            boards = boardService.pageList(pageable);
+            boards = boardService.findPageListByBoardType(pageable, boardType);
         } else if (writerSearchKeyword.equals("")) {                      // 제목만 검색했을 때 : url로 표현된 파라미터가 비어있을 때는 빈공백이므로 .equals("")로 표현
-            boards = boardService.findByTitleContaining(titleSearchKeyword, pageable);
+            boards = boardService.findByTitleContaining(titleSearchKeyword, pageable, boardType);
         } else if (titleSearchKeyword.equals("")) {                       // 글쓴이만 검색했을 때
-            boards = boardService.findByWriterContaining(writerSearchKeyword, pageable);
+            boards = boardService.findByWriterContaining(writerSearchKeyword, pageable, boardType);
         } else {
-            boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
+            boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
         }
 
         int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
@@ -107,7 +109,7 @@ public class FreeBoardController {
         // 댓글 가져오기
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        List<Comment> comments = board.getComment();
+        List<Comment> comments = board.getComments();
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
@@ -162,6 +164,9 @@ public class FreeBoardController {
             return "messages";
         }
 
+        BoardUploadDto boardType = new BoardUploadDto("freeBoard");
+        model.addAttribute("boardType", boardType);
+
         log.info("로그인 상태 {}", loginMember);
         return "boards/board/freeBoard_upload";
     }
@@ -179,7 +184,6 @@ public class FreeBoardController {
         }
 
         boardService.upload(member.getId(), boardDto, file);
-
 
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));

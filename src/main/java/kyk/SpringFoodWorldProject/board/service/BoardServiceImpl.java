@@ -233,29 +233,29 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Page<Board> pageList(Pageable pageable) {
-        return boardRepository.pageList(pageable);
+    public Page<Board> findPageListByBoardType(Pageable pageable, String boardType) {
+        return boardRepository.findPageListByBoardType(pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable) {
+    public Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable, String boardType) {
         log.info("제목 검색");
 
-        return boardRepository.findByTitleContaining(titleSearchKeyword, pageable);
+        return boardRepository.findByTitleContainingAndBoardTypeContaining(titleSearchKeyword, pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable) {
+    public Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable, String boardType) {
         log.info("작가 검색");
 
-        return boardRepository.findByWriterContaining(writerSearchKeyword, pageable);
+        return boardRepository.findByWriterContainingAndBoardTypeContaining(writerSearchKeyword, pageable, boardType);
     }
 
     @Override
-    public Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable) {
+    public Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType) {
         log.info("작가, 제목 동시 검색");
 
-        return boardRepository.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable);
+        return boardRepository.findByTitleContainingAndWriterContainingAndBoardTypeContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
     }
 
     @Override

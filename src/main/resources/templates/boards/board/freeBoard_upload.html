@@ -78,10 +78,31 @@
 </header>
 
 <section style="position: relative; width: 90vw; height: 30vh;">
-    <h2 id="mtitle" style="position: absolute; left: 45%; top: 10%;"><b>자유게시판 글 작성하기</b></h2>
+    <h2 id="categoryFreeBoard" style="position: absolute; left: 45%; top: 10%;"><b>자유게시판 글 작성하기</b></h2>
 
     <form th:action th:object="${uploadForm}" method="post" enctype="multipart/form-data">
         <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
+            <div class="field-error" style="color: red;" th:errors="*{boardType}"></div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <select th:field="*{boardType}" class="form-control">
+                        <option value="">게시판 선택</option>
+                        <option th:value="freeBoard">자유게시판</option>
+                        <option th:value="recommendBoard">추천게시판</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <select th:field="*{subType}" class="form-control">
+                        <option value="">말머리 선택</option>
+                        <option th:value="사는얘기">사는얘기</option>
+                        <option th:value="질문">질문</option>
+                    </select>
+                </div>
+            </div>
+
+            <br>
+
             <div class="field-error" style="color: red;" th:errors="*{title}"></div>
             <input type="text" id="title" class="form-control mt-3" name="title" th:field="*{title}" placeholder="제목을 입력해주세요"
                    th:errorclass="field-error">

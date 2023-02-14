@@ -23,6 +23,8 @@ public class BoardDto {
     private String writer;
     private String content;
     private LocalDateTime createdDate;
+    private String boardType;
+    private String subType;
     private int count;
     private int likeCount;
     private List<CommentDto> comments;

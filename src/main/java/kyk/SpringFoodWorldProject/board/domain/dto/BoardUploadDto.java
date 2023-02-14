@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -29,6 +30,11 @@ public class BoardUploadDto {
 
     private String filePath;
 
+    @NotEmpty(message = "게시판을 선택해주세요!")
+    private String boardType;
+
+    private String subType;
+
 
     // 엔티티에 @setter를 사용하지 않기 위해 dto에서 엔티티로 변환해주는 메서드 적용
     public Board toEntity(Member member, String fileName, String filePath) {
@@ -39,7 +45,13 @@ public class BoardUploadDto {
                 .member(member)
                 .fileName(fileName)
                 .filePath(filePath)
+                .boardType(boardType)
+                .subType(subType)
                 .build();
     }
 
+
+    public BoardUploadDto(String boardType) {
+        this.boardType = boardType;
+    }
 }

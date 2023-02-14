@@ -5,6 +5,7 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -27,6 +28,9 @@ public class Board extends BaseTimeEntity{
     @Column(updatable = false)
     private String writer;
 
+    private String boardType;
+    private String subType;
+
     @Column(insertable = false, updatable = false, columnDefinition = "integer default 0", nullable = false)
     private int count;
 
@@ -43,7 +47,7 @@ public class Board extends BaseTimeEntity{
     // 게시글이 삭제되면 댓글 또한 삭제되어야 하기 때문에 CascadeType.REMOVE 속성을 사용
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
-    private List<Comment> comment;
+    private List<Comment> comments;
 
     private String fileName;
     private String filePath;
@@ -54,11 +58,13 @@ public class Board extends BaseTimeEntity{
 //    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 //    private List<FileStore> imageFiles;
 
-    public Board(String title, String content, String writer, Member member) {
+    public Board(String title, String content, String writer, Member member, String boardType, String subType) {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.member = member;
+        this.boardType = boardType;
+        this.subType = subType;
     }
 
 

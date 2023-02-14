@@ -44,7 +44,7 @@ class BoardServiceImplTest {
         Member savedMember = memberRepository.save(member1);
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
 
 
         // when
@@ -98,9 +98,10 @@ class BoardServiceImplTest {
     void pageList() {
         // given
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        String boardType = "freeBoard";
 
         // when
-        Page<Board> result = boardService.pageList(pageable);
+        Page<Board> result = boardService.findPageListByBoardType(pageable, boardType);
 
         // then
         Assertions.assertEquals(result.getSize(), 10, "한 페이지당 게시글의 개수");
@@ -118,9 +119,10 @@ class BoardServiceImplTest {
         // given
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String titleKeyword = "제";
+        String boardType = "freeBoard";
 
         // when
-        Page<Board> result = boardService.findByTitleContaining(titleKeyword, pageable);
+        Page<Board> result = boardService.findByTitleContaining(titleKeyword, pageable,boardType);
 
         // then
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
@@ -135,9 +137,10 @@ class BoardServiceImplTest {
         // given
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String writerKeyword = "작";
+        String boardType = "freeBoard";
 
         // when
-        Page<Board> result = boardService.findByWriterContaining(writerKeyword, pageable);
+        Page<Board> result = boardService.findByWriterContaining(writerKeyword, pageable, boardType);
 
         // then
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
@@ -153,9 +156,10 @@ class BoardServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String titleKeyword = "제목10";
         String writerKeyword = "작";
+        String boardType = "freeBoard";
 
         // when
-        Page<Board> result = boardService.findByTitleContainingAndWriterContaining(titleKeyword, writerKeyword, pageable);
+        Page<Board> result = boardService.findByTitleContainingAndWriterContaining(titleKeyword, writerKeyword, pageable, boardType);
 
         // then
         Assertions.assertEquals(result.getTotalElements(), 1, "페이지 객체에 담긴 모든 게시글 개수");
@@ -171,7 +175,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when
@@ -195,7 +199,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when
@@ -215,7 +219,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null,"freeBoard", "잡담");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
@@ -244,7 +248,7 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
 
         CommentUploadDto commentDto = new CommentUploadDto(37L, "안녕하세요 댓글");
