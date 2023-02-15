@@ -55,25 +55,27 @@ public class BoardServiceImpl implements BoardService {
         String filePath = null;
 
         if (boardDto.getImageFiles() != null && !boardDto.getImageFiles().isEmpty()) {
-            log.info("파일 가져와짐");
+            log.info("파일 가져온 상태");
 
-            MultipartFile imageFiles = boardDto.getImageFiles();
-            String originalFilename = imageFiles.getOriginalFilename();
+            // 여러 개의 파일일 수 있으므로 부모 객체인 Board부터 가져와야함
+            Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
+            Long savedId = boardRepository.save(boardEntity).getId();
+            Board board = boardRepository.findById(savedId).get();
 
-            UUID uuid = UUID.randomUUID();
-            String storedFileName = uuid + "_" + originalFilename;
-            String savePath = fileLocation;
-            imageFiles.transferTo(new File(savePath, storedFileName));
+            for (MultipartFile imageFiles: boardDto.getImageFiles()) {
 
-            filePath = "/C:/Users/KOR/IdeaProjects/file/" + storedFileName;
+                String originalFilename = imageFiles.getOriginalFilename();
 
-            Board board = boardDto.toSaveFileEntity(findMember, boardDto);
-            Long savedId = boardRepository.save(board).getId();
+                UUID uuid = UUID.randomUUID();
+                String storedFileName = uuid + "_" + originalFilename;
+                String savePath = fileLocation;
+                imageFiles.transferTo(new File(savePath, storedFileName));
 
 
-            BoardFile boardFile = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName);
+                BoardFile boardFileEntity = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName);
 
-            boardFileRepository.save(boardFile);
+                boardFileRepository.save(boardFileEntity);
+            }
 
             return savedId;
 

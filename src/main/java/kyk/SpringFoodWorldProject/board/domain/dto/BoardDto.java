@@ -1,11 +1,13 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,9 +33,9 @@ public class BoardDto {
     private int likeCount;
     private List<CommentDto> comments;
 
-    private MultipartFile imageFiles;
-    private String originalFileName;
-    private String storedFileName;
+    private List<MultipartFile> imageFiles;
+    private List<String> originalFileName;
+    private List<String> storedFileName;
     private int fileAttached;
 
 //    public BoardDto(Board board) {
@@ -63,9 +65,23 @@ public class BoardDto {
         if (board.getFileAttached() == 0) {
             boardDto.setFileAttached(board.getFileAttached());
         } else {
+            List<String> orginalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+
             boardDto.setFileAttached(board.getFileAttached());
-            boardDto.setStoredFileName(board.getBoardFiles().get(0).getOriginalFileName());
-            boardDto.setStoredFileName(board.getBoardFiles().get(0).getStoredFileName());
+
+            // 파일 이름들을 담아줌
+            for (BoardFile boardFile : board.getBoardFiles()) {
+                orginalFileNameList.add(boardFile.getOriginalFileName());
+                storedFileNameList.add(boardFile.getStoredFileName());
+            }
+            // 담아준 이름으로 설정
+            boardDto.setOriginalFileName(orginalFileNameList);
+            boardDto.setStoredFileName(storedFileNameList);
+
+//            단일이었을 때 get(인덱스)로 접근
+//            boardDto.setStoredFileName(board.getBoardFiles().get(0).getOriginalFileName());
+//            boardDto.setStoredFileName(board.getBoardFiles().get(0).getStoredFileName());
         }
 
         return boardDto;

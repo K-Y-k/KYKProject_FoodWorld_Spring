@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * 글 저장 전송 객체
@@ -37,9 +38,9 @@ public class BoardUploadDto {
     private String subType;
 
 
-    private MultipartFile imageFiles;
-    private String originalFileName;
-    private String storedFileName;
+    private List<MultipartFile> imageFiles;
+    private List<String> originalFileName;
+    private List<String> storedFileName;
     private int fileAttached;
 
 
