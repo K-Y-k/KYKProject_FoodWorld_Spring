@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <!--부트 스트랩 적용-->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+  <!--css 적용-->
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_detail_style.css" th:href="@{/board_detail_style.css}">
+</head>
+
+<body>
+<header style="position: relative;">
+  <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
+  <div class="px-3 py-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <img src = "/image/main_img/write_icon.PNG" width = "50px" height="50px" >
+        <a href="/boards/freeBoard" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;자유게시판</h4></a>
+        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <li>
+            <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
+            <a href="/" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 120px; margin-top: 10px;">
+            <a href="store_recommend.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 95px; margin-top: 10px;">
+            <a href="muckstar_main.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 75px; margin-top: 10px;">
+            <a href="menu_recommend.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/chat_icon.PNG" width = "50px" height="40px" style="margin-left: 65px; margin-top: 10px;">
+            <a href="chat.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+          </li>
+
+            <li>
+                <h5 th:if="${session.loginMember != null}"
+                    th:text="${session.loginMember.name}+ '님 접속중'"
+                    id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+
+                <br/>
+
+                <form th:action="@{/members/logout}" method="post">
+                    <button th:if="${session.loginMember != null}"
+                            type="submit" class="btn btn-primary" id="logout"
+                            style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                            th:onclick="@{/members/logout}">로그아웃
+                    </button>
+                </form>
+
+                <button th:if="${session.loginMember == null}"
+                        type="submit" class="btn btn-primary"
+                        style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                        th:onclick="|location.href='@{/members/login}'|">로그인
+                </button>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<section style="position: relative; width: 90vw; height: 80vh;">
+  <div class="container mt-3" style="position: absolute; top: 7%;">
+      <div class="card" style="position: relative; width: 50vw; left: 35%;">
+          <div class="row">
+            <div class="col" style="position: absolute; left: 82%;">
+              <button th:if="${session.loginMember != null && session.loginMember.id == board.member.id}"
+                      class="btn btn-danger" id="edit"
+                      th:onclick="|location.href='@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}'|"
+                      type="button">수정
+              </button>
+            </div>
+
+            <div class="col" style="position: absolute; left: 90%;">
+              <button th:if="${session.loginMember != null && session.loginMember.id == board.member.id}"
+                      class="btn btn-danger" id="delete"
+                      th:onclick="|location.href='@{/boards/freeBoard/{boardId}/delete(boardId=${board.id})}'|"
+                      type="button">삭제
+              </button>
+            </div>
+          </div>
+
+
+          <h3 class="title" th:text="${board.title}" style="margin-left: 2%; margin-top: 5%;"></h3>
+
+
+          <div class="row">
+              <div class="col" style="margin-left: 2%">
+                  <th:block th:text="${board.writer}" style="float: left"/>
+              </div>
+
+              <div class="col" style="float: right; margin-left: 35%">
+                  <th:block  th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
+                             th:text="${#temporals.format(board.createdDate, 'HH:mm')} + '   조회: '+ ${board.count}"/>
+                  <th:block  th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
+                             th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')} + '   조회: '+ ${board.count}"/>
+              </div>
+          </div>
+
+          <hr>
+          <br>
+
+<!--          <a th:if="${board.filePath != null}" th:href="@{|/fileUpload/${board.fileName}|}" style="margin-left: 85%;"> 첨부파일</a>-->
+<!--          <img th:if="${board.filePath != null}" th:src="@{|/fileUpload/${board.fileName}|}" style="margin-left: 2%;">-->
+
+          <div th:if="${board.fileAttached == 1}" th:each="boardFile : ${boardFiles}">
+              <img th:src="@{|/fileUpload/${boardFile.storedFileName}|}" style="margin-left: 2%;">
+          </div>
+
+          <br>
+          <br>
+
+          <h4 class="content" th:text="${board.content}" style="margin-left: 2%;"></h4>
+
+          <br>
+          <br>
+
+          <hr>
+
+          <br>
+
+          <div class="input-group" style="margin-left: 45%;">
+              <h4 class="like" style="font-weight: 400; margin-top: 1.5%;" th:text="${likeCount}"></h4>
+
+              <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;"
+                      th:onclick="|location.href='@{/boards/freeBoard/{boardId}/like(boardId=${board.id})}'|"
+                      type="button">
+                  <img src="/image/muckstargram_img/recommend_icon.PNG" style="width: 3vw; height: 5vh;">
+              </button>
+
+          </div>
+
+          <br>
+
+          <span class="input-group">
+              <div style="font-weight: 400; font-size: 20px; margin-left: 2%;">댓글</div>
+              <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${#lists.size(comments)} + ')'"></div>
+              <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + 0 + ')'"></div>
+          </span>
+
+          <hr>
+
+          <div class="card bg-light">
+              <div class="card-body">
+                  <!-- 댓글 전송 폼 -->
+                  <form class="mb-4" th:action="@{/boards/freeBoard/{boardId}/comment(boardId=${board.id})}" th:object="${comment}" method="post">
+                    <div class="input-group">
+                      <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"
+                              th:errorclass="field-error"></textarea>
+                      <button class="btn btn-secondary" id="reply_send" type="submit">전송</button>
+                    </div>
+                  </form>
+
+                  <!-- 댓글 -->
+                  <div class="d-flex mb-4" th:each="comment : ${comments}" style="position: relative; width: 40vw;">
+                      <div class="ms-3">
+                          <span class="input-group">
+                              <div class="flex-shrink-0" style=""><img class="rounded-circle"
+                                                                                  src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"
+                                                                                  alt="..."></div>
+                              <div class="fw-bold" style="">
+                                  <th:block th:text="${comment.writer}"></th:block>
+
+                                  <th:block style="float: left;"
+                                            th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
+                                            th:text="${#temporals.format(board.createdDate, 'HH:mm')}"></th:block>
+                                  <th:block th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
+                                            th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd')}"></th:block>
+                              </div>
+                          </span>
+
+                          <div style="white-space: normal; word-break:break-all; position: absolute; left: 8.5%;"
+                               th:text="${comment.content}"></div>
+
+<!--                              &lt;!&ndash; 답글 &ndash;&gt;-->
+<!--                              <div class="d-flex mt-4">-->
+<!--                                  <div class="flex-shrink-0"><img class="rounded-circle"-->
+<!--                                                                  src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"-->
+<!--                                                                  alt="..."></div>-->
+<!--                                  <div class="ms-3">-->
+<!--                                      <div class="fw-bold">Commenter Name</div>-->
+<!--                                  </div>-->
+<!--                              </div>-->
+
+
+                          <br>
+                          <br>
+                      </div>
+
+                  </div>
+              </div>
+
+              <ul class="chat-content">
+                  <!--채팅메시지--></ul>
+          </div>
+      </div>
+  </div>
+</section>
+</body>
+</html>

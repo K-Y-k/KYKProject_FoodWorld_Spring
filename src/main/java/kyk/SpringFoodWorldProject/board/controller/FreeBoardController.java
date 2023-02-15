@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
@@ -84,7 +85,7 @@ public class FreeBoardController {
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
 
-        return "boards/board/freeBoard_main";
+        return "boards/freeboard/freeBoard_main";
     }
 
 
@@ -115,12 +116,18 @@ public class FreeBoardController {
             model.addAttribute("comments", comments);
         }
 
+        // 파일 가져오기
+        List<BoardFile> boardFiles = board.getBoardFiles();
+        if (boardFiles != null && !boardFiles.isEmpty()) {
+            model.addAttribute("boardFiles", boardFiles);
+        }
+
         model.addAttribute("board", board);
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
 
-        return "boards/board/freeBoard_detail";
+        return "boards/freeboard/freeBoard_detail";
     }
 
     /**
@@ -168,7 +175,7 @@ public class FreeBoardController {
         model.addAttribute("boardType", boardType);
 
         log.info("로그인 상태 {}", loginMember);
-        return "boards/board/freeBoard_upload";
+        return "boards/freeboard/freeBoard_upload";
     }
 
 
@@ -177,13 +184,14 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/upload")
     public String boardUpload(@Valid @ModelAttribute("uploadForm") BoardUploadDto boardDto, BindingResult bindingResult,
-                              @SessionAttribute("loginMember") Member member,
-                              MultipartFile file) throws IOException {
+                              @SessionAttribute("loginMember") Member member) throws IOException {
         if (bindingResult.hasErrors()) {
-            return "boards/board/freeBoard_upload";
+            return "boards/freeboard/freeBoard_upload";
         }
 
-        boardService.upload(member.getId(), boardDto, file);
+
+
+        boardService.upload(member.getId(), boardDto);
 
 
 //        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
@@ -211,7 +219,7 @@ public class FreeBoardController {
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
         model.addAttribute("board", board);
-        return "boards/board/freeBoard_edit";
+        return "boards/freeboard/freeBoard_edit";
     }
 
     /**

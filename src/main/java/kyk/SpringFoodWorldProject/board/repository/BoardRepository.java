@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

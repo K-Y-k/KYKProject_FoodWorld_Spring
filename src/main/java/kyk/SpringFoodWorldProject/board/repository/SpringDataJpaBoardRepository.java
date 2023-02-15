@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.member.repository.JPAMemberRepository;
@@ -29,6 +30,14 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
 
     @Override
     public Optional<Board> findById(Long id) {
+//        Optional<Board> optionalBoard = boardRepository.findById(id);
+//        if (optionalBoard.isPresent()) {
+//            Board board = optionalBoard.get();
+//            BoardDto boardDto = BoardDto.toBoardDto(board);
+//            return Optional.of(boardDto);
+//        } else {
+//            return null;
+//        }
         return boardRepository.findById(id);
     }
 

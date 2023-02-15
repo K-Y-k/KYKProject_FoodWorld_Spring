@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.domain.dto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -36,17 +37,46 @@ public class BoardUploadDto {
     private String subType;
 
 
+    private MultipartFile imageFiles;
+    private String originalFileName;
+    private String storedFileName;
+    private int fileAttached;
+
+
     // 엔티티에 @setter를 사용하지 않기 위해 dto에서 엔티티로 변환해주는 메서드 적용
+    public Board toSaveEntity(Member member, BoardUploadDto boardDto) {
+        return Board.builder()
+                .title(title)
+                .content(content)
+                .writer(member.getName())
+                .member(member)
+                .boardType(boardType)
+                .subType(subType)
+                .fileAttached(0)
+                .build();
+    }
+    public Board toSaveFileEntity(Member member, BoardUploadDto boardDto) {
+        return Board.builder()
+                .title(title)
+                .content(content)
+                .writer(member.getName())
+                .member(member)
+                .boardType(boardType)
+                .subType(subType)
+                .fileAttached(1)
+                .build();
+    }
+
     public Board toEntity(Member member, String fileName, String filePath) {
         return Board.builder()
                 .title(title)
                 .content(content)
                 .writer(member.getName())
                 .member(member)
-                .fileName(fileName)
-                .filePath(filePath)
                 .boardType(boardType)
                 .subType(subType)
+                .fileName(fileName)
+                .filePath(filePath)
                 .build();
     }
 

@@ -1,9 +1,11 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.entity.UploadFile;
+import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
+import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
@@ -18,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,9 +32,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardFileRepository boardFileRepository;
     private final MemberRepository memberRepository;
 
     @Value("${file.location}")
@@ -41,39 +43,62 @@ public class BoardServiceImpl implements BoardService{
 
     /**
      * 글 등록
+     *
+     * @return
      */
     @Override
-    public Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException {
+    public Long upload(Long memberId, BoardUploadDto boardDto) throws IOException {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
         String fileName = null;
         String filePath = null;
 
-        if (file != null && !file.isEmpty()) {
+        if (boardDto.getImageFiles() != null && !boardDto.getImageFiles().isEmpty()) {
             log.info("파일 가져와짐");
 
-            // 실제 파일 저장하는 경로 지정
-            filePath = fileLocation;
-//            filePath= System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+            MultipartFile imageFiles = boardDto.getImageFiles();
+            String originalFilename = imageFiles.getOriginalFilename();
 
-            // 파일에 이름을 붙일 랜덤으로 식별자 지정
             UUID uuid = UUID.randomUUID();
-            fileName = uuid + "_" + file.getOriginalFilename();
+            String storedFileName = uuid + "_" + originalFilename;
+            String savePath = fileLocation;
+            imageFiles.transferTo(new File(savePath, storedFileName));
 
-            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
-            file.transferTo(new File(filePath, fileName));
+            filePath = "/C:/Users/KOR/IdeaProjects/file/" + storedFileName;
 
-            // DB에 저장할 경로
-            filePath = "/C:/Users/KOR/IdeaProjects/file/" + fileName;
+            Board board = boardDto.toSaveFileEntity(findMember, boardDto);
+            Long savedId = boardRepository.save(board).getId();
+
+
+            BoardFile boardFile = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName);
+
+            boardFileRepository.save(boardFile);
+
+            return savedId;
+
+//            // 실제 파일 저장하는 경로 지정
+//            String savePath = fileLocation;
+////            filePath= System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
+//
+//            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+//            UUID uuid = UUID.randomUUID();
+//            fileName = uuid + "_" + boardDto.getImageFiles().getOriginalFilename();
+//
+//            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
+//            boardDto.getImageFiles().transferTo(new File(savePath, fileName));
+//
+//            // DB에 저장할 경로
+//            filePath = "/C:/Users/KOR/IdeaProjects/file/" + fileName;
+        } else {
+
+//        Board board = boardDto.toEntity(findMember, fileName, filePath);
+
+            Board board = boardDto.toSaveEntity(findMember, boardDto);
+            log.info("uploadBoard={}", board);
+            Board uploadBoard = boardRepository.save(board);
+            return uploadBoard.getId();
         }
-
-        Board board = boardDto.toEntity(findMember, fileName, filePath);
-
-        log.info("uploadBoard={}", board);
-        Board uploadBoard = boardRepository.save(board);
-
-        return uploadBoard.getId();
     }
 
 //    public String getFullPath(String fileName) {
@@ -81,7 +106,7 @@ public class BoardServiceImpl implements BoardService{
 //        return filePath + fileName;
 //    }
 
-//    @Override
+    //    @Override
 //    public Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException {
 //        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
 //                new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
@@ -122,6 +147,7 @@ public class BoardServiceImpl implements BoardService{
         return uuid + "." + ext;
 
     }
+
     private String extractedExt(String originalFilename) {
         // 마지막 .뒤의 위치를 가져온다.
         int pos = originalFilename.lastIndexOf(".");
@@ -221,6 +247,19 @@ public class BoardServiceImpl implements BoardService{
         log.info("수정완료");
         return findBoard.getId();
     }
+
+//    @Override
+//    public Optional<BoardDto> findById(Long id) {
+//        Optional<Board> optionalBoardEntity = boardRepository.findById(id);
+//        if (optionalBoardEntity.isPresent()) {
+//            Board boardEntity = optionalBoardEntity.get();
+//            BoardDto boardDto = BoardDto.toBoardDto(boardEntity);
+//            return boardDto;
+//        } else {
+//            return null;
+//        }
+////        return boardRepository.findById(id);
+//    }
 
     @Override
     public Optional<Board> findById(Long id) {

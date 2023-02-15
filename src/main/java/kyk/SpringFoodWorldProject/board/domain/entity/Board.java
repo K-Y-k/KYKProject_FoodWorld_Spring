@@ -37,6 +37,7 @@ public class Board extends BaseTimeEntity{
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int likeCount;
 
+    // 단방향 관계
     // Fetch 전략의 기본값은 EAGER(즉시 로딩)이지만 필요하지 않은 쿼리도 JPA에서 함께 조회하기 때문에 N+1 문제를 야기할 수 있어,
     // Fetch 전략을 LAZY(지연 로딩)로 설정
     @ManyToOne(fetch = FetchType.LAZY) // Board 입장에서는 member와 다대일 관계이므로
@@ -44,13 +45,18 @@ public class Board extends BaseTimeEntity{
     private Member member;
 
     // 양방향 관계를 맺어줌
-    // 게시글이 삭제되면 댓글 또한 삭제되어야 하기 때문에 CascadeType.REMOVE 속성을 사용
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    // 게시글이 삭제되면 파일 또한 삭제되어야 하기 때문에 CascadeType.REMOVE와 orphanRemoval = true 속성을 사용
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<BoardFile> boardFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("id asc") // 댓글 정렬
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     private String fileName;
     private String filePath;
+
+    private int fileAttached;
 
 //    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 //    private FileStore file;

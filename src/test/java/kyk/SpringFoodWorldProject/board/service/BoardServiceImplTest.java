@@ -44,11 +44,11 @@ class BoardServiceImplTest {
         Member savedMember = memberRepository.save(member1);
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
 
 
         // when
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         Board findUploadBoard = boardService.findById(uploadBoardId).get();
 
@@ -175,8 +175,8 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
         boardService.delete(uploadBoardId);
@@ -199,8 +199,8 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
         int count = boardService.updateCount(uploadBoardId);
@@ -219,8 +219,8 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null,"freeBoard", "잡담");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null,"freeBoard", "잡담", null, null, null, 0);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
         likeService.saveLike(savedMember.getId(), uploadBoardId);
@@ -248,8 +248,8 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담");
-        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto, null);
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         CommentUploadDto commentDto = new CommentUploadDto(37L, "안녕하세요 댓글");
 
