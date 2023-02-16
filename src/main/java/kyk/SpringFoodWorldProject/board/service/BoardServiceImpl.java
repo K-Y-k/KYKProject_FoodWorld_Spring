@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -38,203 +37,120 @@ public class BoardServiceImpl implements BoardService {
     private final BoardFileRepository boardFileRepository;
     private final MemberRepository memberRepository;
 
-    @Value("${file.location}")
-    private String fileLocation;
+    @Value("${file.imageFileLocation}")
+    private String imageFileLocation;
+
+    @Value("${file.attachFileLocation}")
+    private String attachFileLocation;
 
     /**
      * 글 등록
-     *
-     * @return
      */
     @Override
     public Long upload(Long memberId, BoardUploadDto boardDto) throws IOException {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
-        String fileName = null;
-        String filePath = null;
+        List<MultipartFile> imageFiles = boardDto.getImageFiles();
+        List<MultipartFile> attachFiles = boardDto.getAttachFiles();
 
-        if (boardDto.getImageFiles() != null && !boardDto.getImageFiles().isEmpty()) {
-            log.info("파일 가져온 상태");
-
+        // 첨부파일이 있을 경우
+        if (!attachFiles.get(0).getOriginalFilename().isEmpty()) {
             // 여러 개의 파일일 수 있으므로 부모 객체인 Board부터 가져와야함
+            // + attached 속성 1로 설정한 toSaveFileEntity로 글 저장
             Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
             Long savedId = boardRepository.save(boardEntity).getId();
             Board board = boardRepository.findById(savedId).get();
 
-            for (MultipartFile imageFiles: boardDto.getImageFiles()) {
+            attachUpload(boardDto, board);
 
-                String originalFilename = imageFiles.getOriginalFilename();
-
-                UUID uuid = UUID.randomUUID();
-                String storedFileName = uuid + "_" + originalFilename;
-                String savePath = fileLocation;
-                imageFiles.transferTo(new File(savePath, storedFileName));
-
-
-                BoardFile boardFileEntity = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName);
-
-                boardFileRepository.save(boardFileEntity);
+            // + 이미지파일이 있을 경우
+            if (!imageFiles.get(0).getOriginalFilename().isEmpty()) {
+                imageUpload(boardDto, board);
             }
 
             return savedId;
+        } else if (attachFiles.get(0).getOriginalFilename().isEmpty()) {
+            // 첨부파일이 없고 이미지파일은 있을 경우
+            if (!imageFiles.get(0).getOriginalFilename().isEmpty()) {
+                Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
+                Long savedId = boardRepository.save(boardEntity).getId();
+                Board board = boardRepository.findById(savedId).get();
 
-//            // 실제 파일 저장하는 경로 지정
-//            String savePath = fileLocation;
-////            filePath= System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
-//
-//            // 파일에 이름을 붙일 랜덤으로 식별자 지정
-//            UUID uuid = UUID.randomUUID();
-//            fileName = uuid + "_" + boardDto.getImageFiles().getOriginalFilename();
-//
-//            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
-//            boardDto.getImageFiles().transferTo(new File(savePath, fileName));
-//
-//            // DB에 저장할 경로
-//            filePath = "/C:/Users/KOR/IdeaProjects/file/" + fileName;
-        } else {
+                imageUpload(boardDto, board);
+                return savedId;
+            } else { // 첨부파일, 이미지파일 모두 없을 경우
+                Board uploadBoard = uploadBoard(boardDto, findMember);
+                return uploadBoard.getId();
+            }
+        }
+        return null;
+    }
 
-//        Board board = boardDto.toEntity(findMember, fileName, filePath);
 
-            Board board = boardDto.toSaveEntity(findMember, boardDto);
-            log.info("uploadBoard={}", board);
-            Board uploadBoard = boardRepository.save(board);
-            return uploadBoard.getId();
+    private Board uploadBoard(BoardUploadDto boardDto, Member findMember) {
+        Board board = boardDto.toSaveEntity(findMember, boardDto);
+        Board uploadBoard = boardRepository.save(board);
+        log.info("uploadBoard={}", board);
+        return uploadBoard;
+    }
+
+    private void imageUpload(BoardUploadDto boardDto, Board board) throws IOException {
+        // 루프를 돌려 파일을 모두 찾고 반환
+        for (MultipartFile imageFiles: boardDto.getImageFiles()) {
+            String originalFilename = imageFiles.getOriginalFilename();
+
+            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+            UUID uuid = UUID.randomUUID();
+            String storedFileName = uuid + "_" + originalFilename;
+            String savePath = imageFileLocation;
+
+            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
+            imageFiles.transferTo(new File(savePath, storedFileName));
+
+            String attachedType = "none";
+
+            // DB에 파일 관련 필드 값 저장
+            BoardFile boardFileEntity = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName, attachedType);
+            boardFileRepository.save(boardFileEntity);
         }
     }
 
-//    public String getFullPath(String fileName) {
-//        filePath = "C:\\Users\\KOR\\IdeaProjects\\file\\";
-//        return filePath + fileName;
-//    }
+    private void attachUpload(BoardUploadDto boardDto, Board board) throws IOException {
+        // 루프를 돌려 파일을 모두 찾고 반환
+        for (MultipartFile attachFiles: boardDto.getAttachFiles()) {
+            String originalFilename = attachFiles.getOriginalFilename();
 
-    //    @Override
-//    public Long upload(Long memberId, BoardUploadDto boardDto, MultipartFile file) throws IOException {
-//        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
-//                new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
-//
-//        filePath = null;
-//        String fileName = null;
-//
-//        if (file != null && !file.isEmpty()) {
-//            log.info("파일 가져와짐");
-//
-//            // 파일경로 지정
-////            String fullPath = "C:\\Users\\KOR\\IdeaProjects\\file";
-////            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 현재 프로젝트의 경로로 담아줌
-//
-////            // 파일에 이름을 붙일 랜덤으로 식별자 지정
-////            String uuid = UUID.randomUUID().toString();
-////            fileName = uuid + "_" + file.getOriginalFilename();
-//
-//            String originalFilename = file.getOriginalFilename();
-//            fileName = createStoreFileName(originalFilename);
-//
-//            // 파일경로와 파일이름 지정한 객체 생성 및 저장
-//            file.transferTo(new File(getFullPath(fileName)));
-//            log.info("file = {}", file.getOriginalFilename());
-//
-//        }
-//
-//        Board board = boardDto.toEntity(findMember, fileName, filePath);
-//
-//        log.info("uploadBoard={}", board);
-//        Board uploadBoard = boardRepository.save(board);
-//
-//        return uploadBoard.getId();
-//    }
-    private String createStoreFileName(String originalFilename) {
-        String ext = extractedExt(originalFilename);
-        String uuid = UUID.randomUUID().toString();
-        return uuid + "." + ext;
+            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+            UUID uuid = UUID.randomUUID();
+            String storedFileName = uuid + "_" + originalFilename;
+            String savePath = attachFileLocation;
 
+            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
+            attachFiles.transferTo(new File(savePath, storedFileName));
+
+            String attachedType = "attached";
+
+            // DB에 파일 관련 필드 값 저장
+            BoardFile boardFileEntity = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName, attachedType);
+            boardFileRepository.save(boardFileEntity);
+        }
     }
 
-    private String extractedExt(String originalFilename) {
-        // 마지막 .뒤의 위치를 가져온다.
-        int pos = originalFilename.lastIndexOf(".");
-        // 위를 활용하여 확장자를 가져온다.
-        return originalFilename.substring(pos + 1);
-    }
-
-
-//    @Override
-//    public void upload(Board board, MultipartFile file) throws IOException {
-//        if(!file.isEmpty()) {
-//            // 파일경로 지정
-//            String fullPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";  // System.getProperty("user.dir")는 resource->static->files로 경로를 정했기에 현재 프로젝트의 경로로 담아줌
-//
-//            // 파일에 이름을 붙일 랜덤으로 식별자 지정
-//            UUID uuid = UUID.randomUUID();
-//            String fileName = uuid + "_" + file.getOriginalFilename();
-//
-//            // 파일경로와 파일이름 지정한 객체 생성 및 저장
-//            File saveFile = new File(fullPath, fileName);
-//            file.transferTo(saveFile);
-//
-//            // DB에 저장
-//            board.setFileName(fileName);
-//            board.setFilePath("/files/" + fileName);
-//
-//        }
-////        boardRepository.save(board);
-//        return;
-//    }
-
-
-//    /**
-//     * 여러 개의 이미지 업로드
-//     */
-//    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
-//        // ArrayList로 저장 결과 변수 선언
-//        List<UploadFile> storeFileResult = new ArrayList<>();
-//
-//        // 루프를 돌려 파일을 모두 찾고 반환
-//        for (MultipartFile multipartFile : multipartFiles) {
-//            // 파일이 비어있지 않으면
-//            if (!multipartFile.isEmpty()) {
-//                // storeFile호출해서 multipartFile를 넣어준 uploadFile을 리스트에 담아줘야한다.
-//                storeFileResult.add(storeFile(multipartFile));
-//            }
-//        }
-//        return storeFileResult;
-//    }
-//
-//    public String getFullPath(String filename) {
-//        return System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + filename;
-//    }
-//
-//    /**
-//     * 하나의 파일 저장 MultipartFile을 받아와 UploadFile로 변환
-//     */
-//    public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
-//
-//        // 비어있으면 널로 반환
-//        if (multipartFile.isEmpty()) {
-//            return null;
-//        }
-//
-//        // 비어있지 않으면
-//        // 사용자가 업로드한 파일명 가져오고 ex) image.png
-//        String originalFilename = multipartFile.getOriginalFilename();
-//
-////        // 확장자를 가져오기 : 나중에 서버에서 구분하기 쉽게하려고 ex) png
-////        String ext = extractedExt(originalFilename);
-////
-////        // 서버에 저장하는 파일명 = 유효Id로 ex) "qwe-qwe-123-qwe-qqwe.png"
-////        String uuid = UUID.randomUUID().toString();
-////
-////        // 최종적으로 저장할 파일명
-////        String storeFileName = uuid + "." + ext;
-//
-//        // 위 작업을 한 메서드를 적용한 것
-//        String storeFileName = createStoreFileName(originalFilename);
-//
-//        // 파일 경로명으로 변환 및 UploadFile 객체로 반환
-//        multipartFile.transferTo(new File(getFullPath(storeFileName)));
-//        return new UploadFile(originalFilename, storeFileName);
+//    // 확장자 구분 메서드
+//    private String createStoreFileName(String originalFilename) {
+//        String ext = extractedExt(originalFilename);
+//        String uuid = UUID.randomUUID().toString();
+//        return uuid + "." + ext;
 //
 //    }
+//    private String extractedExt(String originalFilename) {
+//        // 마지막 .뒤의 위치를 가져온다.
+//        int pos = originalFilename.lastIndexOf(".");
+//        // 위를 활용하여 확장자를 가져온다.
+//        return originalFilename.substring(pos + 1);
+//    }
+
 
 
     /**
@@ -323,4 +239,7 @@ public class BoardServiceImpl implements BoardService {
         log.info("좋아요 최신화 완료");
     }
 
+    public Optional<BoardFile> findBoardFileById(Long boardFileId){
+        return boardFileRepository.findById(boardFileId);
+    }
 }

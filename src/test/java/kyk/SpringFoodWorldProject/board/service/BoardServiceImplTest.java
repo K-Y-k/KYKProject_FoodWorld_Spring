@@ -9,6 +9,7 @@ import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,13 +17,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
 @SpringBootTest
@@ -33,26 +44,48 @@ class BoardServiceImplTest {
     @Autowired LikeServiceImpl likeService;
     @Autowired CommentServiceImpl commentService;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @BeforeEach
+    void init() {
+    }
+
+
     /**
      * 글 등록 테스트
      */
     @Test
 //    @Rollback(value = false)
-    void upload() throws IOException {
+    void upload() throws Exception {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어오 됨
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
 
 
-        // when
+        // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어도 됨
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
-        Board findUploadBoard = boardService.findById(uploadBoardId).get();
 
         // then : 등록한 속성들로 비교
+        Board findUploadBoard = boardService.findById(uploadBoardId).get();
+
         assertThat(findUploadBoard.getTitle()).isEqualTo(boardDto.getTitle());
         assertThat(findUploadBoard.getContent()).isEqualTo(boardDto.getContent());
     }
@@ -96,7 +129,7 @@ class BoardServiceImplTest {
      */
     @Test
     void pageList() {
-        // given
+        // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String boardType = "freeBoard";
 
@@ -106,7 +139,7 @@ class BoardServiceImplTest {
         // then
         Assertions.assertEquals(result.getSize(), 10, "한 페이지당 게시글의 개수");
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
-        Assertions.assertEquals(result.getTotalElements(), 20, "페이지 객체에 담긴 모든 게시글 개수");
+        Assertions.assertEquals(result.getTotalElements(), 19, "페이지 객체에 담긴 모든 게시글 개수");
         System.out.println("NEXT: " + result.nextPageable());
     }
 
@@ -116,17 +149,17 @@ class BoardServiceImplTest {
      */
     @Test
     void findByTitleContaining() {
-        // given
+        // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String titleKeyword = "제";
         String boardType = "freeBoard";
 
         // when
-        Page<Board> result = boardService.findByTitleContaining(titleKeyword, pageable,boardType);
+        Page<Board> result = boardService.findByTitleContaining(titleKeyword, pageable, boardType);
 
         // then
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
-        Assertions.assertEquals(result.getTotalElements(), 20, "페이지 객체에 담긴 모든 게시글 개수");
+        Assertions.assertEquals(result.getTotalElements(), 19, "페이지 객체에 담긴 모든 게시글 개수");
     }
 
     /**
@@ -134,7 +167,7 @@ class BoardServiceImplTest {
      */
     @Test
     void findByWriterContaining() {
-        // given
+        // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String writerKeyword = "작";
         String boardType = "freeBoard";
@@ -144,7 +177,7 @@ class BoardServiceImplTest {
 
         // then
         Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
-        Assertions.assertEquals(result.getTotalElements(), 20, "페이지 객체에 담긴 모든 게시글 개수");
+        Assertions.assertEquals(result.getTotalElements(), 19, "페이지 객체에 담긴 모든 게시글 개수");
     }
 
     /**
@@ -175,7 +208,21 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -199,7 +246,21 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -219,7 +280,21 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null,"freeBoard", "잡담", null, null, null, 0);
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
@@ -248,10 +323,24 @@ class BoardServiceImplTest {
         Member member1 = new Member("이름1", "loginId", "pw1");
         Member savedMember = memberRepository.save(member1);
 
-        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", null, null, "freeBoard", "잡담", null, null, null, 0);
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadDto boardDto = new BoardUploadDto(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
-        CommentUploadDto commentDto = new CommentUploadDto(37L, "안녕하세요 댓글");
+        CommentUploadDto commentDto = new CommentUploadDto(47L, "안녕하세요 댓글");
 
         // when
         Long savedComment = commentService.saveComment(savedMember.getId(), uploadBoardId, commentDto);

@@ -14,20 +14,25 @@ public class BoardFile extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+
     private String originalFileName;
 
     private String storedFileName;
+
+    private String attachedType;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
     // board 엔티티에 originalFileName, storedFileName 컬럼을 추가하지 않기 위해
-    public static BoardFile toBoardFileEntity(Board board, String originalFileName, String storedFileName) {
+    public static BoardFile toBoardFileEntity(Board board, String originalFileName, String storedFileName, String attachedType) {
          return BoardFile.builder()
                  .originalFileName(originalFileName)
                  .storedFileName(storedFileName)
                  .board(board)
+                 .attachedType(attachedType)
                  .build();
     }
 

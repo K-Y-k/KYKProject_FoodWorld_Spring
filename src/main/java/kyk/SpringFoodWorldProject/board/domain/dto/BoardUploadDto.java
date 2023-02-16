@@ -28,23 +28,17 @@ public class BoardUploadDto {
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
 
-    private String fileName;
-
-    private String filePath;
-
     @NotEmpty(message = "게시판을 선택해주세요!")
     private String boardType;
-
     private String subType;
 
-
     private List<MultipartFile> imageFiles;
+    private List<MultipartFile> attachFiles;
     private List<String> originalFileName;
     private List<String> storedFileName;
     private int fileAttached;
 
 
-    // 엔티티에 @setter를 사용하지 않기 위해 dto에서 엔티티로 변환해주는 메서드 적용
     public Board toSaveEntity(Member member, BoardUploadDto boardDto) {
         return Board.builder()
                 .title(title)
@@ -68,21 +62,17 @@ public class BoardUploadDto {
                 .build();
     }
 
-    public Board toEntity(Member member, String fileName, String filePath) {
-        return Board.builder()
-                .title(title)
-                .content(content)
-                .writer(member.getName())
-                .member(member)
-                .boardType(boardType)
-                .subType(subType)
-                .fileName(fileName)
-                .filePath(filePath)
-                .build();
-    }
-
 
     public BoardUploadDto(String boardType) {
         this.boardType = boardType;
+    }
+
+    public BoardUploadDto(Long id, String title, String content, String boardType, String subType, int fileAttached) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.boardType = boardType;
+        this.subType = subType;
+        this.fileAttached = fileAttached;
     }
 }

@@ -53,16 +53,8 @@ public class Board extends BaseTimeEntity{
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
-    private String fileName;
-    private String filePath;
-
     private int fileAttached;
 
-//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-//    private FileStore file;
-
-//    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    private List<FileStore> imageFiles;
 
     public Board(String title, String content, String writer, Member member, String boardType, String subType) {
         this.title = title;

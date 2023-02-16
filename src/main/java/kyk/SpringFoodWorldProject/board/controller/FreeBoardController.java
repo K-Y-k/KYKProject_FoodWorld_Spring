@@ -13,19 +13,28 @@ import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.lang.reflect.MalformedParameterizedTypeException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +50,8 @@ public class FreeBoardController {
     private final LikeServiceImpl likeService;
     private final CommentServiceImpl commentService;
 
+    @Value("${file.attachFileLocation}")
+    private String attachFileLocation;
 
     /**
      * 글 모두 조회 폼
@@ -183,30 +194,38 @@ public class FreeBoardController {
      * 글 등록 기능
      */
     @PostMapping("/freeBoard/upload")
-    public String boardUpload(@Valid @ModelAttribute("uploadForm") BoardUploadDto boardDto, BindingResult bindingResult,
-                              @SessionAttribute("loginMember") Member member) throws IOException {
+    public String boardUpload(@SessionAttribute("loginMember") Member loginMember,
+                              @Valid @ModelAttribute("uploadForm") BoardUploadDto boardDto, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return "boards/freeboard/freeBoard_upload";
         }
 
-
-
-        boardService.upload(member.getId(), boardDto);
-
-
-//        return ResponseEntity.ok(boardService.save(member.getName(), boardDto));
-//
-//        UploadFile attachFile = boardService.storeFile(board.getAttachFile());
-//        List<UploadFile> storeImageFiles = boardService.storeFiles(board.getImageFiles());
-//
-//        Board boardDto = new Board();
-//        boardDto.setTitle(board.getTitle());
-//        boardDto.setContent(board.getContent());
-//        boardDto.setAttachFile((MultipartFile) attachFile);
-//
-//        boardService.save(boardDto);
-
+        boardService.upload(loginMember.getId(), boardDto);
         return "redirect:/boards/freeBoard";
+    }
+
+    /**
+     * 파일 다운로드
+     */
+    @GetMapping("/attach/{boardFileId}")
+    public ResponseEntity<Resource> downloadAttach(@PathVariable Long boardFileId) throws MalformedURLException {
+        BoardFile boardFile = boardService.findBoardFileById(boardFileId).get();
+
+        // 직접 접근해서 storeFileName, uploadFileName을 가져옴
+        // uploadFileName은 다운로드 받을 때의 파일명이 필요해서
+        String storeFileName = boardFile.getStoredFileName();
+        String uploadFileName = boardFile.getOriginalFileName();
+
+        UrlResource resource = new UrlResource("file:" + attachFileLocation + storeFileName);
+
+        // CONTENT_DISPOSITION이 attachment에 filename이 맞으면 다운로드하게 한다.
+        // 깨짐 방지를 위해 한글로 확실히 변환시키고 넣기
+        String encodeUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
     }
 
 
