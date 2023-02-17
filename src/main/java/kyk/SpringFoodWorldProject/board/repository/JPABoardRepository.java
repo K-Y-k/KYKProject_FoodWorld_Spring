@@ -25,11 +25,4 @@ public interface JPABoardRepository extends JpaRepository<Board, Long> {
     @Query("update Board b set b.count = b.count + 1 where b.id = :boardId")
     int updateCount(Long boardId);
 
-
-//    @Modifying
-//    @Transactional
-//    @Query(value = "insert into Board b (b.id, b.title, b.content, b.member.name) VALUES(:#{boardDto.id}, :#{boardDto.title}, :#{boardDto.content}, :#{boardDto.member.name}, 0, 0, :#{boardDto.member.id}, null)", nativeQuery = true)
-//    int upload(@Param("boardDto") BoardDto boardDto);
-
-
 }

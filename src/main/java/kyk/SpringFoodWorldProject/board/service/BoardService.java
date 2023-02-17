@@ -1,11 +1,10 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,12 +17,12 @@ public interface BoardService {
      *
      * @return
      */
-    Long upload(Long memberId, BoardUploadDto boardDto) throws IOException;
+    Long upload(Long memberId, BoardUploadForm boardDto) throws IOException;
 
     /**
      * 글 수정
      */
-    Long updateBoard(Long boardId, BoardUpdateDto boardUpdateDto);
+    Long updateBoard(Long boardId, BoardUpdateForm boardUpdateDto);
 
     /**
      * 글 id로 조회

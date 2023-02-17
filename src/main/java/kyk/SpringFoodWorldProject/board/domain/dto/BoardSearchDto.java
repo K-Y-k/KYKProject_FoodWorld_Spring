@@ -8,7 +8,7 @@ import lombok.Setter;
  */
 @Getter @Setter
 public class BoardSearchDto {
-    private String writer;
-    private String title;
+    private String writerSearchKeyword;
+    private String titleSearchKeyword;
 
 }

@@ -1,7 +1,7 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadDto;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
@@ -47,7 +47,7 @@ public class BoardServiceImpl implements BoardService {
      * 글 등록
      */
     @Override
-    public Long upload(Long memberId, BoardUploadDto boardDto) throws IOException {
+    public Long upload(Long memberId, BoardUploadForm boardDto) throws IOException {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
@@ -55,7 +55,7 @@ public class BoardServiceImpl implements BoardService {
         List<MultipartFile> attachFiles = boardDto.getAttachFiles();
 
         // 첨부파일이 있을 경우
-        if (!attachFiles.get(0).getOriginalFilename().isEmpty()) {
+        if (!attachFiles.get(0).getOriginalFilename().isBlank()) {
             // 여러 개의 파일일 수 있으므로 부모 객체인 Board부터 가져와야함
             // + attached 속성 1로 설정한 toSaveFileEntity로 글 저장
             Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
@@ -65,14 +65,14 @@ public class BoardServiceImpl implements BoardService {
             attachUpload(boardDto, board);
 
             // + 이미지파일이 있을 경우
-            if (!imageFiles.get(0).getOriginalFilename().isEmpty()) {
+            if (!imageFiles.get(0).getOriginalFilename().isBlank()) {
                 imageUpload(boardDto, board);
             }
 
             return savedId;
-        } else if (attachFiles.get(0).getOriginalFilename().isEmpty()) {
+        } else if (attachFiles.get(0).getOriginalFilename().isBlank()) {
             // 첨부파일이 없고 이미지파일은 있을 경우
-            if (!imageFiles.get(0).getOriginalFilename().isEmpty()) {
+            if (!imageFiles.get(0).getOriginalFilename().isBlank()) {
                 Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
                 Long savedId = boardRepository.save(boardEntity).getId();
                 Board board = boardRepository.findById(savedId).get();
@@ -88,14 +88,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-    private Board uploadBoard(BoardUploadDto boardDto, Member findMember) {
+    private Board uploadBoard(BoardUploadForm boardDto, Member findMember) {
         Board board = boardDto.toSaveEntity(findMember, boardDto);
         Board uploadBoard = boardRepository.save(board);
         log.info("uploadBoard={}", board);
         return uploadBoard;
     }
 
-    private void imageUpload(BoardUploadDto boardDto, Board board) throws IOException {
+    private void imageUpload(BoardUploadForm boardDto, Board board) throws IOException {
         // 루프를 돌려 파일을 모두 찾고 반환
         for (MultipartFile imageFiles: boardDto.getImageFiles()) {
             String originalFilename = imageFiles.getOriginalFilename();
@@ -116,7 +116,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void attachUpload(BoardUploadDto boardDto, Board board) throws IOException {
+    private void attachUpload(BoardUploadForm boardDto, Board board) throws IOException {
         // 루프를 돌려 파일을 모두 찾고 반환
         for (MultipartFile attachFiles: boardDto.getAttachFiles()) {
             String originalFilename = attachFiles.getOriginalFilename();
@@ -157,7 +157,7 @@ public class BoardServiceImpl implements BoardService {
      * 글 수정
      */
     @Override
-    public Long updateBoard(Long boardId, BoardUpdateDto updateParam) {
+    public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
         Board findBoard = findById(boardId).orElseThrow();
 
         findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent());

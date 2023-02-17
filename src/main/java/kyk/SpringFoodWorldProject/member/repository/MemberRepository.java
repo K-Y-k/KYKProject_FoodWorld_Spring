@@ -20,5 +20,4 @@ public interface MemberRepository {
 
     Optional<Member> findByLoginId(String loginId);
 
-    void clearStore();
 }

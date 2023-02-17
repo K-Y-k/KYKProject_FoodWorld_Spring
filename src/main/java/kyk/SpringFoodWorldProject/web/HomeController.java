@@ -1,6 +1,8 @@
 package kyk.SpringFoodWorldProject.web;
 
+import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberSessionDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class HomeController {
      *  메인 폼 + 로그인 세션 체크 기능 (@SessionAttribute 활용)
      */
     @GetMapping("/")
-    public String homeLoginCheck(@SessionAttribute(name="loginMember", required = false) Member loginMember,
+    public String homeLoginCheck(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                  @ModelAttribute("loginForm") LoginForm form,
                                  Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동

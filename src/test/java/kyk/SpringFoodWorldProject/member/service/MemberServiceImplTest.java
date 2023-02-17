@@ -23,7 +23,7 @@ class MemberServiceImplTest {
 
     @AfterEach
     void afterEach() {
-        memberRepository.clearStore();
+        memberRepository.clear();
     }
 
     /**
@@ -57,7 +57,7 @@ class MemberServiceImplTest {
         Member savedMember = memberRepository.save(member);
 
         // then
-        Member findMember = memberService.findById(savedMember.getId()).get(); // 저장했던 saveId로 member 가져오기
+        Member findMember = memberService.findById(savedMember.getId()).get();
         assertThat(member.getId()).isEqualTo(findMember.getId());
 //        assertThat(memberEntity.getId()).isEqualTo(findMember.getId());
     }
@@ -79,7 +79,7 @@ class MemberServiceImplTest {
         List<Member> findAllMember = memberRepository.findAll();
 
         // then
-        assertThat(findAllMember.size()).isEqualTo(5); // TestDataInit 클래스에서 3명을 미리 생성하게 세팅해서 5명
+        assertThat(findAllMember.size()).isEqualTo(2);
     }
 
     /**

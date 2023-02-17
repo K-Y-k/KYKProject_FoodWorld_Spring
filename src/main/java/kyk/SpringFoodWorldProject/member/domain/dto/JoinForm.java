@@ -9,7 +9,11 @@ import javax.validation.constraints.Size;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class JoinForm {
+
+    private Long id;
+
     @NotBlank(message = "닉네임을 입력해주세요")
     @Size(min = 2, max = 7, message = "최소 2글자, 최대 7글자입니다.")
     private String name;

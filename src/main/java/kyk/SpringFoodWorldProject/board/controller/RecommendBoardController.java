@@ -45,7 +45,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/boards")
-public class FreeBoardController {
+public class RecommendBoardController {
 
     private final BoardServiceImpl boardService;
     private final LikeServiceImpl likeService;
@@ -57,12 +57,12 @@ public class FreeBoardController {
     /**
      * 글 모두 조회 폼
      */
-    @GetMapping("/freeBoard")
-    public String freeBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+    @GetMapping("/recommendBoard")
+    public String recommendBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                              Model model,
                              BoardSearchDto boardSearchDto) {
         Page<Board> boards;
-        String boardType = "freeBoard";
+        String boardType = "recommendBoard";
 
         String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
@@ -79,7 +79,7 @@ public class FreeBoardController {
         }
 
         int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
-                                                                     // pageable의 index는 0부터 시작이기에 1을 더해준 것이다.
+        // pageable의 index는 0부터 시작이기에 1을 더해준 것이다.
 
         int startPage = Math.max(1, nowPage - 2);                    // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
         int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
@@ -100,14 +100,14 @@ public class FreeBoardController {
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
 
-        return "boards/freeboard/freeBoard_main";
+        return "boards/recommendboard/recommendBoard_main";
     }
 
 
     /**
      * 글 상세 조회 폼
      */
-    @GetMapping("/freeBoard/{boardId}")
+    @GetMapping("/recommendBoard/{boardId}")
     public String board(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
@@ -143,13 +143,13 @@ public class FreeBoardController {
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
 
-        return "boards/freeboard/freeBoard_detail";
+        return "boards/recommendboard/recommendBoard_detail";
     }
 
     /**
      * 댓글 등록
      */
-    @PostMapping("/freeBoard/{boardId}/comment")
+    @PostMapping("/recommendBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 @ModelAttribute("comment") CommentUploadDto commentDto,
@@ -167,14 +167,14 @@ public class FreeBoardController {
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
 
         redirectAttributes.addAttribute("boardId", boardId);
-        return "redirect:/boards/freeBoard/{boardId}";
+        return "redirect:/boards/recommendBoard/{boardId}";
     }
 
 
     /**
      * 글 등록 폼
      */
-    @GetMapping("/freeBoard/upload")
+    @GetMapping("/recommendBoard/upload")
     public String uploadForm(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                              @ModelAttribute("uploadForm") BoardUploadForm boardDto,
                              Model model) {
@@ -187,81 +187,56 @@ public class FreeBoardController {
             return "messages";
         }
 
-        BoardUploadForm boardType = new BoardUploadForm("freeBoard");
+        BoardUploadForm boardType = new BoardUploadForm("recommendBoard");
         model.addAttribute("boardType", boardType);
 
         log.info("로그인 상태 {}", loginMember);
-        return "boards/freeboard/freeBoard_upload";
+        return "boards/recommendboard/recommendBoard_upload";
     }
 
 
     /**
      * 글 등록 기능
      */
-    @PostMapping("/freeBoard/upload")
+    @PostMapping("/recommendBoard/upload")
     public String boardUpload(@SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                               @Valid @ModelAttribute("uploadForm") BoardUploadForm boardDto, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
-            return "boards/freeboard/freeBoard_upload";
+            return "boards/recommendboard/recommendBoard_upload";
         }
 
         boardService.upload(loginMember.getId(), boardDto);
-        return "redirect:/boards/freeBoard";
-    }
-
-    /**
-     * 파일 다운로드
-     */
-    @GetMapping("/attach/{boardFileId}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable Long boardFileId) throws MalformedURLException {
-
-        BoardFile boardFile = boardService.findBoardFileById(boardFileId).get();
-
-        // 직접 접근해서 storedFileName, uploadFileName을 가져옴
-        // uploadFileName은 다운로드 받을 때의 파일명이 필요해서
-        String uploadFileName = boardFile.getOriginalFileName();
-        String storeFileName = boardFile.getStoredFileName();
-
-        UrlResource resource = new UrlResource("file:" + attachFileLocation + storeFileName);
-
-        // CONTENT_DISPOSITION이 attachment에 filename이 맞으면 다운로드하게 한다.
-        // 깨짐 방지를 위해 한글로 확실히 변환시키고 넣기
-        String encodeUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
-        String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .body(resource);
+        return "redirect:/boards/recommendBoard";
     }
 
 
     /**
      * 글 수정 폼
      */
-    @GetMapping("/freeBoard/{boardId}/edit")
+    @GetMapping("/recommendBoard/{boardId}/edit")
     public String editForm(@PathVariable Long boardId,
                            Model model) {
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
         model.addAttribute("board", board);
-        return "boards/freeboard/freeBoard_edit";
+        return "boards/recommendboard/recommendBoard_edit";
     }
 
     /**
      * 글 수정 기능
      */
-    @PostMapping("/freeBoard/{boardId}/edit")
+    @PostMapping("/recommendBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
                        @ModelAttribute("board") BoardUpdateForm updateParam) {
         boardService.updateBoard(boardId, updateParam);
-        return "redirect:/boards/freeBoard/{boardId}";
+        return "redirect:/boards/recommendBoard/{boardId}";
     }
 
 
     /**
      * 글 삭제 기능
      */
-    @GetMapping("/freeBoard/{boardId}/delete")
+    @GetMapping("/recommendBoard/{boardId}/delete")
     public String delete(@PathVariable Long boardId,
                          @SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                          Model model) {
@@ -271,18 +246,18 @@ public class FreeBoardController {
             boardService.delete(boardId);
         } else {
             model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
-            model.addAttribute("redirectUrl", "/boards/freeBoard");
+            model.addAttribute("redirectUrl", "/boards/recommendBoard");
             return "messages";
         }
 
-        return "redirect:/boards/freeBoard";
+        return "redirect:/boards/recommendBoard";
     }
 
 
     /**
      * 글 좋아요 업데이트 기능
      */
-    @GetMapping ("/freeBoard/{boardId}/like")
+    @GetMapping ("/recommendBoard/{boardId}/like")
     public String likeUpdate(@PathVariable Long boardId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                              RedirectAttributes redirectAttributes,
@@ -300,7 +275,7 @@ public class FreeBoardController {
         likeService.saveLike(loginMember.getId(), boardId);
         redirectAttributes.addAttribute("boardId", boardId);
 
-        return "redirect:/boards/freeBoard/{boardId}";
+        return "redirect:/boards/recommendBoard/{boardId}";
     }
 
 

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class BoardFile extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 

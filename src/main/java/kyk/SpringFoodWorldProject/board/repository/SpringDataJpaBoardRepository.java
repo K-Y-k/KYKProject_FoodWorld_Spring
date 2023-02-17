@@ -1,9 +1,6 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateDto;
-import kyk.SpringFoodWorldProject.member.repository.JPAMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -76,5 +73,8 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.updateCount(boardId);
     }
 
+    public void clear() {
+        boardRepository.deleteAll();
+    }
 
 }

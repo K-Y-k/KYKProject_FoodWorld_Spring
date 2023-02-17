@@ -4,13 +4,9 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.persistence.EntityManager;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,21 +16,21 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class SpringDataJpaMemberRepository implements MemberRepository {
-    private final JPAMemberRepository repository;
+    private final JPAMemberRepository memberRepository;
 
     @Override
     public Member save(Member member) {
-        return repository.save(member);
+        return memberRepository.save(member);
     }
 
     @Override
     public Optional<Member> findById(Long id) {
-        return repository.findById(id);
+        return memberRepository.findById(id);
     }
 
     @Override
     public Member findByName(String name) {
-        return repository.findByName(name);
+        return memberRepository.findByName(name);
     }
 
 
@@ -53,13 +49,12 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
 
     @Override
     public List<Member> findAll() {
-        return repository.findAll();
+        return memberRepository.findAll();
     }
 
 
-    @Override
-    public void clearStore() {
-        repository.deleteAll();
+    public void clear() {
+        memberRepository.deleteAll();
     }
 
 }

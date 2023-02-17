@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
-public class BoardUploadDto {
+public class BoardUploadForm {
     private Long id;
 
     @NotBlank(message = "제목을 입력해주세요")
@@ -39,7 +38,7 @@ public class BoardUploadDto {
     private int fileAttached;
 
 
-    public Board toSaveEntity(Member member, BoardUploadDto boardDto) {
+    public Board toSaveEntity(Member member, BoardUploadForm boardDto) {
         return Board.builder()
                 .title(title)
                 .content(content)
@@ -50,7 +49,7 @@ public class BoardUploadDto {
                 .fileAttached(0)
                 .build();
     }
-    public Board toSaveFileEntity(Member member, BoardUploadDto boardDto) {
+    public Board toSaveFileEntity(Member member, BoardUploadForm boardDto) {
         return Board.builder()
                 .title(title)
                 .content(content)
@@ -63,11 +62,11 @@ public class BoardUploadDto {
     }
 
 
-    public BoardUploadDto(String boardType) {
+    public BoardUploadForm(String boardType) {
         this.boardType = boardType;
     }
 
-    public BoardUploadDto(Long id, String title, String content, String boardType, String subType, int fileAttached) {
+    public BoardUploadForm(Long id, String title, String content, String boardType, String subType, int fileAttached) {
         this.id = id;
         this.title = title;
         this.content = content;
