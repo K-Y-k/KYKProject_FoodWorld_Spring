@@ -35,10 +35,10 @@ public class TestDataInit {
         // 게시글 데이터 추가 20
         int boardCount = 1;
         while (boardCount < 20) {
-            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember1, "freeBoard", "사는얘기"));
+            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember1, "자유게시판", "사는얘기"));
             boardCount++;
         }
-        Board savedBoard = boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용", "작가10", savedMember2, "recommendBoard","식당"));
+        Board savedBoard = boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용", "작가10", savedMember2, "추천게시판","식당"));
 
 
         // 댓글 데이터 추가 2

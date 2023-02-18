@@ -62,7 +62,7 @@ public class RecommendBoardController {
                              Model model,
                              BoardSearchDto boardSearchDto) {
         Page<Board> boards;
-        String boardType = "recommendBoard";
+        String boardType = "추천게시판";
 
         String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
@@ -187,9 +187,6 @@ public class RecommendBoardController {
             return "messages";
         }
 
-        BoardUploadForm boardType = new BoardUploadForm("recommendBoard");
-        model.addAttribute("boardType", boardType);
-
         log.info("로그인 상태 {}", loginMember);
         return "boards/recommendboard/recommendBoard_upload";
     }
@@ -218,7 +215,9 @@ public class RecommendBoardController {
                            Model model) {
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        model.addAttribute("board", board);
+
+        model.addAttribute("updateForm", board);
+
         return "boards/recommendboard/recommendBoard_edit";
     }
 
@@ -227,7 +226,7 @@ public class RecommendBoardController {
      */
     @PostMapping("/recommendBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @ModelAttribute("board") BoardUpdateForm updateParam) {
+                       @ModelAttribute("updateForm") BoardUpdateForm updateParam) {
         boardService.updateBoard(boardId, updateParam);
         return "redirect:/boards/recommendBoard/{boardId}";
     }

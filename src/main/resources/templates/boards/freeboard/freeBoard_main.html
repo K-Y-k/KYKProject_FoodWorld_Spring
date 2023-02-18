@@ -132,10 +132,10 @@
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
                     th:text="${board.id}"></td>
                 <td>
-                    <a th:if="${board.subType == null}" class="col-md-6" style="text-align: center; margin: 0 auto;"
-                       th:href="@{|/boards/${board.boardType}/${board.id}|}" th:text="|${board.title}|"></a>
-                    <a th:if="${board.subType != null}" class="col-md-6" style="text-align: center; margin: 0 auto;"
-                       th:href="@{|/boards/${board.boardType}/${board.id}|}" th:text="|[${board.subType}] ${board.title}|"></a>
+                    <a th:if="${#strings.equals(board.subType, '말머리 선택')}" class="col-md-6" style="text-align: center; margin: 0 auto;"
+                       th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|${board.title}|"></a>
+                    <a th:if="${not#strings.equals(board.subType, '말머리 선택')}" class="col-md-6" style="text-align: center; margin: 0 auto;"
+                       th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.subType}] ${board.title}|"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"

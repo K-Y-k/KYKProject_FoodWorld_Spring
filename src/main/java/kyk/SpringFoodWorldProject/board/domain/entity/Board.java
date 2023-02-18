@@ -73,9 +73,10 @@ public class Board extends BaseTimeEntity{
 
 
     // 변경 감지 메서드
-    public void updateBoard(String title, String content){
+    public void updateBoard(String title, String content, String subType){
         this.title = title;
         this.content = content;
+        this.subType = subType;
     }
 
     public void updateLikeCount(int likeCount){

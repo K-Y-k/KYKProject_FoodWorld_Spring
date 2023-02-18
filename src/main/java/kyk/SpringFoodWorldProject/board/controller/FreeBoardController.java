@@ -62,7 +62,7 @@ public class FreeBoardController {
                              Model model,
                              BoardSearchDto boardSearchDto) {
         Page<Board> boards;
-        String boardType = "freeBoard";
+        String boardType = "자유게시판";
 
         String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
@@ -88,6 +88,8 @@ public class FreeBoardController {
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+
+
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
@@ -187,9 +189,6 @@ public class FreeBoardController {
             return "messages";
         }
 
-        BoardUploadForm boardType = new BoardUploadForm("freeBoard");
-        model.addAttribute("boardType", boardType);
-
         log.info("로그인 상태 {}", loginMember);
         return "boards/freeboard/freeBoard_upload";
     }
@@ -243,7 +242,9 @@ public class FreeBoardController {
                            Model model) {
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        model.addAttribute("board", board);
+
+        model.addAttribute("updateForm", board);
+
         return "boards/freeboard/freeBoard_edit";
     }
 
@@ -252,7 +253,7 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @ModelAttribute("board") BoardUpdateForm updateParam) {
+                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam) {
         boardService.updateBoard(boardId, updateParam);
         return "redirect:/boards/freeBoard/{boardId}";
     }

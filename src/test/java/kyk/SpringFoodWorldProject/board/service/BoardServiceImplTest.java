@@ -52,7 +52,6 @@ class BoardServiceImplTest {
 
     @BeforeEach
     public void init() {
-
         // 회원 데이터 추가 3
         memberRepository.save(new Member("테스터1", "test", "test!"));
         Member savedMember1 = memberRepository.save(new Member("ddd", "dd", "dd"));
@@ -70,6 +69,9 @@ class BoardServiceImplTest {
 
     @AfterEach
     public void clear() throws SQLException {
+//        this.entityManager
+//                .createNativeQuery("ALTER TABLE member auto_increment=1")
+//                .executeUpdate();
     }
 
     /**
@@ -117,10 +119,10 @@ class BoardServiceImplTest {
     @Test
     void updateBoard() {
         // given
-        BoardUpdateForm updateDto = new BoardUpdateForm("수정한 제목", "수정한 내용");
+        BoardUpdateForm updateDto = new BoardUpdateForm("수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
 
         // when : 기존에 생성된 게시글 중의 id를 하나 넣음
-        Long updateBoardId = boardService.updateBoard(115L, updateDto);
+        Long updateBoardId = boardService.updateBoard(15L, updateDto);
         Board updateBoard = boardService.findById(updateBoardId).get();
 
         // then
@@ -359,7 +361,7 @@ class BoardServiceImplTest {
         BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
-        CommentUploadDto commentDto = new CommentUploadDto(30L, "안녕하세요 댓글");
+        CommentUploadDto commentDto = new CommentUploadDto(1L, "안녕하세요 댓글");
 
         // when
         Long savedComment = commentService.saveComment(savedMember.getId(), uploadBoardId, commentDto);

@@ -85,16 +85,16 @@
             <div class="field-error" style="color: red;" th:errors="*{boardType}"></div>
             <div>
                 <div class="form-group col-sm-5">
-                    <select th:field="*{boardType}" class="form-control">
-                        <option th:value="freeBoard">자유게시판</option>
+                    <select th:field="*{boardType}" class="form-select">
+                        <option th:value="자유게시판">자유게시판</option>
                     </select>
                 </div>
 
                 <br>
 
                 <div class="form-group col-sm-2">
-                    <select th:field="*{subType}" class="form-control">
-                        <option value="">말머리 선택</option>
+                    <select th:field="*{subType}" class="form-select">
+                        <option value="말머리 선택">말머리 선택</option>
                         <option th:value="사는얘기">사는얘기</option>
                         <option th:value="질문">질문</option>
                     </select>
@@ -115,6 +115,13 @@
             <label th:for="img">이미지 선택</label>
             <input class="form-control mt-2" type="file" name="imageFiles" multiple> <!--name을 컨트롤러의 매개변수 이름과 동일해야한다/-->
 
+<!--            <div class="form-group" id="file-list">-->
+<!--                <a href="#this" onclick="addFile()">파일추가</a>-->
+<!--                <div class="file-group">-->
+<!--                    <input type="file" name="file"><a href='#this' name='file-delete'>삭제</a>-->
+<!--                </div>-->
+<!--            </div>-->
+
             <button class="btn btn-danger mt-3" type="submit">등록하기</button>
             <button class="btn btn-danger mt-3"
                     th:onclick="|location.href='@{/boards/freeBoard}'|"
@@ -124,5 +131,27 @@
     </form>
 </section>
 
+
+<!--<script type="text/javascript">-->
+<!--    $(document).ready(function() {-->
+<!--        $("a[name='file-delete']").on("click", function(e) {-->
+<!--            e.preventDefault();-->
+<!--            deleteFile($(this));-->
+<!--        });-->
+<!--    })-->
+
+<!--    function addFile() {-->
+<!--        var str = "<div class='file-group'><input type='file' name='file'><a href='#this' name='file-delete'>삭제</a></div>";-->
+<!--        $("#file-list").append(str);-->
+<!--        $("a[name='file-delete']").on("click", function(e) {-->
+<!--            e.preventDefault();-->
+<!--            deleteFile($(this));-->
+<!--        });-->
+<!--    }-->
+
+<!--    function deleteFile(obj) {-->
+<!--        obj.parent().remove();-->
+<!--    }-->
+<!--</script>-->
 </body>
 </html>

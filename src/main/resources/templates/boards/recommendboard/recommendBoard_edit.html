@@ -78,17 +78,36 @@
 
 <section style="position: relative; width: 90vw; height: 30vh;">
     <!--th:action="@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}"-->
-    <h2 id="mtitle" style="position: absolute; left: 45%; top: 10%;"><b>추천게시판 글 수정하기</b></h2>
+  <h2 id="mtitle" style="position: absolute; left: 45%; top: 10%;"><b>추천게시판 글 수정하기</b></h2>
 
-    <form action="" th:action method="post">
-      <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
-        <input type="text" id="title" class="form-control mt-3" name="title" th:value="${board.title}">
+  <form action="" th:action th:object="${updateForm}" method="post" enctype="multipart/form-data">
+    <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
 
-        <textarea class="form-control mt-2" id="content" name="content" th:text="${board.content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
+      <div class="form-group col-sm-5">
+        <select th:field="*{boardType}" class="form-select" disabled>
+          <option th:value="추천게시판">추천게시판</option>
+        </select>
+      </div>
 
-        <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
+      <br>
+
+      <div class="form-group col-sm-2">
+        <select th:field="*{subType}" class="form-select">
+          <option value="말머리 선택">말머리 선택</option>
+          <option th:value="식당">식당</option>
+          <option th:value="메뉴">메뉴</option>
+        </select>
+      </div>
+
+      <div class="field-error" style="color: red;" th:errors="*{title}"></div>
+      <input type="text" id="title" class="form-control mt-3" name="title" th:field="*{title}">
+
+      <div class="field-error" style="color: red;" th:errors="*{content}"></div>
+      <textarea class="form-control mt-2" id="content" name="content" th:field="*{content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
+
+      <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
         <button class="btn btn-danger mt-3"
-                th:onclick="|location.href='@{/boards/recommendBoard/{boardId}(boardId=${board.id})}'|"
+                th:onclick="|location.href='@{/boards/recommendBoard/{boardId}(boardId=*{id})}'|"
                 type="button">취소
         </button>
       </div>

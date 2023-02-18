@@ -51,8 +51,8 @@ public class BoardServiceImpl implements BoardService {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
 
-        List<MultipartFile> imageFiles = boardDto.getImageFiles();
         List<MultipartFile> attachFiles = boardDto.getAttachFiles();
+        List<MultipartFile> imageFiles = boardDto.getImageFiles();
 
         // 첨부파일이 있을 경우
         if (!attachFiles.get(0).getOriginalFilename().isBlank()) {
@@ -65,7 +65,7 @@ public class BoardServiceImpl implements BoardService {
             attachUpload(boardDto, board);
 
             // + 이미지파일이 있을 경우
-            if (!imageFiles.get(0).getOriginalFilename().isBlank()) {
+            if (imageFiles.get(0).getOriginalFilename() != null && !imageFiles.get(0).getOriginalFilename().isBlank()) {
                 imageUpload(boardDto, board);
             }
 
@@ -160,7 +160,10 @@ public class BoardServiceImpl implements BoardService {
     public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
         Board findBoard = findById(boardId).orElseThrow();
 
-        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent());
+        log.info("서브 타입 : ", findBoard.getSubType());
+
+        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
+
 
         log.info("수정완료");
         return findBoard.getId();
