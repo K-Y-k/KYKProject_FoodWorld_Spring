@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * BoardRepository 인터페이스의 스프링 데이터 JPA 버전의 구현체
+ */
 @Slf4j
 @Repository
 @RequiredArgsConstructor

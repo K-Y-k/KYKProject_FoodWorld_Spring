@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface JPABoardRepository extends JpaRepository<Board, Long> {
+public interface JPABoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
     /**
      * 키워드 검색에 따른 검색
      */

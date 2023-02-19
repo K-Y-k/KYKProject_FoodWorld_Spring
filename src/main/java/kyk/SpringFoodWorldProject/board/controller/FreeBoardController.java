@@ -39,6 +39,7 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -78,6 +79,13 @@ public class FreeBoardController {
             boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
         }
 
+        // 댓글 개수 가져오는 작업
+        for (Board board : boards) {
+            Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + board.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
+
         int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
                                                                      // pageable의 index는 0부터 시작이기에 1을 더해준 것이다.
 
@@ -88,7 +96,6 @@ public class FreeBoardController {
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
 
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
@@ -214,7 +221,8 @@ public class FreeBoardController {
     @GetMapping("/attach/{boardFileId}")
     public ResponseEntity<Resource> downloadAttach(@PathVariable Long boardFileId) throws MalformedURLException {
 
-        BoardFile boardFile = boardService.findBoardFileById(boardFileId).get();
+        BoardFile boardFile = boardService.findBoardFileById(boardFileId).orElseThrow(() ->
+                new IllegalArgumentException("파일 가져오기 실패: 파일을 찾지 못했습니다." + boardFileId));;
 
         // 직접 접근해서 storedFileName, uploadFileName을 가져옴
         // uploadFileName은 다운로드 받을 때의 파일명이 필요해서
@@ -266,7 +274,8 @@ public class FreeBoardController {
     public String delete(@PathVariable Long boardId,
                          @SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                          Model model) {
-        Board findBoard = boardService.findById(boardId).orElseThrow();
+        Board findBoard = boardService.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
         if (findBoard.getMember().getId().equals(loginMember.getId())) {
             boardService.delete(boardId);

@@ -43,7 +43,9 @@ public interface BoardService {
      * 글 검색
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable, String boardType);
+
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable, String boardType);
+
     Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
 
     /**
@@ -62,4 +64,12 @@ public interface BoardService {
      * 좋아요 개수 최신화
      */
     void updateLikeCount(Long boardId, int likeCount);
+
+
+    /**
+     * 댓글 개수 최신화
+     */
+    Long updateCommentCount(Long boardId);
 }
+
+
