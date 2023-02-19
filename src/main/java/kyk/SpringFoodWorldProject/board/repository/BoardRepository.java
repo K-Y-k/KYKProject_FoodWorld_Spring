@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 구현체가 바뀌어도 같은 기능들을 선언하게 인터페이스를 만듬
+ */
 public interface BoardRepository {
     /**
      * 글 저장

@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.comment.repository;
 
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 
 import java.awt.print.Pageable;
@@ -9,6 +8,7 @@ import java.util.Optional;
 
 public interface CommentRepository {
     Comment save(Comment comment);
+
     List<Comment> pageList(Pageable pageable);
 
     Optional<Comment> findById(Long id);
@@ -16,5 +16,6 @@ public interface CommentRepository {
 
     void delete(Long commentId);
 
+    int findCommentCount(Long boardId);
 
 }

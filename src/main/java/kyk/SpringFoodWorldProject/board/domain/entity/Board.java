@@ -8,9 +8,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Board extends BaseTimeEntity{
@@ -47,14 +47,15 @@ public class Board extends BaseTimeEntity{
     // 양방향 관계를 맺어줌
     // 게시글이 삭제되면 파일 또한 삭제되어야 하기 때문에 CascadeType.REMOVE와 orphanRemoval = true 속성을 사용
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<BoardFile> boardFiles = new ArrayList<>();
+    private List<BoardFile> boardFiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @OrderBy("id asc") // 댓글 정렬
+    @OrderBy("id asc") // 정렬
     private List<Comment> comments = new ArrayList<>();
 
     private int fileAttached;
 
+    private int commentCount;
 
     public Board(String title, String content, String writer, Member member, String boardType, String subType) {
         this.title = title;
@@ -83,4 +84,7 @@ public class Board extends BaseTimeEntity{
         this.likeCount = likeCount;
     }
 
+    public void updateCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 }

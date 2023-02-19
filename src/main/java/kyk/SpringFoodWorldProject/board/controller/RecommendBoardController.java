@@ -78,11 +78,19 @@ public class RecommendBoardController {
             boards = boardService.findByTitleContainingAndWriterContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
         }
 
+        // 댓글 개수 가져오는 작업
+        for (Board board : boards) {
+            Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + board.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
+
         int nowPage = pageable.getPageNumber() + 1;                  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
         // pageable의 index는 0부터 시작이기에 1을 더해준 것이다.
 
         int startPage = Math.max(1, nowPage - 2);                    // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
         int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
+
 
         model.addAttribute("boards", boards);
         model.addAttribute("nowPage", nowPage);
@@ -239,7 +247,8 @@ public class RecommendBoardController {
     public String delete(@PathVariable Long boardId,
                          @SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                          Model model) {
-        Board findBoard = boardService.findById(boardId).orElseThrow();
+        Board findBoard = boardService.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
         if (findBoard.getMember().getId().equals(loginMember.getId())) {
             boardService.delete(boardId);

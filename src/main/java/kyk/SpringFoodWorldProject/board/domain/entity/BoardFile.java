@@ -9,9 +9,10 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class BoardFile extends BaseTimeEntity{
+public class BoardFile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "boardFile_id")
     private Long id;
 
 

@@ -40,5 +40,10 @@ public class CommentRepositoryImpl implements CommentRepository{
         commentRepository.deleteById(commentId);
     }
 
+    @Override
+    public int findCommentCount(Long boardId) {
+        return commentRepository.findCommentCount(boardId);
+    }
+
 
 }

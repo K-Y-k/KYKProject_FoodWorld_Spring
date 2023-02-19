@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -119,10 +120,10 @@ class BoardServiceImplTest {
     @Test
     void updateBoard() {
         // given
-        BoardUpdateForm updateDto = new BoardUpdateForm("수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
+        BoardUpdateForm updateDto = new BoardUpdateForm(15L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
 
         // when : 기존에 생성된 게시글 중의 id를 하나 넣음
-        Long updateBoardId = boardService.updateBoard(15L, updateDto);
+        Long updateBoardId = boardService.updateBoard(updateDto.getId(), updateDto);
         Board updateBoard = boardService.findById(updateBoardId).get();
 
         // then
@@ -370,5 +371,45 @@ class BoardServiceImplTest {
         assertThat(savedComment).isEqualTo(commentDto.getId());
     }
 
+
+    /**
+     * 댓글 개수 출력 기능
+     */
+    @Test
+    void commentCount() throws IOException {
+        // given
+        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member savedMember = memberRepository.save(member1);
+
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile attachFile = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
+
+        CommentUploadDto commentDto = new CommentUploadDto(1L, "안녕하세요 댓글");
+        Long savedComment = commentService.saveComment(savedMember.getId(), uploadBoardId, commentDto);
+
+        Board findBoard = boardRepository.findById(uploadBoardId).orElseThrow();
+
+
+        // when
+        int commentCount = commentService.findCommentCount(findBoard.getId());
+
+
+        // then
+        assertThat(commentCount).isEqualTo(1);
+    }
 
 }

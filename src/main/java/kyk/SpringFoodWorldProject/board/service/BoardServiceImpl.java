@@ -6,6 +6,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
+import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     @Value("${file.imageFileLocation}")
     private String imageFileLocation;
@@ -43,9 +45,7 @@ public class BoardServiceImpl implements BoardService {
     @Value("${file.attachFileLocation}")
     private String attachFileLocation;
 
-    /**
-     * 글 등록
-     */
+
     @Override
     public Long upload(Long memberId, BoardUploadForm boardDto) throws IOException {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
@@ -153,9 +153,6 @@ public class BoardServiceImpl implements BoardService {
 
 
 
-    /**
-     * 글 수정
-     */
     @Override
     public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
         Board findBoard = findById(boardId).orElseThrow();
@@ -245,4 +242,17 @@ public class BoardServiceImpl implements BoardService {
     public Optional<BoardFile> findBoardFileById(Long boardFileId){
         return boardFileRepository.findById(boardFileId);
     }
+
+
+    @Override
+    public Long updateCommentCount(Long boardId) {
+        Board findBoard = findById(boardId).orElseThrow();
+
+        findBoard.updateCommentCount(commentRepository.findCommentCount(findBoard.getId()));
+
+        log.info("댓글 개수 갱신완료");
+        return findBoard.getId();
+    }
+
+
 }

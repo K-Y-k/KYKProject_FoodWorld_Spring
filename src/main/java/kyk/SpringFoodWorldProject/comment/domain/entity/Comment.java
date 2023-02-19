@@ -7,9 +7,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 @Table(name = "COMMENTS")

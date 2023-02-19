@@ -31,6 +31,7 @@ public class CommentServiceImpl implements CommentService{
        return commentRepository.save(comment);
     }
 
+    @Override
     public Long saveComment(Long memberId, Long boardId, CommentUploadDto dto) {
         Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 로그인 상태가 아닙니다." + memberId));
@@ -57,6 +58,11 @@ public class CommentServiceImpl implements CommentService{
         findComment.updateComment(updateParam.getContent());
 
         log.info("댓글 수정완료");
+    }
+
+    @Override
+    public int findCommentCount(Long boardId) {
+        return commentRepository.findCommentCount(boardId);
     }
 
     @Override

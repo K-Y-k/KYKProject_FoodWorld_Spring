@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.member.domain.entity;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")

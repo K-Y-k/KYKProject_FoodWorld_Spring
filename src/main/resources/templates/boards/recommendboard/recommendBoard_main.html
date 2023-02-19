@@ -131,11 +131,17 @@
             <tr th:each="board : ${boards}">
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
                     th:text="${board.id}"></td>
-                <td>
-                    <a th:if="${#strings.equals(board.subType, '말머리 선택')}" class="col-md-6" style="text-align: center; margin: 0 auto;"
-                       th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|${board.title}|"></a>
-                    <a th:if="${not#strings.equals(board.subType, '말머리 선택')}" class="col-md-6" style="text-align: center; margin: 0 auto;"
-                       th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.subType}] ${board.title}|"></a>
+
+                <td style="text-decoration-line: none;">
+                    <a th:if="${not#strings.equals(board.subType, '말머리 선택')}"
+                       th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.subType}]|"
+                       style="color: black; text-decoration-line: none;"></a>
+
+                    <a th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|${board.title}|"
+                       style="color: black; text-decoration-line: none;"></a>
+
+                    <a th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none;"
+                       th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
