@@ -85,41 +85,45 @@
   </div>
 </header>
 
-<!--검색-->
-<div style="position: absolute; top: 3%; left: 47%;">
-  <form th:action="@{/boards/recommendBoard}" method="get">
-    <div class="row" style="">
-      <div class="col-md-1" style="width: 6vw;">
-        <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
-      </div>
+<div style="position: relative; width: 90vw; height: 80vh;">
+  <div class="container row" style="float: none; margin: 100 auto;">
+    <!--검색-->
+    <div style="position: absolute; top: 3%; left: 47%;">
+      <form th:action="@{/boards/recommendBoard}" method="get">
+        <div class="row" style="">
+          <div class="col-md-1" style="width: 6vw;">
+            <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
+          </div>
 
-      <div class="col-md-2" style="width: 12vw;">
-        <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
-      </div>
+          <div class="col-md-2" style="width: 12vw;">
+            <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
+          </div>
 
-      <div class="col-md-1" style="width: 5vw;">
-        <button type="submit" class="btn btn-secondary">검색</button>
-      </div>
+          <div class="col-md-1" style="width: 5vw;">
+            <button type="submit" class="btn btn-secondary">검색</button>
+          </div>
 
-      <div class="col-md-1" style="width: 6vw;">
-        <button class="btn btn-danger" id="write"
-                th:onclick="|location.href='@{/boards/recommendBoard/upload}'|"
-                type="button">글 작성
-        </button>
-      </div>
+          <div class="col-md-1" style="width: 6vw;">
+            <button class="btn btn-danger" id="write"
+                    th:onclick="|location.href='@{/boards/recommendBoard/upload}'|"
+                    type="button">글 작성
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
-</div>
 
-  <div class = "main" style="width: 100%; position: relative;"> 
-    <div class="muckstar_background1" style="position: absolute; left: 3%; top: 1.8%;"> </div>
+    <div class="main" style="width: 100%; position: relative;">
+      <div class="muckstar_background1" style="position: absolute; left: 3%; top: 1.8%;"></div>
 
-    <br>
-    <br>
+      <br>
+      <br>
 
-    <div class = "container1 mt-10" style="margin-left: 310px;"></div> <!--출력되는 글-->
+      <div class="container1 mt-10" style="margin-left: 310px;"></div> <!--출력되는 글-->
 
+    </div>
   </div>
+</div>
 
 
   <!--jquery-->
