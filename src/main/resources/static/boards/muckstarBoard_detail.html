@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatable" content="IE=edge">
+  <meta name="viewport" content="width=device=witdh, initial-scale=1.0">
+  <title>먹스타그램 클릭한 글 세부내용 보기</title>
+  
+  <!--bootstrapcss-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link href = "muckstar_board.css" rel="stylesheet">
+</head>
+
+<body>
+  <header style="position: relative;">
+    <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
+    <div class="px-3 py-2 bg-dark text-white">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <img src = "/image/main_img/muckstar_icon.PNG" width = "50px" height="50px" >
+          <a href="muckstar_main.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;먹스타그램</h4></a>
+          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+            <li>
+              <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
+              <a href="main.html" class="nav-link text-white" style="font-size: 16px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+              </a>
+            </li>
+            <li>
+              <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 100px; margin-top: 10px;">
+              <a href="#" class="nav-link text-white" style="font-size: 16px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
+              </a>
+            </li>
+            <li>
+              <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 105px; margin-top: 10px;">
+              <a href="muckstar_main.html" class="nav-link text-white" style="font-size: 16px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
+              </a>
+            </li>
+            <li>
+              <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 75px; margin-top: 10px;">
+              <a href="menu_recommend.html" class="nav-link text-white" style="font-size: 16px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+              </a>
+            </li>
+            <li>
+              <img src = "/image/main_img/chat_icon.PNG" width = "50px" height="40px" style="margin-left: 65px; margin-top: 10px;">
+              <a href="chat.html" class="nav-link text-white" style="font-size: 16px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </a>
+            </li>
+            <li>
+            <h5 id = "userName" style="font-size : 13px; margin-top: 20px; color: white;"></h5>
+            <br/>
+            <button type="submit" class="btn btn-primary" id="logout" style="width: 90px; height: 35px; position :absolute; top: 56%;">로그아웃</button> 
+            <a href = "main_login.html" > <button type="submit" class="btn btn-primary" style = "width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id = "login">로그인</button></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <br>
+  
+  <div class="main" style="margin-left: 400px; position: relative;">   <!--해당 글 세부 내용-->
+    <div class = "card" style="width: 1000px; border-width: 2px; border-color: rgb(117, 73, 19);">
+      <button class="btn btn-danger" id="edit" style = "margin-left: 820px; width: 120px; position: absolute; top: 2%">글 수정하기</button>
+      <br>
+      <div class="detail-pic" style="width : 700px; height : 400px;"></div>
+      <br>
+      <br>
+       <span style=" height: 10px;">
+        <img src="/image/muckstargram_img/user_icon.PNG" style = "width: 40px; height: 40px; position: absolute; top: 50%; left: 3%;">
+        <h5 class='name' style="white-space: no-wrap; display: inline; position: absolute; top: 51.5%; left: 8%;"></h5>
+        <button class="btn btn-danger mt-3" id="chat" style="width: 70px; height: 40px;  position: absolute; left: 90%;">채팅</button>
+       </span>
+       <br>
+      <br>
+      <hr style="width: 935px;">
+      <h3 class="title"></h3>
+      <p class="date"></p>
+      <hr style="width: 935px;">
+      <h4 class="content"></h4>
+      <br>
+      <br>
+      <br>
+      <span>
+        <button class="btn btnEvent" id="like_btn" style="width: 70px; height: 40px; position: absolute; left: 1.5%; top: 75%;">
+          <img src="/image/muckstargram_img/favorite_icon.PNG" style = "width: 35px; height: 30px;">
+        </button> 
+        <span class="like" style ="font-weight: 400; font-size: 20px; position: absolute; left: 9.5%; top: 75.5%;"></span>
+      </span>
+      <br>
+      <span>
+        <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 40px; height: 40px; position: absolute; left: 3%; top: 81%;">  
+        <span class="comment" style ="font-weight: 400; font-size: 20px; position: absolute; left: 8.8%; top: 81%;" ></span>
+      </span>
+      <br>
+      <br>
+      
+      <hr style="width: 935px;">
+
+      <div class="input-group">
+         <textarea  id="chat-input" rows="3" cols = "115" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
+         <button class="btn btn-secondary" id="reply_send">전송</button>
+      </div>
+    </div>
+
+      <hr>
+
+      <ul class="chat-content">
+         <!--댓글-->
+      </ul>
+
+   </div>
+
+
+  <script src="/__/firebase/9.8.1/firebase-app-compat.js"></script>
+  <script src="/__/firebase/9.8.1/firebase-auth-compat.js"></script>
+  <script src="/__/firebase/9.8.1/firebase-firestore-compat.js"></script>
+  <script src="/__/firebase/9.8.1/firebase-storage-compat.js"></script>
+  
+  <!--bootstrapjs-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  
+  <!--jquery-->
+  <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+
+  <!--firebase-->
+  <script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyCqNsH4WnQVWyOtpmP3I6Js3mFwThDcOQI",
+    authDomain: "espsensortestcbj.firebaseapp.com",
+    databaseURL: "https://espsensortestcbj-default-rtdb.firebaseio.com",
+    projectId: "espsensortestcbj",
+    storageBucket: "espsensortestcbj.appspot.com",
+    messagingSenderId: "574319666940",
+    appId: "1:574319666940:web:fb395ba5d9d47f475d5979",
+    measurementId: "G-LXM4LVYD4V"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script>
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    const login_btn = document.getElementById('login');
+    const logout_btn = document.getElementById('logout');
+    const edit_btn = document.getElementById('edit');
+
+    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+       if(user) { // 로그인된 상태라면
+         console.log(user.uid)
+         console.log(user.displayName)
+         $('#userName').html(user.displayName + '님 접속중')    // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
+
+          logout_btn.style.display = 'inline';
+          login_btn.style.display = 'none';
+        }
+        else {
+          logout_btn.style.display = 'none';
+          login_btn.style.display = 'inline';
+        }
+     })
+
+    var my_uid = JSON.parse(localStorage.getItem('user')).uid
+    var user_name = JSON.parse(localStorage.getItem('user')).displayName
+    var otherperson_uid;
+    var chat_title;
+    var other_name;
+    
+    var query_str = new URLSearchParams(window.location.search)
+
+    db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{  // 클릭한 글의 id와 관련 글을 조회하고 그 값들을 출력한다.
+        console.log(result.data());
+        otherperson_uid = result.data().uid;
+        chat_title = result.data().name;
+        other_name = result.data().name;
+        
+        $('.name').html(result.data().name)
+        $('.title').html(result.data().title)
+        $('.date').html(result.data().date.toDate().toLocaleString())
+        $('.content').html(result.data().content)
+        $('.like').html(result.data().like)
+        $('.comment').html('&nbsp;'+ result.data().comment)
+        $('.detail-pic').css('background-image', `url(${result.data().img})`)
+     })
+
+
+     db.collection('muckstargram').doc(query_str.get('id')).collection('message').orderBy('date').get().then((result)=>{   // 클릭한 글의 id와 관련된 댓글들을 조회하고 출력한다.
+      $('.chat-content').html('');
+
+      result.forEach((a)=>{
+        console.log(a.data())
+         
+        var temp =
+        `<li><span class="chat-box">${a.data().user_name}</span></li> 
+        <li><span class="chat-box_time">${a.data().date.toDate().toLocaleString()}</span> <button class="btn btn-secondary" id="reply_update" style = "visibility: hidden;">수정</button></li> <br> 
+        <li><span class="chat-box">${a.data().content}</span></li> <br><hr> `;         
+         $('.chat-content').append(temp)
+         
+        })
+     })
+
+     
+     $('#edit').click(function(){
+        firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+        if(user) { // 로그인된 상태라면
+            db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{
+            if(my_uid == result.data().uid){
+              window.location.href = '/muckstar_board_edit.html?id=' + query_str.get('id')
+            }
+            else { 
+              alert('다른 사람의 게시물은 수정할 수 없습니다.')
+            }
+          })
+        }
+          else {
+            alert('회원만 수정할 수 있습니다');
+          }
+      })
+     })
+
+
+     $('#chat').click(function(){
+      firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+        if(user) { // 로그인된 상태라면
+         
+                  var data = {
+                  chat_useruid : [my_uid, otherperson_uid],
+                  my_uid : my_uid,
+                  otherperson_uid : otherperson_uid,
+                  title : chat_title + ' '+ user_name,
+                  my_name : user_name,
+                  other_name : other_name,
+                  date : new Date()
+                  }
+
+                  db.collection('muckstar_chatroom').add(data).then(()=>{
+                    window.location.href = '/chat.html'
+                  })
+         }
+        else {
+            alert('회원만 채팅할 수 있습니다');
+        }
+      })
+    })
+
+
+    $('#like_btn').click(function(){ // 좋아요 버튼 클릭 시
+      firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+        if(user) { // 로그인된 상태라면
+          db.collection('muckstargram').doc(query_str.get('id')).update({'like': firebase.firestore.FieldValue.increment(1)}).then(()=>{  // 1씩 증가시키고 증가된 값으로 변경시켜준다.
+            db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{
+                  $('.like').html(result.data().like)
+            })
+          })
+       }
+       else {
+            alert('로그인 먼저 해주세요');
+        }
+      })
+    })
+
+    
+     $('#reply_send').click(function(){  // 댓글 작성 기능
+
+        firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+          if(user) { // 로그인된 상태라면
+            var data = {
+            user_name : user_name,
+            content : $('#chat-input').val(),
+            date : new Date(),
+            uid : my_uid
+            }
+
+            db.collection('muckstargram').doc(query_str.get('id')).update({'comment': firebase.firestore.FieldValue.increment(1)})  // 댓글 수를 1씩 증가시킨다.
+
+            db.collection('muckstargram').doc(query_str.get('id')).collection('message').add(data).then(()=>{
+              $('#chat-input').val('')
+              db.collection('muckstargram').doc(query_str.get('id')).collection('message').orderBy('date').get().then((result)=>{ // 새로 작성한 댓글을 적용시키기 위해 다시 조회하여
+                $('.chat-content').html('');
+
+                result.forEach((a)=>{
+                  console.log(a.data())
+                  
+                  var temp =
+                  `<li><span class="chat-box">${a.data().user_name}</span></li> 
+                  <li><span class="chat-box_time">${a.data().date.toDate().toLocaleString()}</span> <button class="btn btn-secondary" id="reply_update" style = "visibility: hidden;">수정</button></li> <br> 
+                  <li><span class="chat-box">${a.data().content}</span></li> <br><hr> `;         
+                  $('.chat-content').append(temp)
+                  
+                  })
+              })
+
+              db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{  // 새로 작성한 것도 적용시킴
+                $('.like').html(result.data().like)
+                $('.comment').html('&nbsp;'+ result.data().comment)
+              })
+
+            })
+          }
+            else {
+              alert('회원만 댓글을 작성할 수 있습니다');
+            }
+        })
+    })
+
+    $('#logout').click(function(user){  // 로그아웃 버튼을 눌렀을 때 로그아웃
+       if(user) {
+       firebase.auth().signOut().then(()=>{
+        alert('로그아웃 되었습니다')
+        location.reload();
+       })
+      }
+     })
+  </script>
+
+
+</body>
+</html>

@@ -28,25 +28,29 @@ public class LikeServiceImpl implements LikeService{
     public int saveLike(Long memberId, Long boardId) {
         Optional<Like> findLike = likeRepository.findByMember_IdAndBoard_Id(memberId, boardId);
 
-        log.info("findLike.isEmpty() = {}", findLike.isEmpty());
-
-        if (findLike.isEmpty()){
-            Member memberEntity = memberRepository.findById(memberId).get();
-            Board boardEntity = boardRepository.findById(boardId).get();
+        if (findLike.isPresent()){
+            likeRepository.delete(findLike.get().getId());
+            return 0;
+        } else {
+            Member memberEntity = memberRepository.findById(memberId).orElseThrow(() ->
+                    new IllegalArgumentException("회원 조회 실패: " + memberId));
+            Board boardEntity = boardRepository.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("글 조회 실패: " + boardId));
 
             Like likeEntity = LikeDto.toEntity(memberEntity, boardEntity);
             likeRepository.save(likeEntity);
 
             return 1;
-        } else {
-            likeRepository.delete(findLike.get().getId());
-            return 0;
         }
     }
 
     @Override
     public int countByBoard_Id(Long boardId) {
         return likeRepository.countByBoard_Id(boardId);
+    }
+
+    public void deleteByBoard_Id(Long boardId) {
+        likeRepository.deleteByBoardId(boardId);
     }
 
 }

@@ -33,7 +33,7 @@
                     </li>
                     <li>
                         <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 95px; margin-top: 10px;">
-                        <a href="muckstar_main.html" class="nav-link text-white">
+                        <a href="/boards/muckstarBoard" class="nav-link text-white">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
                         </a>
                     </li>
@@ -94,7 +94,7 @@
 
                 <div class="form-group col-sm-2">
                     <select th:field="*{subType}" class="form-control">
-                        <option value="말머리 선택">말머리 선택</option>
+                        <option th:value="'말머리 ' + '선택'">말머리 선택</option>
                         <option th:value="식당">식당</option>
                         <option th:value="메뉴">메뉴</option>
                     </select>

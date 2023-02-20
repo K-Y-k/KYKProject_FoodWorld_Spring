@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>먹스타그램 메인 페이지</title>
+  <!--부트 스트랩 적용-->
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+  <!--css 적용-->
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/muckstar_main_style.css" th:href="@{/muckstar_main_style.css}">
+</head>
+
+<body>
+<header style="position: relative;">
+  <img src="/image/main_img/logo2.PNG" class="logo"
+       style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id="logo2">
+
+  <div class="px-3 py-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <img src="/image/main_img/write_icon.PNG" width="50px" height="50px">
+        <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
+
+        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <li>
+            <img src="/image/main_img/home_icon.PNG" width="45px" height="40px"
+                 style="margin-left: 151px; margin-top: 10px;">
+            <a href="/" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+            </a>
+          </li>
+          <li>
+            <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
+                 style="margin-left: 105px; margin-top: 10px;">
+            <a href="/boards/freeBoard" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
+            </a>
+          </li>
+          <li>
+            <img src="/image/main_img/muckstar_icon.PNG" width="40px" height="40px"
+                 style="margin-left: 95px; margin-top: 10px;">
+            <a href="/boards/recommendBoard" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추천게시판
+            </a>
+          </li>
+          <li>
+            <img src="/image/main_img/menu_recommend_icon.PNG" width="50px" height="40px"
+                 style="margin-left: 75px; margin-top: 10px;">
+            <a href="menu_recommend.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+            </a>
+          </li>
+          <li>
+            <img src="/image/main_img/chat_icon.PNG" width="50px" height="40px"
+                 style="margin-left: 65px; margin-top: 10px;">
+            <a href="chat.html" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+          </li>
+
+          <li>
+            <h5 th:if="${session.loginMember != null}"
+                th:text="${session.loginMember.name}+ '님 접속중'"
+                id="userName" style="font-size : 13px; margin-top: 20px;"></h5>
+
+            <br/>
+
+            <form th:action="@{/members/logout}" method="post">
+              <button th:if="${session.loginMember != null}"
+                      type="submit" class="btn btn-primary" id="logout"
+                      style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                      th:onclick="@{/members/logout}">로그아웃
+              </button>
+            </form>
+
+            <button th:if="${session.loginMember == null}"
+                    type="submit" class="btn btn-primary"
+                    style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                    th:onclick="|location.href='@{/members/login}'|">로그인
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!--검색-->
+<div style="position: absolute; top: 3%; left: 47%;">
+  <form th:action="@{/boards/recommendBoard}" method="get">
+    <div class="row" style="">
+      <div class="col-md-1" style="width: 6vw;">
+        <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
+      </div>
+
+      <div class="col-md-2" style="width: 12vw;">
+        <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
+      </div>
+
+      <div class="col-md-1" style="width: 5vw;">
+        <button type="submit" class="btn btn-secondary">검색</button>
+      </div>
+
+      <div class="col-md-1" style="width: 6vw;">
+        <button class="btn btn-danger" id="write"
+                th:onclick="|location.href='@{/boards/recommendBoard/upload}'|"
+                type="button">글 작성
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+  <div class = "main" style="width: 100%; position: relative;"> 
+    <div class="muckstar_background1" style="position: absolute; left: 3%; top: 1.8%;"> </div>
+
+    <br>
+    <br>
+
+    <div class = "container1 mt-10" style="margin-left: 310px;"></div> <!--출력되는 글-->
+
+  </div>
+
+
+  <!--jquery-->
+  <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous">
+  </script>
+
+
+  <script>
+    const db = firebase.firestore();
+    const write_btn = document.getElementById('write');
+    const login_btn = document.getElementById('login');
+    const logout_btn = document.getElementById('logout');
+
+    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
+       if(user) { // 로그인된 상태라면
+         console.log(user.uid)
+         console.log(user.displayName)
+         $('#userName').html(user.displayName + '님 접속중')    // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
+
+          logout_btn.style.display = 'inline';
+          login_btn.style.display = 'none';
+          write_btn.style.display = 'inline';
+        }
+        else {
+          logout_btn.style.display = 'none';
+          login_btn.style.display = 'inline';
+          write_btn.style.display = 'none';
+        }
+     })
+
+
+    db.collection('muckstargram').orderBy('date', 'desc').get().then((result)=>{  // 모든 게시물을 조회하고 출력한다.
+      result.forEach((doc)=>{
+      var view = `<div class = "card" style = "width: 500px; margin-left: 300px; border-width: 5px; border-color: rgb(117, 73, 19);">
+        <a href="/muckstar_board.html?id=${doc.id}"><div class="card-body" style="background-image: url('${doc.data().img}'); width: 470px; height: 390px; background-position: center; background-size : cover; margin-left : 10px; margin-top: 10px;"></div></a>
+        <div class="card-body">
+          <h5 class="title"><a href="/muckstar_board.html?id=${doc.id}" style="text-decoration: none;">${doc.data().title}</a></h5>
+          <p class="date">  ${doc.data().date.toDate().toLocaleString()}</p>
+          <span style = "white-space: nowrap;"><img src="/image/muckstargram_img/favorite_icon.PNG" style = "width: 35px; height: 30px;"> <span class="like" style ="font-weight: 400; font-size: 20px;">  ${doc.data().like}</span></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span style = "white-space: nowrap;"><img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 35px; height: 32px;">  <span class="comment" style ="font-weight: 400; font-size: 20px;"> ${doc.data().comment}</span></span>
+        </div>
+      </div>
+      <br>
+      <br>`;
+      $('.container1').append(view)
+
+      var view = ` <img src="/image/muckstargram_img/muckstar_background.PNG" style = "width: 470px;"> <br>`;   // 게시물 옆에 사진도 똑같은 개수만큼 출력한다.
+      $('.muckstar_background1').append(view)
+    })
+  })
+
+
+  $('#logout').click(function(user){  // 로그아웃 버튼을 눌렀을 때 로그아웃
+       if(user) {
+       firebase.auth().signOut().then(()=>{
+        alert('로그아웃 되었습니다')
+        location.reload();
+       })
+      }
+     })
+
+  </script>
+
+
+</body>
+</html>

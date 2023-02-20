@@ -20,4 +20,10 @@ public interface JPALikeRepository extends JpaRepository<Like, Long> {
      */
     int countByBoard_Id(Long boardId);
 
+
+    /**
+     * 해당 게시글의 좋아요 한 데이터를 모두 삭제하기 위한 쿼리 메서드
+     */
+    void deleteByBoard_Id(Long boardId);
+
 }

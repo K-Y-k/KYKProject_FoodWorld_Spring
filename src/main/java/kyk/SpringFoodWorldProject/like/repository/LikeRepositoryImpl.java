@@ -23,14 +23,18 @@ public class LikeRepositoryImpl implements LikeRepository{
     }
 
     @Override
+    public int countByBoard_Id(Long boardId) {
+        return likeRepository.countByBoard_Id(boardId);
+    }
+
+    @Override
     public void delete(Long likeId) {
         likeRepository.deleteById(likeId);
     }
 
     @Override
-    public int countByBoard_Id(Long boardId) {
-        return likeRepository.countByBoard_Id(boardId);
+    public void deleteByBoardId(Long boardId) {
+        likeRepository.deleteByBoard_Id(boardId);
     }
-
 
 }
