@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -12,8 +12,6 @@ import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
-import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
-import kyk.SpringFoodWorldProject.member.domain.dto.MemberSessionDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +37,6 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -61,12 +58,12 @@ public class FreeBoardController {
     @GetMapping("/freeBoard")
     public String freeBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                              Model model,
-                             BoardSearchDto boardSearchDto) {
+                             BoardSearchCond boardSearchCond) {
         Page<Board> boards;
         String boardType = "자유게시판";
 
-        String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
-        String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
+        String writerSearchKeyword = boardSearchCond.getWriterSearchKeyword();
+        String titleSearchKeyword = boardSearchCond.getTitleSearchKeyword();
 
         // 키워드의 컬럼에 따른 페이징된 게시글 출력
         if (writerSearchKeyword == null && titleSearchKeyword == null) {  // 검색 자체를 하지 않았을 때 : 검색을 클릭할 때 url로 파라미터가 표현되므로 검색 클릭 안했을 때는 null

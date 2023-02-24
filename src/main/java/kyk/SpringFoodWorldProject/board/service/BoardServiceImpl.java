@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -214,6 +216,12 @@ public class BoardServiceImpl implements BoardService {
 
         return boardRepository.findByTitleContainingAndWriterContainingAndBoardTypeContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
     }
+
+    @Override
+    public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
+        return boardRepository.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
+    }
+
 
     @Override
     public void delete(Long boardId) {

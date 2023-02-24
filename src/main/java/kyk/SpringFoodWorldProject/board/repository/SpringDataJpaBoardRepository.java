@@ -1,10 +1,12 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +66,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     @Override
     public Page<Board> findByTitleContainingAndWriterContainingAndBoardTypeContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType) {
         return boardRepository.findByTitleContainingAndWriterContainingAndBoardTypeContaining(titleSearchKeyword, writerSearchKeyword, pageable, boardType);
+    }
+
+    @Override
+    public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
+        return boardRepository.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
     }
 
     @Override

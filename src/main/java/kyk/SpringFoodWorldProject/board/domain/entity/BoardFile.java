@@ -27,6 +27,12 @@ public class BoardFile extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
+
+    public BoardFile(String storedFileName, Board board) {
+        this.storedFileName = storedFileName;
+        this.board = board;
+    }
+
     // board 엔티티에 originalFileName, storedFileName 컬럼을 추가하지 않기 위해
     public static BoardFile toBoardFileEntity(Board board, String originalFileName, String storedFileName, String attachedType) {
          return BoardFile.builder()

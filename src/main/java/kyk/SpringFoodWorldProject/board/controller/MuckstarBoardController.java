@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -16,25 +16,21 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,12 +52,32 @@ public class MuckstarBoardController {
      * 글 모두 조회 폼
      */
     @GetMapping("/muckstarBoard")
-    public String muckstarBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                             Model model,
-                             BoardSearchDto boardSearchDto) {
+    public String muckstarBoards(@PageableDefault(page = 0, size = 1, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                 Model model,
+                                 BoardSearchCond boardSearchDto) {
+
+        String boardType = "먹스타그램";
+
+        String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
+
+        Slice<Board> boards = boardService.searchBySlice(1L, boardSearchDto, pageable, boardType);
+        model.addAttribute("boards", boards);
+
+
 
         return "boards/muckstarboard/muckstarBoard_main";
     }
+
+//    @GetMapping("/muckstarBoard")
+//    public ResponseEntity<Slice<Board>> muckstarBoards(  @RequestParam(value = "lastCursorId", required = false) Long lastCursorId,
+//                                                             @RequestParam(value = "boardSearchDto", required = false) BoardSearchCond boardSearchDto,
+//                                                Pageable pageable) {
+//        String boardType = "먹스타그램";
+//
+//        return new ResponseEntity<>(boardService.getSlce(
+//                boardService.searchBySlice(lastCursorId, boardSearchDto, pageable, boardType)), HttpStatus.OK);
+//
+//    }
 
 
     /**

@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -12,31 +12,22 @@ import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
-import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
-import kyk.SpringFoodWorldProject.member.domain.dto.MemberSessionDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,7 +51,7 @@ public class RecommendBoardController {
     @GetMapping("/recommendBoard")
     public String recommendBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                              Model model,
-                             BoardSearchDto boardSearchDto) {
+                             BoardSearchCond boardSearchDto) {
         Page<Board> boards;
         String boardType = "추천게시판";
 

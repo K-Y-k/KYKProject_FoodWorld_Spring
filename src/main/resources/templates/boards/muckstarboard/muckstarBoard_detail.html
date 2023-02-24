@@ -7,18 +7,18 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/boards/board/muckstar_main_style.css" th:href="@{/muckstar_main_style.css}">
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/muckstar_detail_style.css" th:href="@{/muckstar_detail_style.css}">
 </head>
 
 <body>
 <header style="position: relative;">
-  <img src="/image/main_img/logo2.PNG" class="logo"
-       style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id="logo2">
+  <img src="/image/main_img/logo2.PNG"
+       class="logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
 
   <div class="px-3 py-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <img src="/image/main_img/write_icon.PNG" width="50px" height="50px">
+        <img src="/image/main_img/muckstar_icon.PNG" width="50px" height="50px">
         <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
 
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
@@ -31,14 +31,14 @@
           </li>
           <li>
             <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
-                 style="margin-left: 105px; margin-top: 10px;">
+                 style="margin-left: 102px; margin-top: 10px;">
             <a href="/boards/freeBoard" class="nav-link text-white">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
             </a>
           </li>
           <li>
-            <img src="/image/main_img/muckstar_icon.PNG" width="40px" height="40px"
-                 style="margin-left: 95px; margin-top: 10px;">
+            <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
+                 style="margin-left: 90px; margin-top: 10px;">
             <a href="/boards/recommendBoard" class="nav-link text-white">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추천게시판
             </a>
@@ -155,7 +155,7 @@
   crossorigin="anonymous"></script>
 
   <!--firebase-->
-  <script>
+  <script type="text/javascript">
     const firebaseConfig = {
     apiKey: "AIzaSyCqNsH4WnQVWyOtpmP3I6Js3mFwThDcOQI",
     authDomain: "espsensortestcbj.firebaseapp.com",

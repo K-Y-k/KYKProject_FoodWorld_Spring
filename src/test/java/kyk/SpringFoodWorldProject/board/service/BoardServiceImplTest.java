@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
@@ -17,10 +18,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,10 +60,10 @@ class BoardServiceImplTest {
         // 게시글 데이터 추가 20
         int boardCount = 1;
         while (boardCount < 20) {
-            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember1, "freeBoard", "사는얘기"));
+            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember1, "자유게시판", "사는얘기"));
             boardCount++;
         }
-        Board savedBoard = boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용", "작가10", savedMember2, "recommendBoard","식당"));
+        Board savedBoard = boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용", "작가10", savedMember2, "추천게시판","식당"));
     }
 
     @AfterEach
@@ -153,7 +151,7 @@ class BoardServiceImplTest {
     void pageList() {
         // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        String boardType = "freeBoard";
+        String boardType = "자유개시판";
 
         // when
         Page<Board> result = boardService.findPageListByBoardType(pageable, boardType);
@@ -174,7 +172,7 @@ class BoardServiceImplTest {
         // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String titleKeyword = "제";
-        String boardType = "freeBoard";
+        String boardType = "자유게시판";
 
         // when
         Page<Board> result = boardService.findByTitleContaining(titleKeyword, pageable, boardType);
@@ -192,7 +190,7 @@ class BoardServiceImplTest {
         // given : freeBoard타입인 글 19개 / recommend타입인 글 1개
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String writerKeyword = "작";
-        String boardType = "freeBoard";
+        String boardType = "자유게시판";
 
         // when
         Page<Board> result = boardService.findByWriterContaining(writerKeyword, pageable, boardType);
@@ -211,7 +209,7 @@ class BoardServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         String titleKeyword = "제목10";
         String writerKeyword = "작";
-        String boardType = "freeBoard";
+        String boardType = "자유게시판";
 
         // when
         Page<Board> result = boardService.findByTitleContainingAndWriterContaining(titleKeyword, writerKeyword, pageable, boardType);
@@ -412,4 +410,42 @@ class BoardServiceImplTest {
         assertThat(commentCount).isEqualTo(1);
     }
 
+
+    @Test
+    @DisplayName("No-Offset 방식을 사용하면 lastStoreId값 -1 부터 page size 만큼 가져옴")
+    void test() {
+        // given
+        Slice<Board> boards = boardRepository.searchBySlice(10L,
+                new BoardSearchCond(),
+                PageRequest.ofSize(6), "자유게시판");
+        // when
+        Long first = boards.getContent().get(0).getId();
+        Long last  = boards.getContent().get(5).getId();
+
+        // then
+        assertThat(first).isEqualTo(9);
+        assertThat(last).isEqualTo(4);
+
+    }
+
+    @Test
+    @DisplayName("마지막 페이지에서는 isLast가 true, 마지막이 아니면 isLast가 false")
+    void checkLast() {
+        // given
+        Slice<Board> getLastPage = boardRepository.searchBySlice(10L,
+                new BoardSearchCond(),
+                PageRequest.ofSize(9), "자유게시판");
+
+        Slice<Board> getMiddlePage = boardRepository.searchBySlice(10L,
+                new BoardSearchCond(),
+                PageRequest.ofSize(4), "자유게시판");
+
+        // when
+        boolean isLastPage = getLastPage.isLast();
+        boolean isNotLastPage = getMiddlePage.isLast();
+
+        // then
+        assertThat(isLastPage).isTrue();
+        assertThat(isNotLastPage).isFalse();
+    }
 }

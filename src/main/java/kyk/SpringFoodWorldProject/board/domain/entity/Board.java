@@ -46,9 +46,11 @@ public class Board extends BaseTimeEntity{
 
     // 양방향 관계를 맺어줌
     // 게시글이 삭제되면 파일 또한 삭제되어야 하기 때문에 CascadeType.REMOVE와 orphanRemoval = true 속성을 사용
+    @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardFile> boardFiles = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("id asc") // 정렬
     private List<Comment> comments = new ArrayList<>();

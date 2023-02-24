@@ -1,9 +1,11 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardDto;
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +38,17 @@ public interface BoardRepository {
     Page<Board> findPageListByBoardType(Pageable pageable, String boardType);
 
     /**
-     * 글 검색
+     * 글 페이징 + 검색
      */
     Page<Board> findByTitleContainingAndBoardTypeContaining(String titleSearchKeyword, Pageable pageable, String boardType);
     Page<Board> findByWriterContainingAndBoardTypeContaining(String writerSearchKeyword, Pageable pageable, String boardType);
     Page<Board> findByTitleContainingAndWriterContainingAndBoardTypeContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
+
+    /**
+     * 무하 스크롤 페이징
+     */
+    Slice<Board> searchBySlice(Long lastBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
+
 
     /**
      * 글 삭제

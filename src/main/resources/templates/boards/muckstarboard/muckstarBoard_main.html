@@ -18,7 +18,7 @@
   <div class="px-3 py-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <img src="/image/main_img/write_icon.PNG" width="50px" height="50px">
+        <img src="/image/main_img/muckstar_icon.PNG" width="50px" height="50px">
         <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
 
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
@@ -31,14 +31,14 @@
           </li>
           <li>
             <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
-                 style="margin-left: 105px; margin-top: 10px;">
+                 style="margin-left: 102px; margin-top: 10px;">
             <a href="/boards/freeBoard" class="nav-link text-white">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
             </a>
           </li>
           <li>
-            <img src="/image/main_img/muckstar_icon.PNG" width="40px" height="40px"
-                 style="margin-left: 95px; margin-top: 10px;">
+            <img src="/image/main_img/write_icon.PNG" width="50px" height="40px"
+                 style="margin-left: 90px; margin-top: 10px;">
             <a href="/boards/recommendBoard" class="nav-link text-white">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추천게시판
             </a>
@@ -85,18 +85,14 @@
   </div>
 </header>
 
-<div style="position: relative; width: 90vw; height: 80vh;">
-  <div class="container row" style="float: none; margin: 100 auto;">
+<div style="position: relative; width: 70vw; height: 80vh;">
+
     <!--검색-->
     <div style="position: absolute; top: 3%; left: 47%;">
       <form th:action="@{/boards/recommendBoard}" method="get">
-        <div class="row" style="">
-          <div class="col-md-1" style="width: 6vw;">
+        <div class="row">
+          <div class="col-md-1" style="width: 15vw;">
             <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
-          </div>
-
-          <div class="col-md-2" style="width: 12vw;">
-            <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
           </div>
 
           <div class="col-md-1" style="width: 5vw;">
@@ -113,16 +109,21 @@
       </form>
     </div>
 
-    <div class="main" style="width: 100%; position: relative;">
-      <div class="muckstar_background1" style="position: absolute; left: 3%; top: 1.8%;"></div>
+    <div class="main" style="position: absolute; width: 70vw;">
 
-      <br>
-      <br>
+      <div class="infinite-container" id="infinite-container"
+           style="position: absolute; width: 70vw; height: 90vh;">
+        <div class="card" id="card" style="top: 15%; left: 40%; width: 40vw; height: 70vh">
 
-      <div class="container1 mt-10" style="margin-left: 310px;"></div> <!--출력되는 글-->
+<!--          <img th:src="@{|/imageFileUpload/${boardFiles.storedFileName}|}"-->
+<!--               style="max-width: 100%; height: auto;">-->
+        </div>
+      </div>
 
     </div>
-  </div>
+
+  <div class="article-list" id="article-list"></div>
+  <ul class="article-list__pagination article-list__pagination--inactive" id="article-list-pagination"></ul>
 </div>
 
 
@@ -134,62 +135,76 @@
   </script>
 
 
-  <script>
-    const db = firebase.firestore();
-    const write_btn = document.getElementById('write');
-    const login_btn = document.getElementById('login');
-    const logout_btn = document.getElementById('logout');
+<!--<script type="text/javascript">-->
+<!--//페이지가 처음 로딩될 때 1page를 보여주기 때문에 초기값을 1로 지정한다.-->
+<!--let currentPage=1;-->
+<!--//현재 페이지가 로딩중인지 여부를 저장할 변수이다.-->
+<!--let isLoading=false;-->
 
-    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-       if(user) { // 로그인된 상태라면
-         console.log(user.uid)
-         console.log(user.displayName)
-         $('#userName').html(user.displayName + '님 접속중')    // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
+<!--//웹브라우저의 창을 스크롤 할 때 마다 호출되는 함수 등록-->
+<!--$(window).on("scroll",function(){-->
+<!--    //위로 스크롤된 길이-->
+<!--    let scrollTop=$(window).scrollTop();-->
+<!--    //웹브라우저의 창의 높이-->
+<!--    let windowHeight=$(window).height();-->
+<!--    //문서 전체의 높이-->
+<!--    let documentHeight=$(document).height();-->
+<!--    //바닥까지 스크롤 되었는 지 여부를 알아낸다.-->
+<!--    let isBottom=scrollTop+windowHeight + 10 >= documentHeight;-->
 
-          logout_btn.style.display = 'inline';
-          login_btn.style.display = 'none';
-          write_btn.style.display = 'inline';
-        }
-        else {
-          logout_btn.style.display = 'none';
-          login_btn.style.display = 'inline';
-          write_btn.style.display = 'none';
-        }
-     })
+<!--    if(isBottom){-->
+<!--        //만일 현재 마지막 페이지라면-->
+<!--        if(currentPage == ${totalPageCount} || isLoading){-->
+<!--            return; //함수를 여기서 끝낸다.-->
+<!--        }-->
+<!--        //현재 로딩 중이라고 표시한다.-->
+<!--        isLoading=true;-->
+<!--        //로딩바를 띄우고-->
+<!--        $(".back-drop").show();-->
+<!--        //요청할 페이지 번호를 1 증가시킨다.-->
+<!--        currentPage++;-->
+<!--        //추가로 받아올 페이지를 서버에 ajax 요청을 하고-->
+<!--        console.log("inscroll"+currentPage);-->
+<!--        GetList(currentPage);-->
 
+<!--    };-->
+<!--});-->
+<!--</script>-->
 
-    db.collection('muckstargram').orderBy('date', 'desc').get().then((result)=>{  // 모든 게시물을 조회하고 출력한다.
-      result.forEach((doc)=>{
-      var view = `<div class = "card" style = "width: 500px; margin-left: 300px; border-width: 5px; border-color: rgb(117, 73, 19);">
-        <a href="/muckstar_board.html?id=${doc.id}"><div class="card-body" style="background-image: url('${doc.data().img}'); width: 470px; height: 390px; background-position: center; background-size : cover; margin-left : 10px; margin-top: 10px;"></div></a>
-        <div class="card-body">
-          <h5 class="title"><a href="/muckstar_board.html?id=${doc.id}" style="text-decoration: none;">${doc.data().title}</a></h5>
-          <p class="date">  ${doc.data().date.toDate().toLocaleString()}</p>
-          <span style = "white-space: nowrap;"><img src="/image/muckstargram_img/favorite_icon.PNG" style = "width: 35px; height: 30px;"> <span class="like" style ="font-weight: 400; font-size: 20px;">  ${doc.data().like}</span></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <span style = "white-space: nowrap;"><img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 35px; height: 32px;">  <span class="comment" style ="font-weight: 400; font-size: 20px;"> ${doc.data().comment}</span></span>
-        </div>
-      </div>
-      <br>
-      <br>`;
-      $('.container1').append(view)
+<!--<script>-->
+<!--const GetList = function(currentPage){-->
+<!--    console.log("inGetList"+currentPage);-->
 
-      var view = ` <img src="/image/muckstargram_img/muckstar_background.PNG" style = "width: 470px;"> <br>`;   // 게시물 옆에 사진도 똑같은 개수만큼 출력한다.
-      $('.muckstar_background1').append(view)
-    })
-  })
+<!--    // 무한 스크롤-->
+<!--    $.ajax({-->
+<!--        url:"boards/muckstarBoard",-->
+<!--        method:"GET",-->
+<!--        // 검색기능이 있는 경우 condition과 keyword를 함께 넘겨줘야한다. 안그러면 검색결과만 나와야하는데 다른것들이 덧붙여져 나온다.-->
+<!--        data:"pageNum="+currentPage+"&condition=${condition}&keyword=${keyword}",-->
+<!--        // 내용이 data로 들어온다.-->
+<!--        success:function(data){-->
+<!--            console.log(data);-->
+<!--            // 응답된 문자열은 html 형식이다.(picture/ajax_page.jsp에 응답내용이 있다.)-->
+<!--            // 해당 문자열을 .card-list-container  div에 html로 해석하라고 추가한다.-->
+<!--            $(".card").append(data);-->
+<!--            console.log("ajax");-->
+<!--        }-->
+<!--    });-->
+<!--}-->
 
+<!--</script>-->
 
-  $('#logout').click(function(user){  // 로그아웃 버튼을 눌렀을 때 로그아웃
-       if(user) {
-       firebase.auth().signOut().then(()=>{
-        alert('로그아웃 되었습니다')
-        location.reload();
-       })
-      }
-     })
+<script type="text/javascript">
+var page = 1;
 
-  </script>
+$(window).scroll(function() {
+    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+      console.log(++page);
+      $("#card").append("<h1>Page " + page + "</h1><BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~");
 
+    }
+});
+</script>
 
 </body>
 </html>

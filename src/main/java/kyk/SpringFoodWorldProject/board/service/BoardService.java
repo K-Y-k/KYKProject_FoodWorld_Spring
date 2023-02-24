@@ -1,10 +1,12 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,13 +42,20 @@ public interface BoardService {
     Page<Board> findPageListByBoardType(Pageable pageable, String boardType);
 
     /**
-     * 글 검색
+     * 글 페이징 + 검색
      */
     Page<Board> findByTitleContaining(String titleSearchKeyword, Pageable pageable, String boardType);
 
     Page<Board> findByWriterContaining(String writerSearchKeyword, Pageable pageable, String boardType);
 
     Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
+
+
+    /**
+     * 무한 스크롤 페이징 처리
+     */
+    Slice<Board> searchBySlice(Long lastBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
+
 
     /**
      * 글 삭제
