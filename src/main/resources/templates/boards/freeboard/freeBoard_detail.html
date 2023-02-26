@@ -129,11 +129,6 @@
                       th:text="${attachFile.originalFileName}"
                       th:value="|/boards/attach/${attachFile.id}|"></option>
               <option selected disabled style="display: none;">첨부 파일</option>
-
-<!--              <option th:if="${attachFile.attachedType == 'attached' and session.loginMember == null}"-->
-<!--                      th:each="attachFile : ${boardFiles}"-->
-<!--                      title="다운받으려면 로그인을 해주세요"-->
-<!--                      th:text="${attachFile.originalFileName}"></option>-->
           </select>
 
           <select th:if="${board.fileAttached == 1 and boardFiles.get(0).attachedType == 'attached' and session.loginMember == null}"

@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,18 +53,32 @@ public class MuckstarBoardController {
      * 글 모두 조회 폼
      */
     @GetMapping("/muckstarBoard")
-    public String muckstarBoards(@PageableDefault(page = 0, size = 1, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                 Model model,
-                                 BoardSearchCond boardSearchDto) {
+    public String muckstarBoards(BoardSearchCond boardSearchDto,
+                                 @PageableDefault(size=3) Pageable pageable,
+                                 Model model) {
 
         String boardType = "먹스타그램";
+        Long firstCursorBoardId = boardService.findFirstCursorBoardId(boardType);
 
-        String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
+        Slice<Board> boards = boardService.searchBySlice(firstCursorBoardId+1, boardSearchDto, pageable, boardType);
 
-        Slice<Board> boards = boardService.searchBySlice(1L, boardSearchDto, pageable, boardType);
-        model.addAttribute("boards", boards);
+        boolean hasNext = boards.hasNext();
 
+        List<Board> content = boards.getContent();
 
+        ArrayList<BoardFile> boardFiles = new ArrayList<>();
+
+        for (Board board : content) {
+            List<BoardFile> files = board.getBoardFiles();
+            for (BoardFile file : files) {
+                if (file != null) {
+                    boardFiles.add(file);
+                }
+            }
+        }
+
+        model.addAttribute("boards", content);
+        model.addAttribute("boardFiles", boardFiles);
 
         return "boards/muckstarboard/muckstarBoard_main";
     }

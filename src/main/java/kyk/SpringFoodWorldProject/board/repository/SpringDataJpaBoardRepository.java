@@ -69,6 +69,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     }
 
     @Override
+    public Long findFirstCursorBoardId(String boardType) {
+        return boardRepository.findFirstCursorBoardId(boardType);
+    }
+
+    @Override
     public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
         return boardRepository.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
     }

@@ -50,13 +50,17 @@ public interface BoardService {
 
     Page<Board> findByTitleContainingAndWriterContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
 
-
+    /**
+     * 마지막 id 조회
+     */
+    Long findFirstCursorBoardId(String boardType);
+    
     /**
      * 무한 스크롤 페이징 처리
      */
     Slice<Board> searchBySlice(Long lastBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
-
-
+    
+    
     /**
      * 글 삭제
      */

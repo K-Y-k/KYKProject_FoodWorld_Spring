@@ -118,7 +118,7 @@ class BoardServiceImplTest {
     @Test
     void updateBoard() {
         // given
-        BoardUpdateForm updateDto = new BoardUpdateForm(15L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
+        BoardUpdateForm updateDto = new BoardUpdateForm(1L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
 
         // when : 기존에 생성된 게시글 중의 id를 하나 넣음
         Long updateBoardId = boardService.updateBoard(updateDto.getId(), updateDto);
@@ -417,14 +417,14 @@ class BoardServiceImplTest {
         // given
         Slice<Board> boards = boardRepository.searchBySlice(10L,
                 new BoardSearchCond(),
-                PageRequest.ofSize(6), "자유게시판");
+                PageRequest.ofSize(3), "자유게시판");
         // when
         Long first = boards.getContent().get(0).getId();
-        Long last  = boards.getContent().get(5).getId();
+        Long last  = boards.getContent().get(2).getId();
 
         // then
         assertThat(first).isEqualTo(9);
-        assertThat(last).isEqualTo(4);
+        assertThat(last).isEqualTo(7);
 
     }
 

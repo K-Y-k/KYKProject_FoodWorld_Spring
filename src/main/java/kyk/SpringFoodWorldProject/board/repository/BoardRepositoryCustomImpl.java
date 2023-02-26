@@ -8,6 +8,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.QBoard;
 import kyk.SpringFoodWorldProject.board.domain.entity.QBoardFile;
 import kyk.SpringFoodWorldProject.member.domain.entity.QMember;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -22,11 +23,24 @@ import static kyk.SpringFoodWorldProject.member.domain.entity.QMember.member;
 /**
  * 사용자 정의 인터페이스를 상속받은 사용자 정의 리포지토리
  */
+@Slf4j
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
     public BoardRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em); // 이렇게 JPAQueryFactory를 사용할 수는 있다.
+    }
+
+    public Long findFirstCursorBoardId(String boardType) {
+        Board findBoard = queryFactory.selectFrom(board)
+                .where(
+                        board.boardType.eq(boardType)
+                )
+                .limit(1)
+                .orderBy(board.id.desc())
+                .fetchOne();
+
+        return findBoard.getId();
     }
 
     @Override
@@ -42,6 +56,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 .orderBy(board.id.desc())
                 .fetch();
 
+        log.info("리스트 개수=", results.size());
 
         return checkLastPage(pageable, results);
     }

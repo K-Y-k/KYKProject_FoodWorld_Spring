@@ -89,7 +89,7 @@
 
     <!--검색-->
     <div style="position: absolute; top: 3%; left: 47%;">
-      <form th:action="@{/boards/recommendBoard}" method="get">
+      <form th:action="@{/boards/muckstarBoard}" method="get">
         <div class="row">
           <div class="col-md-1" style="width: 15vw;">
             <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
@@ -101,7 +101,7 @@
 
           <div class="col-md-1" style="width: 6vw;">
             <button class="btn btn-danger" id="write"
-                    th:onclick="|location.href='@{/boards/recommendBoard/upload}'|"
+                    th:onclick="|location.href='@{/boards/muckstarBoard/upload}'|"
                     type="button">글 작성
             </button>
           </div>
@@ -113,10 +113,24 @@
 
       <div class="infinite-container" id="infinite-container"
            style="position: absolute; width: 70vw; height: 90vh;">
-        <div class="card" id="card" style="top: 15%; left: 40%; width: 40vw; height: 70vh">
 
-<!--          <img th:src="@{|/imageFileUpload/${boardFiles.storedFileName}|}"-->
-<!--               style="max-width: 100%; height: auto;">-->
+        <div th:each="image : ${boardFiles}"
+             class="card" id="card" style="margin-top: 10%; left: 40%; width: 40vw; height: 70vh margin-top: 10%;">
+          <input class="cursorBoardId" th:id="${image.board.id}" style="display: none;" th:name="${image.board.id}"/>
+
+          <img th:src="@{|/imageFileUpload/${image.storedFileName}|}"
+               style="max-width: 100%; height: 90%;">
+
+          <div class="input-group" style="margin-left: 5%;">
+            <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;"
+                    type="button">
+              <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
+            </button>
+
+            <h4 class="like" style="font-weight: 500; font-size: 250%; margin-left: 5%; margin-top: 1.5%;" th:text="${image.board.likeCount}"></h4>
+          </div>
+
+          <br>
         </div>
       </div>
 
@@ -194,17 +208,19 @@
 
 <!--</script>-->
 
-<script type="text/javascript">
-var page = 1;
+<!--<script type="text/javascript">-->
+<!--var page = 1;-->
 
-$(window).scroll(function() {
-    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-      console.log(++page);
-      $("#card").append("<h1>Page " + page + "</h1><BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~");
+<!--$(window).scroll(function() {-->
+<!--    if ($(window).scrollTop() == $(document).height() - $(window).height()) {-->
+<!--      console.log(++page);-->
 
-    }
-});
-</script>
+<!--      $("#card").append("<h1>Page " + page + "</h1>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~");-->
+<!--    }-->
+<!--});-->
+<!--</script>-->
+
+<script src="/js/muckstar.js"></script>
 
 </body>
 </html>

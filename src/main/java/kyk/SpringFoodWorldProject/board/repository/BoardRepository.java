@@ -44,8 +44,14 @@ public interface BoardRepository {
     Page<Board> findByWriterContainingAndBoardTypeContaining(String writerSearchKeyword, Pageable pageable, String boardType);
     Page<Board> findByTitleContainingAndWriterContainingAndBoardTypeContaining(String titleSearchKeyword, String writerSearchKeyword, Pageable pageable, String boardType);
 
+
     /**
-     * 무하 스크롤 페이징
+     * 최근 boardId 조회
+     */
+    Long findFirstCursorBoardId(String boardType);
+
+    /**
+     * 무한 스크롤 페이징
      */
     Slice<Board> searchBySlice(Long lastBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
 
