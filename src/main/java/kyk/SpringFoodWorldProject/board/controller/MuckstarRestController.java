@@ -26,17 +26,12 @@ public class MuckstarRestController {
     @GetMapping("/api/muckstarBoard")
     public ResponseEntity<?> muckstarBoardsScroll(@RequestParam(value = "lastCursorBoardId", defaultValue = "0") Long lastCursorBoardId,
                                                   @PageableDefault(size=3) Pageable pageable,
-                                                  BoardSearchCond boardSearchCond) {
+                                                  BoardSearchCond boardSearchCond,
+                                                  Model model) {
         String boardType = "먹스타그램";
 
-        if (lastCursorBoardId == 0) {
-            Long firstCursorBoardId = boardService.findFirstCursorBoardId(boardType);
-            Slice<Board> boards = boardService.searchBySlice(firstCursorBoardId, boardSearchCond, pageable, boardType);
-            return new ResponseEntity<>(boards, HttpStatus.OK);
+        Slice<Board> boards = boardService.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
 
-        } else {
-            Slice<Board> boards = boardService.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
-            return new ResponseEntity<>(boards, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(boards, HttpStatus.OK);
     }
 }

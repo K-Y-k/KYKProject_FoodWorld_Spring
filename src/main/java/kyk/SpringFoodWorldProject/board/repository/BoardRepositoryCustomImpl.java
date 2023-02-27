@@ -43,6 +43,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return findBoard.getId();
     }
 
+
     @Override
     public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
 
@@ -66,8 +67,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         if (lastCursorBoardId == null) {
             return null;
         }
-
-        return board.id.lt(lastCursorBoardId);
+        return board.id.loe(lastCursorBoardId);
     }
 
     // 무한 스크롤 방식 처리하는 메서드

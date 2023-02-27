@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,13 +16,11 @@ public class BoardFile extends BaseTimeEntity {
     @Column(name = "boardFile_id")
     private Long id;
 
-
     private String originalFileName;
 
     private String storedFileName;
 
     private String attachedType;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")

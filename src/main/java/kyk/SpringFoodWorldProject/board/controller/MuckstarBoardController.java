@@ -56,43 +56,15 @@ public class MuckstarBoardController {
     public String muckstarBoards(BoardSearchCond boardSearchDto,
                                  @PageableDefault(size=3) Pageable pageable,
                                  Model model) {
-
         String boardType = "먹스타그램";
+
         Long firstCursorBoardId = boardService.findFirstCursorBoardId(boardType);
 
-        Slice<Board> boards = boardService.searchBySlice(firstCursorBoardId+1, boardSearchDto, pageable, boardType);
-
-        boolean hasNext = boards.hasNext();
-
-        List<Board> content = boards.getContent();
-
-        ArrayList<BoardFile> boardFiles = new ArrayList<>();
-
-        for (Board board : content) {
-            List<BoardFile> files = board.getBoardFiles();
-            for (BoardFile file : files) {
-                if (file != null) {
-                    boardFiles.add(file);
-                }
-            }
-        }
-
-        model.addAttribute("boards", content);
-        model.addAttribute("boardFiles", boardFiles);
+        model.addAttribute("firstCursorBoardId", firstCursorBoardId+1);
+        log.info(String.valueOf(firstCursorBoardId));
 
         return "boards/muckstarboard/muckstarBoard_main";
     }
-
-//    @GetMapping("/muckstarBoard")
-//    public ResponseEntity<Slice<Board>> muckstarBoards(  @RequestParam(value = "lastCursorId", required = false) Long lastCursorId,
-//                                                             @RequestParam(value = "boardSearchDto", required = false) BoardSearchCond boardSearchDto,
-//                                                Pageable pageable) {
-//        String boardType = "먹스타그램";
-//
-//        return new ResponseEntity<>(boardService.getSlce(
-//                boardService.searchBySlice(lastCursorId, boardSearchDto, pageable, boardType)), HttpStatus.OK);
-//
-//    }
 
 
     /**
