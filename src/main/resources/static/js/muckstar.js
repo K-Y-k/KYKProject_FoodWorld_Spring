@@ -56,18 +56,37 @@ function storyLoad() {
 	});
 }
 
+//                        <li style="display: inline;">
+//                            <img src="/image/muckstargram_img/muckstar_background.PNG" style="width: 20vw;">
+//                        </li>
 
 function getStoryItem(board) {
-    let item = `<div class="mucstarList__item">
-                    <div class="card" id="card" style="margin-top: 10%; left: 40%; width: 40vw; height: 70vh margin-top: 10%;">
-                        <div class="cursorBoardId" th:id="${board.id}" style="display: none;" th:name="${board.id}"></div>`;
+    let item = `<div class="mucstarList_item">
+                    <ul style="">
 
-    // 다중 파일 업로드 기능이 있기에 [0]항으로 첫번째 이미지 파일을 하나 가져오기
-               item += `<img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}"
-                             style="max-width: 100%; height: 90%;">`;
-                             console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
-            item += `</div>
-                 </div>`;
+                        <li style="display: inline;">
+                            <div class="card" id="card" style="margin-top: 10%; left: 40%; width: 40vw; height: 70vh margin-top: 10%;">
+                                <a href="/boards/muckstarBoard/${board.id}">
+                                    <img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}"
+                                         style="width: 40vw; height: 62vh;">
+                                </a>
+
+                                <div class="input-group" style="margin-left: 5%;">
+                                    <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;" type="button">
+                                        <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
+                                    </button>
+
+                                    <span class="like" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
+
+                                    <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
+                                    <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
+                                </div>`;
+
+                        console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
+            item += `       </div>
+                        </li>
+                    </ul>
+                </div>`;
 
     console.log("가져온 요소의 출력 결과", item);
 
