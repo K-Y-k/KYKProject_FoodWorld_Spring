@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
@@ -53,9 +54,7 @@ public class MuckstarBoardController {
      * 글 모두 조회 폼
      */
     @GetMapping("/muckstarBoard")
-    public String muckstarBoards(BoardSearchCond boardSearchDto,
-                                 @PageableDefault(size=3) Pageable pageable,
-                                 Model model) {
+    public String muckstarBoards(Model model) {
         String boardType = "먹스타그램";
 
         Long firstCursorBoardId = boardService.findFirstCursorBoardId(boardType);
@@ -128,6 +127,7 @@ public class MuckstarBoardController {
         }
 
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        boardService.updateCommentCount(boardId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/muckstarBoard/{boardId}";
@@ -160,12 +160,12 @@ public class MuckstarBoardController {
      */
     @PostMapping("/muckstarBoard/upload")
     public String boardUpload(@SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
-                              @Valid @ModelAttribute("uploadForm") BoardUploadForm boardDto, BindingResult bindingResult) throws IOException {
+                              @Valid @ModelAttribute("uploadForm") MucstarUploadForm boardDto, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return "boards/muckstarboard/muckstarBoard_upload";
         }
 
-        boardService.upload(loginMember.getId(), boardDto);
+        boardService.muckstarUpload(loginMember.getId(), boardDto);
         return "redirect:/boards/muckstarBoard";
     }
 

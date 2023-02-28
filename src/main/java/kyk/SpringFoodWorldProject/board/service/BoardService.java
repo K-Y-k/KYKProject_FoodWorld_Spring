@@ -2,6 +2,7 @@ package kyk.SpringFoodWorldProject.board.service;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import org.springframework.data.domain.Page;
@@ -15,11 +16,14 @@ import java.util.Optional;
 public interface BoardService {
 
     /**
-     * 글 저장
-     *
-     * @return
+     * 일반 게시판 글 저장
      */
     Long upload(Long memberId, BoardUploadForm boardDto) throws IOException;
+
+    /**
+     * 먹스타그램 글 저장
+     */
+    Long muckstarUpload(Long memberId, MucstarUploadForm boardDto) throws IOException;
 
     /**
      * 글 수정

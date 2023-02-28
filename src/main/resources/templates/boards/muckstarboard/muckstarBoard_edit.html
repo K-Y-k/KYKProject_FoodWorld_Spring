@@ -12,14 +12,14 @@
 
 <body>
 <header style="position: relative;">
-  <img src="/image/main_img/logo2.PNG" class="logo"
-       style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id="logo2">
+  <img src="/image/main_img/logo2.PNG"
+       class="logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
 
   <div class="px-3 py-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <img src="/image/main_img/muckstar_icon.PNG" width="50px" height="50px">
-        <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
+        <a href="/boards/muckstarBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
 
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
@@ -84,87 +84,54 @@
     </div>
   </div>
 </header>
-  
-  <h2 id = "mtitle"><b>먹스타그램 글 수정하기</b></h2>
-  <div class="container mt-3">
-    <input type="text" class="form-control mt-3" id="title" placeholder="제목">
-    <textarea class="form-control mt-2" id="content" placeholder="내용" rows = "20"></textarea>
-    <button class="btn btn-danger mt-3" id="send">글 수정완료</button>
-  </div>
 
-  <script src="/__/firebase/9.8.1/firebase-app-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-auth-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-firestore-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-storage-compat.js"></script>
-  
+<section style="position: relative; width: 90vw; height: 30vh;">
+  <!--th:action="@{/boards/freeBoard/{boardId}/edit(boardId=${board.id})}"-->
+  <h2 id="mtitle" style="position: absolute; left: 45%; top: 10%;"><b>먹스타그램 글 수정하기</b></h2>
+
+  <form action="" th:action th:object="${updateForm}" method="post" enctype="multipart/form-data">
+    <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
+
+      <div class="form-group col-sm-5">
+        <select th:field="*{boardType}" class="form-select" disabled>
+          <option th:value="먹스타그램">먹스타그램</option>
+        </select>
+      </div>
+
+      <br>
+
+      <div class="form-group col-sm-2">
+        <select th:field="*{subType}" class="form-select">
+          <option th:value="'말머리 ' + '선택'">말머리 선택</option>
+          <option th:value="'리뷰 ' + '이벤트'">리뷰 이벤트</option>
+        </select>
+      </div>
+
+      <div class="field-error" style="color: red;" th:errors="*{content}"></div>
+      <textarea class="form-control mt-2" id="content" name="content" th:field="*{content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
+
+      <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
+      <button class="btn btn-danger mt-3"
+              th:onclick="|location.href='@{/boards/muckstarBoard/{boardId}(boardId=*{id})}'|"
+              type="button">취소
+      </button>
+    </div>
+  </form>
+</section>
+
+
   <!--bootstrapjs-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+          crossorigin="anonymous">
+  </script>
   
   <!--jquery-->
-  <script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
-
-  <!--firebase-->
-  <script>
-    const firebaseConfig = {
-    apiKey: "AIzaSyCqNsH4WnQVWyOtpmP3I6Js3mFwThDcOQI",
-    authDomain: "espsensortestcbj.firebaseapp.com",
-    databaseURL: "https://espsensortestcbj-default-rtdb.firebaseio.com",
-    projectId: "espsensortestcbj",
-    storageBucket: "espsensortestcbj.appspot.com",
-    messagingSenderId: "574319666940",
-    appId: "1:574319666940:web:fb395ba5d9d47f475d5979",
-    measurementId: "G-LXM4LVYD4V"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          crossorigin="anonymous">
   </script>
 
-
-  <script>
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    
-    const logout_btn = document.getElementById('logout');
-
-    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-       if(user) { // 로그인된 상태라면
-         console.log(user.uid)
-         console.log(user.displayName)
-         $('#userName').html(user.displayName + '님 접속중')    // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
-
-          logout_btn.style.display = 'inline';
-          login_btn.style.display = 'none';
-        }
-        else {
-          logout_btn.style.display = 'none';
-          login_btn.style.display = 'inline';
-        }
-     })
-
-    var query_str = new URLSearchParams(window.location.search);
-    query_str.get('id');
-
-    db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{
-        $('#title').val(result.data().title)
-        $('#content').val(result.data().content)
-    })
-
-    $('#send').click(function(){  // 수정버튼을 클릭시   제목, 내용을 다시 업데이트함
-        var ud = {
-            title : $('#title').val(),
-            content : $('#content').val()
-        }
-
-        db.collection('muckstargram').doc(query_str.get('id')).update(ud).then(()=>{
-            alert('수정되었습니다')
-            window.location.href = '/muckstar_board.html?id=' + query_str.get('id')
-        })
-    })
-
-  </script>
 
 
 </body>

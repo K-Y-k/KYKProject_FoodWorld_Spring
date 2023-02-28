@@ -33,6 +33,7 @@ function storyLoad() {
 		async: false,
 		success: function(result) {
 		    console.log(JSON.stringify(result))
+
 		    if(result.last ==  true) {
 		        console.log("마지막 페이지");
 		        scrollCheck = false;
@@ -41,12 +42,11 @@ function storyLoad() {
 		    else {
 		        $.each(result.content, function(index, board){
 		            console.log("JSON의 내용에서 가져온 요소: ", index);
+
 		            let muckstarItem = getStoryItem(board);
 		            $("#mucstarList").append(muckstarItem);
 
-		            if(index + 1 == result.size){
-		                lastCursorBoardId = board.id;
-		            }
+		            lastCursorBoardId = board.id;
 		        });
 		    }
 	    },
@@ -61,36 +61,76 @@ function storyLoad() {
 //                        </li>
 
 function getStoryItem(board) {
+    let date = new Date(board.createdDate);
+    console.log(board.createdDate)
+
+    let nowDate = new Date();
+    console.log(nowDate);
+
+    var comparedDate = dateCompare(date, nowDate);
+
     let item = `<div class="mucstarList_item">
-                    <ul style="">
+                    <table>
+                        <tr>
+                            <td> <img src="/image/muckstargram_img/muckstar_background.PNG" style="width: 23vw;"></td>
 
-                        <li style="display: inline;">
-                            <div class="card" id="card" style="margin-top: 10%; left: 40%; width: 40vw; height: 70vh margin-top: 10%;">
-                                <a href="/boards/muckstarBoard/${board.id}">
-                                    <img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}"
-                                         style="width: 40vw; height: 62vh;">
-                                </a>
+                            <td>
+                                <div class="card" id="card" style="margin-top: 10%; left: 10%; width: 40vw; height: 70vh;">
+                                    <a href="/boards/muckstarBoard/${board.id}">
+                                        <img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}"
+                                             style="width: 40vw; height: 62vh;">
+                                    </a>
 
-                                <div class="input-group" style="margin-left: 5%;">
-                                    <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;" type="button">
-                                        <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
-                                    </button>
+                                    <div class="input-group" style="margin-left: 5%;">
+                                        <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;" type="button">
+                                            <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
+                                        </button>
 
-                                    <span class="like" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
+                                        <span class="like" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
 
-                                    <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
-                                    <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
-                                </div>`;
+                                        <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
+                                        <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
+
+                                        <span id="date" style="float: right; margin-left: 40%;">${comparedDate}</span>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td> <img src="/image/food/sin.jpg" style="margin-left: 30%; width: 20vw;"></td>
+                        </tr>`;
 
                         console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
-            item += `       </div>
-                        </li>
-                    </ul>
+
+            item += `</table>
                 </div>`;
 
     console.log("가져온 요소의 출력 결과", item);
 
 	return item;
+}
+
+function dateCompare(date, nowDate) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+
+        month = month >= 10 ? month : '0' + month;
+        day = day >= 10 ? day : '0' + day;
+        hour = hour >= 10 ? hour : '0' + hour;
+        minute = minute >= 10 ? minute : '0' + minute;
+
+        let nowYear = nowDate.getFullYear();
+        let nowMonth = nowDate.getMonth() + 1;
+        let nowDay = nowDate.getDate();
+
+        if (year == nowYear && month == nowMonth && day == nowDay) {
+            return hour + ':' + minute;
+        } else {
+            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+        }
 }
 
 //     // 다중 파일 모두 출력하기

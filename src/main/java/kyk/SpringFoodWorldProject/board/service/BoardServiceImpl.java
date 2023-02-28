@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.service;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
@@ -89,6 +90,31 @@ public class BoardServiceImpl implements BoardService {
         return null;
     }
 
+    @Override
+    public Long muckstarUpload(Long memberId, MucstarUploadForm boardDto) throws IOException {
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("글 등록 실패: 로그인 상태가 아닙니다." + memberId));
+
+        List<MultipartFile> imageFiles = boardDto.getImageFiles();
+
+        try {
+            if (!imageFiles.get(0).getOriginalFilename().isBlank()) {
+                // 여러 개의 파일일 수 있으므로 부모 객체인 Board부터 가져와야함
+                // + attached 속성 1로 설정한 toSaveFileEntity로 글 저장
+                Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
+
+                Long savedId = boardRepository.save(boardEntity).getId();
+                Board board = boardRepository.findById(savedId).get();
+
+                muckstarImageUpload(boardDto, board);
+            }
+        } catch(IllegalStateException e) {
+            log.info("먹스타그램은 이미지가 필수라고 안내 오류");
+        }
+
+        return null;
+    }
+
 
     private Board uploadBoard(BoardUploadForm boardDto, Member findMember) {
         Board board = boardDto.toSaveEntity(findMember, boardDto);
@@ -98,6 +124,26 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void imageUpload(BoardUploadForm boardDto, Board board) throws IOException {
+        // 루프를 돌려 파일을 모두 찾고 반환
+        for (MultipartFile imageFiles: boardDto.getImageFiles()) {
+            String originalFilename = imageFiles.getOriginalFilename();
+
+            // 파일에 이름을 붙일 랜덤으로 식별자 지정
+            UUID uuid = UUID.randomUUID();
+            String storedFileName = uuid + "_" + originalFilename;
+            String savePath = imageFileLocation;
+
+            // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
+            imageFiles.transferTo(new File(savePath, storedFileName));
+
+            String attachedType = "none";
+
+            // DB에 파일 관련 필드 값 저장
+            BoardFile boardFileEntity = BoardFile.toBoardFileEntity(board, originalFilename, storedFileName, attachedType);
+            boardFileRepository.save(boardFileEntity);
+        }
+    }
+    private void muckstarImageUpload(MucstarUploadForm boardDto, Board board) throws IOException {
         // 루프를 돌려 파일을 모두 찾고 반환
         for (MultipartFile imageFiles: boardDto.getImageFiles()) {
             String originalFilename = imageFiles.getOriginalFilename();

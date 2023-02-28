@@ -12,14 +12,14 @@
 
 <body>
 <header style="position: relative;">
-  <img src="/image/main_img/logo2.PNG" class="logo"
-       style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id="logo2">
+  <img src="/image/main_img/logo2.PNG"
+       class="logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
 
   <div class="px-3 py-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <img src="/image/main_img/muckstar_icon.PNG" width="50px" height="50px">
-        <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
+        <a href="/boards/muckstarBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
 
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
@@ -91,9 +91,10 @@
   <form th:action th:object="${uploadForm}" method="post" enctype="multipart/form-data">
     <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
       <div class="field-error" style="color: red;" th:errors="*{boardType}"></div>
+
       <div>
         <div class="form-group col-sm-5">
-          <select th:field="*{boardType}" class="form-control">
+          <select th:field="*{boardType}" class="form-select">
             <option th:value="먹스타그램">먹스타그램</option>
           </select>
         </div>
@@ -101,24 +102,18 @@
         <br>
 
         <div class="form-group col-sm-2">
-          <select th:field="*{subType}" class="form-control">
+          <select th:field="*{subType}" class="form-select">
             <option th:value="'말머리 ' + '선택'">말머리 선택</option>
             <option th:value="'리뷰 ' + '이벤트'">리뷰 이벤트</option>
           </select>
         </div>
       </div>
 
-      <div class="field-error" style="color: red;" th:errors="*{title}"></div>
-      <input type="text" id="title" class="form-control mt-3" name="title" th:field="*{title}" placeholder="제목을 입력해주세요"
-             th:errorclass="field-error">
-
       <div class="field-error" style="color: red;" th:errors="*{content}"></div>
       <textarea id="content" class="form-control mt-2" name="content" th:field="*{content}" placeholder="내용을 입력해주세요"
                 rows="20"
                 th:errorclass="field-error"></textarea>
 
-<!--      <label th:for="attach">첨부파일 선택</label>-->
-<!--      <input class="form-control mt-2" type="file" name="attachFiles" multiple>-->
       <label th:for="img">이미지 선택</label>
       <input class="form-control mt-2" type="file" name="imageFiles" multiple> <!--name을 컨트롤러의 매개변수 이름과 동일해야한다/-->
 

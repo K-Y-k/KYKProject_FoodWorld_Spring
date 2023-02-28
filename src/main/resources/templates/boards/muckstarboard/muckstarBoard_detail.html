@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>수정 페이지</title>
+  <title>먹스타 상세글</title>
   <!--부트 스트랩 적용-->
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <img src="/image/main_img/muckstar_icon.PNG" width="50px" height="50px">
-        <a href="/boards/recommendBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
+        <a href="/boards/muckstarBoard" class="navbar-brand"><h4 class="thema">&nbsp;&nbsp;먹스타그램</h4></a>
 
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
@@ -109,56 +109,51 @@
             </div>
 
             <div th:each="imageFile : ${boardFiles}"
-                 style="width: 30vw; display: flex; justify-content: center; margin-left: 20%;">
-                <img th:if="${board.fileAttached == 1 and imageFile.attachedType == 'none'}"
-                     th:src="@{|/imageFileUpload/${imageFile.storedFileName}|}"
+                 style="width: 40vw; display: flex; justify-content: center; margin-left: 10%; margin-top: 5%;">
+                <img th:src="@{|/imageFileUpload/${imageFile.storedFileName}|}"
                      style="max-width: 100%; height: auto;">
             </div>
 
             <br>
             <br>
-
             <br>
-            <span style=" height: 10px;">
-                <img src="/image/muckstargram_img/user_icon.PNG"
-                     style="width: 40px; height: 40px; position: absolute; top: 50%; left: 3%;">
 
-                <div class="row">
-                    <div class="col" style="margin-left: 2%">
-                        <th:block th:text="${board.writer}" style="float: left"/>
-                    </div>
+            <div class="row">
+                <div class="col" style="margin-left: 2%;">
+                    <img src="/image/muckstargram_img/user_icon.PNG"
+                         style="float: left; width: 2.5vw; height: 4vh;">
 
-                    <div class="col" style="float: right; margin-left: 35%">
-                        <th:block th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
-                                  th:text="${#temporals.format(board.createdDate, 'HH:mm')} + '   조회: '+ ${board.count}"/>
-                        <th:block th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
-                                  th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')} + '   조회: '+ ${board.count}"/>
-                    </div>
-
-                    <button
-                            class="btn btn-danger mt-3" id="chat"
-                            style="width: 70px; height: 40px;">DM</button>
+                    <h5 th:text="${board.writer}" style="left: 5%; margin-top: 4%;"></h5>
                 </div>
 
-            </span>
+                <div class="col" style="margin-left: 55%;">
+                    <th:block th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
+                              th:text="${#temporals.format(board.createdDate, 'HH:mm')} + '   조회: '+ ${board.count}"/>
+                    <th:block th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
+                              th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')} + '   조회: '+ ${board.count}"/>
 
-            <br>
-            <br>
+                    <button th:if="${session.loginMember != null && session.loginMember.id != board.member.id}"
+                            class="btn btn-danger mt-3" id="chat"
+                            style="">DM
+                    </button>
+                </div>
+            </div>
 
             <hr>
-            <h4 class="content" th:text="${board.content}" style="margin-left: 2%;"></h4>
-            <br>
-            <br>
+
+            <h4 class="content" th:text="${board.content}" style="margin-left: 3%;"></h4>
+
             <br>
 
             <div class="input-group">
-                <button class="btn btnEvent" id="like_btn"
-                        style="width: 70px; height: 40px; position: absolute; left: 1.5%; top: 70%;">
-                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 35px; height: 30px;">
+                <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3.5vh; margin-left: 1.5%;"
+                        th:onclick="|location.href='@{/boards/muckstarBoard/{boardId}/like(boardId=${board.id})}'|"
+                        type="button">
+                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 2.3vw; height: 3vh;">
                 </button>
 
                 <span class="like"
-                      style="font-weight: 400; font-size: 20px; position: absolute; left: 9.5%; top: 75.5%;"
+                      style="font-weight: 400; font-size: 20px; margin-left: 2%; margin-top: 0.5%;"
                       th:text="${likeCount}"></span>
             </div>
 
@@ -166,9 +161,9 @@
 
             <div class="input-group">
                 <img src="/image/muckstargram_img/comment_icon.PNG"
-                     style="width: 40px; height: 40px; position: absolute; left: 3%; top: 81%;">
-                <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; position: absolute; left: 9.5%" th:text="${#lists.size(comments)}"></div>
-                <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="0"></div>
+                     style="width: 2.5vw; height: 3.5vh; margin-left: 3%;">
+                <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px;  margin-left: 1.5%;" th:text="${#lists.size(comments)}"></div>
+                <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 1.5%;" th:text="0"></div>
             </div>
 
             <br>
@@ -178,7 +173,7 @@
             <div class="card bg-light">
                 <div class="card-body">
                     <!-- 댓글 전송 폼 -->
-                    <form class="mb-4" th:action="@{/boards/freeBoard/{boardId}/comment(boardId=${board.id})}" th:object="${comment}" method="post">
+                    <form class="mb-4" th:action="@{/boards/muckstarBoard/{boardId}/comment(boardId=${board.id})}" th:object="${comment}" method="post">
                         <div class="input-group">
                       <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"
                                 th:errorclass="field-error"></textarea>
@@ -193,7 +188,7 @@
                               <div class="flex-shrink-0" style=""><img class="rounded-circle"
                                                                        src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"
                                                                        alt="..."></div>
-                              <div class="fw-bold" style="">
+                              <div class="fw-bold">
                                   <th:block th:text="${comment.writer}"></th:block>
 
                                   <th:block style="float: left;"
@@ -231,212 +226,17 @@
 </section>
 
 
-  <script src="/__/firebase/9.8.1/firebase-app-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-auth-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-firestore-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-storage-compat.js"></script>
-  
-  <!--bootstrapjs-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-  
-  <!--jquery-->
-  <script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
+<!--bootstrapjs-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous">
+</script>
 
-  <!--firebase-->
-  <script type="text/javascript">
-    const firebaseConfig = {
-    apiKey: "AIzaSyCqNsH4WnQVWyOtpmP3I6Js3mFwThDcOQI",
-    authDomain: "espsensortestcbj.firebaseapp.com",
-    databaseURL: "https://espsensortestcbj-default-rtdb.firebaseio.com",
-    projectId: "espsensortestcbj",
-    storageBucket: "espsensortestcbj.appspot.com",
-    messagingSenderId: "574319666940",
-    appId: "1:574319666940:web:fb395ba5d9d47f475d5979",
-    measurementId: "G-LXM4LVYD4V"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
-  </script>
-
-  <script>
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    const login_btn = document.getElementById('login');
-    const logout_btn = document.getElementById('logout');
-    const edit_btn = document.getElementById('edit');
-
-    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-       if(user) { // 로그인된 상태라면
-         console.log(user.uid)
-         console.log(user.displayName)
-         $('#userName').html(user.displayName + '님 접속중')    // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
-
-          logout_btn.style.display = 'inline';
-          login_btn.style.display = 'none';
-        }
-        else {
-          logout_btn.style.display = 'none';
-          login_btn.style.display = 'inline';
-        }
-     })
-
-    var my_uid = JSON.parse(localStorage.getItem('user')).uid
-    var user_name = JSON.parse(localStorage.getItem('user')).displayName
-    var otherperson_uid;
-    var chat_title;
-    var other_name;
-    
-    var query_str = new URLSearchParams(window.location.search)
-
-    db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{  // 클릭한 글의 id와 관련 글을 조회하고 그 값들을 출력한다.
-        console.log(result.data());
-        otherperson_uid = result.data().uid;
-        chat_title = result.data().name;
-        other_name = result.data().name;
-        
-        $('.name').html(result.data().name)
-        $('.title').html(result.data().title)
-        $('.date').html(result.data().date.toDate().toLocaleString())
-        $('.content').html(result.data().content)
-        $('.like').html(result.data().like)
-        $('.comment').html('&nbsp;'+ result.data().comment)
-        $('.detail-pic').css('background-image', `url(${result.data().img})`)
-     })
-
-
-     db.collection('muckstargram').doc(query_str.get('id')).collection('message').orderBy('date').get().then((result)=>{   // 클릭한 글의 id와 관련된 댓글들을 조회하고 출력한다.
-      $('.chat-content').html('');
-
-      result.forEach((a)=>{
-        console.log(a.data())
-         
-        var temp =
-        `<li><span class="chat-box">${a.data().user_name}</span></li> 
-        <li><span class="chat-box_time">${a.data().date.toDate().toLocaleString()}</span> <button class="btn btn-secondary" id="reply_update" style = "visibility: hidden;">수정</button></li> <br> 
-        <li><span class="chat-box">${a.data().content}</span></li> <br><hr> `;         
-         $('.chat-content').append(temp)
-         
-        })
-     })
-
-     
-     $('#edit').click(function(){
-        firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-        if(user) { // 로그인된 상태라면
-            db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{
-            if(my_uid == result.data().uid){
-              window.location.href = '/muckstar_board_edit.html?id=' + query_str.get('id')
-            }
-            else { 
-              alert('다른 사람의 게시물은 수정할 수 없습니다.')
-            }
-          })
-        }
-          else {
-            alert('회원만 수정할 수 있습니다');
-          }
-      })
-     })
-
-
-     $('#chat').click(function(){
-      firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-        if(user) { // 로그인된 상태라면
-         
-                  var data = {
-                  chat_useruid : [my_uid, otherperson_uid],
-                  my_uid : my_uid,
-                  otherperson_uid : otherperson_uid,
-                  title : chat_title + ' '+ user_name,
-                  my_name : user_name,
-                  other_name : other_name,
-                  date : new Date()
-                  }
-
-                  db.collection('muckstar_chatroom').add(data).then(()=>{
-                    window.location.href = '/chat.html'
-                  })
-         }
-        else {
-            alert('회원만 채팅할 수 있습니다');
-        }
-      })
-    })
-
-
-    $('#like_btn').click(function(){ // 좋아요 버튼 클릭 시
-      firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-        if(user) { // 로그인된 상태라면
-          db.collection('muckstargram').doc(query_str.get('id')).update({'like': firebase.firestore.FieldValue.increment(1)}).then(()=>{  // 1씩 증가시키고 증가된 값으로 변경시켜준다.
-            db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{
-                  $('.like').html(result.data().like)
-            })
-          })
-       }
-       else {
-            alert('로그인 먼저 해주세요');
-        }
-      })
-    })
-
-    
-     $('#reply_send').click(function(){  // 댓글 작성 기능
-
-        firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-          if(user) { // 로그인된 상태라면
-            var data = {
-            user_name : user_name,
-            content : $('#chat-input').val(),
-            date : new Date(),
-            uid : my_uid
-            }
-
-            db.collection('muckstargram').doc(query_str.get('id')).update({'comment': firebase.firestore.FieldValue.increment(1)})  // 댓글 수를 1씩 증가시킨다.
-
-            db.collection('muckstargram').doc(query_str.get('id')).collection('message').add(data).then(()=>{
-              $('#chat-input').val('')
-              db.collection('muckstargram').doc(query_str.get('id')).collection('message').orderBy('date').get().then((result)=>{ // 새로 작성한 댓글을 적용시키기 위해 다시 조회하여
-                $('.chat-content').html('');
-
-                result.forEach((a)=>{
-                  console.log(a.data())
-                  
-                  var temp =
-                  `<li><span class="chat-box">${a.data().user_name}</span></li> 
-                  <li><span class="chat-box_time">${a.data().date.toDate().toLocaleString()}</span> <button class="btn btn-secondary" id="reply_update" style = "visibility: hidden;">수정</button></li> <br> 
-                  <li><span class="chat-box">${a.data().content}</span></li> <br><hr> `;         
-                  $('.chat-content').append(temp)
-                  
-                  })
-              })
-
-              db.collection('muckstargram').doc(query_str.get('id')).get().then((result)=>{  // 새로 작성한 것도 적용시킴
-                $('.like').html(result.data().like)
-                $('.comment').html('&nbsp;'+ result.data().comment)
-              })
-
-            })
-          }
-            else {
-              alert('회원만 댓글을 작성할 수 있습니다');
-            }
-        })
-    })
-
-    $('#logout').click(function(user){  // 로그아웃 버튼을 눌렀을 때 로그아웃
-       if(user) {
-       firebase.auth().signOut().then(()=>{
-        alert('로그아웃 되었습니다')
-        location.reload();
-       })
-      }
-     })
-  </script>
-
+<!--jquery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+</script>
 
 </body>
 </html>
