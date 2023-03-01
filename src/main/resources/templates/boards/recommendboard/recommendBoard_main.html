@@ -35,7 +35,7 @@
                         </a>
                     </li>
                     <li>
-                        <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 105px; margin-top: 10px;">
+                        <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 102px; margin-top: 10px;">
                         <a href="/boards/freeBoard" class="nav-link text-white">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
                         </a>
@@ -144,8 +144,10 @@
                        th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></a>
                 </td>
 
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${board.writer}">글쓴이
+                <td class="col-md-1" style="text-align: center; margin: 0 auto;">
+                    <a th:href="@{|/members/profile/${board.member.id}|}" style="color: black; text-decoration-line: none;">
+                        <th:block th:text="${board.writer}"/>
+                    </a>
                 </td>
 
                 <td class="col-md-2"

@@ -4,6 +4,8 @@ import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
+import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
 import kyk.SpringFoodWorldProject.board.repository.JPABoardRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
@@ -42,6 +44,7 @@ class BoardServiceImplTest {
 
     @Autowired SpringDataJpaMemberRepository memberRepository;
     @Autowired BoardServiceImpl boardService;
+    @Autowired BoardFileRepository boardFileRepository;
     @Autowired SpringDataJpaBoardRepository boardRepository;
     @Autowired LikeServiceImpl likeService;
     @Autowired CommentServiceImpl commentService;
@@ -64,6 +67,7 @@ class BoardServiceImplTest {
             boardCount++;
         }
         Board savedBoard = boardRepository.save(new Board("제목ddddddcdddddddddddddddddㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇddd", "내용", "작가10", savedMember2, "추천게시판","식당"));
+
     }
 
     @AfterEach
@@ -415,28 +419,32 @@ class BoardServiceImplTest {
     @DisplayName("No-Offset 방식을 사용하면 lastStoreId값 -1 부터 page size 만큼 가져옴")
     void test() {
         // given
-        Slice<Board> boards = boardRepository.searchBySlice(10L,
+        Slice<Board> boards = boardRepository.searchBySlice( "", 10L, true,
                 new BoardSearchCond(),
                 PageRequest.ofSize(3), "자유게시판");
-        // when
-        Long first = boards.getContent().get(0).getId();
-        Long last  = boards.getContent().get(2).getId();
+        try {
+            // when
+            Long first = boards.getContent().get(0).getId();
+            Long last  = boards.getContent().get(2).getId();
 
-        // then
-        assertThat(first).isEqualTo(9);
-        assertThat(last).isEqualTo(7);
 
+            // then
+            assertThat(first).isEqualTo(9);
+            assertThat(last).isEqualTo(7);
+        } catch (IndexOutOfBoundsException e) {
+            fail("IndexOutOfBoundsException 오류 발생");
+        }
     }
 
     @Test
     @DisplayName("마지막 페이지에서는 isLast가 true, 마지막이 아니면 isLast가 false")
     void checkLast() {
         // given
-        Slice<Board> getLastPage = boardRepository.searchBySlice(10L,
+        Slice<Board> getLastPage = boardRepository.searchBySlice("", 10L, true,
                 new BoardSearchCond(),
                 PageRequest.ofSize(9), "자유게시판");
 
-        Slice<Board> getMiddlePage = boardRepository.searchBySlice(10L,
+        Slice<Board> getMiddlePage = boardRepository.searchBySlice("", 10L, true,
                 new BoardSearchCond(),
                 PageRequest.ofSize(4), "자유게시판");
 

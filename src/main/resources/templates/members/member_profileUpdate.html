@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <!--부트 스트랩 적용-->
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
@@ -107,36 +107,43 @@
   </section>
 
   <aside>
-      <!--로그인 폼-->
-      <div class="card" style="position :absolute; left: 38%;">
-        <br>
-        <br>
-        <div class="container mt-3" style="position :absolute;  top : 10%; left: 0%;">
-          <h4 class="tm">로그인</h4>
-          <br>
-          <br>
-          <form action="item.html" th:action th:object="${loginForm}" method="post">
-            <div class="mb-3">
-              <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디">
-              <div class="field-error" style="color: red;" th:errors="*{loginId}"></div>
-            </div>
-            <div class="mb-3">
-              <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호">
-              <div class="field-error" style="color: red;" th:errors="*{password}"></div>
-            </div>
-            <br>
-            <div class="container mt-3">
-              <button type="submit" class="btn btn-primary">로그인</button> &nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="/members/join">
-                <button type="button" class="btn btn-primary">회원가입</button>
-              </a> <br>
-            </div>
-          </form>
+    <div class="card" style="left: 30%;">
+    <br>
+    <br>
+    <h4 class="tm">프로필 수정</h4>
+    <br>
+    <div class="container mt-3">
+      <form action="" th:action th:object="${updateForm}" method="post">
+        <div class="mb-3">
+          <input type="text" th:field="*{name}" class="form-control" placeholder="닉네임(3자리 이상)">
+          <div class="field-error" style="color: red;" th:errors="*{name}"></div>
         </div>
-      </div>
-  </aside>
 
+        <div class="mb-3">
+          <input type="text" th:field="*{loginId}" class="form-control" placeholder="아이디(3자리 이상)">
+          <div class="field-error" style="color: red;" th:errors="*{loginId}"></div>
+        </div>
+
+        <div class="mb-3">
+          <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호 (3자리 이상)">
+          <div class="field-error" style="color: red;" th:errors="*{password}"></div>
+        </div>
+
+        <br>
+
+        <div class="col">
+          <button class="w-100 btn btn-primary" type="submit">수정완료</button>
+          <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='index.html'"
+                  th:onclick="|location.href='@{/}'|"
+                  type="button">취소
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</aside>
+
+<div class = "container mt-3"></div>
 </div>
-
 </body>
 </html>

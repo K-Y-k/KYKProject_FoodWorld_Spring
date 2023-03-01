@@ -70,8 +70,7 @@
       </div>
       <hr>
 
-      <img src="/image/main_img/logo1.PNG" class="logo" style="width: 250px; height: 160px;"
-           id="logo">
+      <img src="/image/main_img/logo1.PNG" class="logo" style="width: 250px; height: 160px;" id="logo">
 
       <br>
       <br>
@@ -80,7 +79,7 @@
       <div class="col-auto" style="position:absolute; top: 35%;" id="col-auto">
           <button type="button" class="btn btn-primary mb-3"
                   style="width: 100px; margin-left: 7px;"
-                  th:onclick="|location.href='@{/members/profile/{memberId}(memberId=${member.id})}'|">프로필
+                  th:onclick="|location.href='@{/members/profile/{memberId}/edit(memberId=${member.id})}'|">프로필
           </button>
         <form th:action="@{/members/logout}" method="post" style="display: inline;">
         <button type="submit" class="btn btn-primary mb-3"

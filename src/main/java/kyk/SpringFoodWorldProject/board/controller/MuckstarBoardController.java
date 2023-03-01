@@ -56,10 +56,9 @@ public class MuckstarBoardController {
     @GetMapping("/muckstarBoard")
     public String muckstarBoards(Model model) {
         String boardType = "먹스타그램";
-
         Long firstCursorBoardId = boardService.findFirstCursorBoardId(boardType);
 
-        model.addAttribute("firstCursorBoardId", firstCursorBoardId+1);
+        model.addAttribute("firstCursorBoardId", firstCursorBoardId);
         log.info(String.valueOf(firstCursorBoardId));
 
         return "boards/muckstarboard/muckstarBoard_main";

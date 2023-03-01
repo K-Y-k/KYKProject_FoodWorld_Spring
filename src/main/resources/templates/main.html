@@ -60,78 +60,72 @@
         </div>
     </header>
 
-    <section style="width: 28%; position: relative;"> <!--사이드바-->
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 275px; height: 110vh">
+    <section style="position: relative; width: 17vw;"> <!--세션 바-->
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
+             style="width: 290px; height: 110vh;">
             <hr>
             <span style="text-align: center; font-size: 20px;" id="userName"></span>
-            <h4>&nbsp;&nbsp;&nbsp;FOOD WORLD에</h4>
-            <h4>오신 것을 환영합니다!</h4>
+            <h4 style="margin-left: 13%;">FOOD WORLD에</h4>
+            <h4 style="margin-left: 5%;">오신 것을 환영합니다!</h4>
             <hr>
 
             <form action="" th:action th:object="${loginForm}" method="post">
-            <div class="container" style="position:absolute; top: 14%; left: 0%;" id="form">
-                <br>
-                <br>
-                <div class="mb-3">
-                    <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디" style="width: 250px;">
+                <div class="container" style="position:absolute; top: 14%; left: 1%;" id="form">
+                    <br>
+                    <br>
+                    <div class="mb-3">
+                        <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="아이디" style="width: 250px;">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호" style="width: 250px;">
+                    </div>
+                    <br>
                 </div>
-                <div class="mb-3">
-                    <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호" style="width: 250px;">
+
+                <div class="col-auto" style="position:absolute; top: 30%; left: 3%;" id="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 7px;" id="login">
+                        로그인
+                    </button>
+                    <button class="btn btn-primary mb-3" style="width: 100px; margin-left: 30px;"
+                            id="register" th:onclick="|location.href='@{/members/join}'|"
+                            type="button" >회원가입
+                    </button>
                 </div>
-                <br>
-            </div>
-
-            <br>
-            <br>
-            <br>
-
-            <div class="col-auto" style="position:absolute; top: 30%; left: 2%;" id="col-auto">
-                <button type="submit" class="btn btn-primary mb-3" style="width: 100px; margin-left: 7px;" id="login">
-                    로그인
-                </button>
-                <button class="btn btn-primary mb-3" style="width: 100px; margin-left: 30px;"
-                        id="register" th:onclick="|location.href='@{/members/join}'|"
-                        type="button" >회원가입
-                </button>
-            </div>
             </form>
 
-            <br>
-            <br>
-
-            <div class="nav nav-pills flex-column mb-auto" style="position:absolute; top: 38%; left: 0%; width: 100%;">
+            <ul style="position:absolute; width: 275px; top: 35%; left: -5%; list-style-type: none;">
                 <hr>
                 <li class="nav-item">
-                    <a href="/boards/freeBoard" class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
+                    <a href="/boards/freeBoard" class="nav-link text-white" style="margin-left: 23%;">
+                        &nbsp;자유게시판
                     </a>
                 </li>
                 <hr>
                 <li>
-                    <a href="/boards/recommendBoard" class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추천게시판
+                    <a href="/boards/recommendBoard" class="nav-link text-white" style="margin-left: 25%;">
+                        추천게시판
                     </a>
                 </li>
                 <hr>
                 <li>
-                    <a href="muckstar_main.html" class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
+                    <a href="/boards/muckstarBoard" class="nav-link text-white" style="margin-left: 25%;">
+                        먹스타그램
                     </a>
                 </li>
                 <hr>
                 <li>
-                    <a href="menu_recommend.html" class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천
+                    <a href="menu_recommend.html" class="nav-link text-white" style="margin-left: 27%;">
+                        메뉴추천
                     </a>
                 </li>
                 <hr>
                 <li>
-                    <a href="chat.html" class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;채팅방
+                    <a href="chat.html" class="nav-link text-white" style="margin-left: 29%;">
+                        채팅방
                     </a>
                 </li>
                 <hr>
-            </div>
+            </ul>
         </div>
     </section>
 
@@ -139,9 +133,22 @@
         <br>
         <br>
 
-        <div> <!--이미지 슬라이드-->
+        <div> <!--배경 꾸미는 사진-->
+            <img src="/image/main_img/main_background01.PNG"
+                 style="position: absolute; top: 3%; width: 12vw;">
+        </div>
+        <div>
+            <img src="/image/main_img/main_background2.PNG"
+                 style="position: absolute; top: 45%; width: 12vw;">
+        </div>
+        <div>
+            <img src="/image/main_img/main_background3.PNG"
+                 style="position: absolute; top: 70%; width: 12vw;">
+        </div>
+
+        <div style="margin-left: 30%;"> <!--이미지 슬라이드-->
             <div class="img_slide"
-                 style="position: absolute; top: 3%; width: 815px; border: solid 3px; border-color: rgb(9, 136, 15);">
+                 style="position: absolute; top: 3%; width: 40vw; border: solid 3px; border-color: rgb(9, 136, 15);">
                 <input type="radio" name="slide" id="slide01" checked>
                 <input type="radio" name="slide" id="slide02">
                 <input type="radio" name="slide" id="slide03">
@@ -193,36 +200,10 @@
                 </div>
             </div>
         </div>
-        <div> <!--배경 꾸미는 사진-->
-            <img src="/image/main_img/main_background01.PNG"
-                 style="position: absolute; left: -30%; top: 3%; width: 230px;">
-        </div>
-        <div>
-            <img src="/image/main_img/main_background2.PNG"
-                 style="position: absolute; left: -30%; top: 45%; width: 230px;">
-        </div>
-        <div>
-            <img src="/image/main_img/main_background3.PNG"
-                 style="position: absolute; left: -30%; top: 70%; width: 230px;">
-        </div>
 
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
 
-        <div style="position: relative; border: solid 3px; border-color: rgb(202, 130, 22); width: 815px; height: 300px;">
+        <div style="margin-left: 30%; margin-top: 40%; border: solid 3px; border-color: rgb(202, 130, 22);
+                    position: relative; width: 40vw; height: 30vh;">
             <!--자유게시판 식당게시판-->
             <div>
                 <table class="container2 mt-10"
@@ -248,7 +229,8 @@
 
         <br>
 
-        <div style="position: relative; border: solid 3px; border-color: rgb(47, 9, 136); width: 815px; height: 275px;">
+        <div style="margin-left: 30%; border: solid 3px; border-color: rgb(47, 9, 136);
+                    position: relative; width: 40vw; height: 30vh;">
             <!--먹스타그램-->
             <span style="font-family: 'Nanum Gothic'; font-style: normal; font-weight: 550; white-space: nowrap; padding: 10px; font-size: 20px; color: rgb(47, 9, 136);">먹스타그램</span>
             <a href="muckstar_main.html" style="text-decoration: none;">

@@ -58,11 +58,12 @@ public interface BoardService {
      * 마지막 id 조회
      */
     Long findFirstCursorBoardId(String boardType);
-    
+    Long findFirstCursorBoardIdInMember(Long memberId, String boardType);
+
     /**
      * 무한 스크롤 페이징 처리
      */
-    Slice<Board> searchBySlice(Long lastBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
+    Slice<Board> searchBySlice(String memberId, Long lastBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
     
     
     /**

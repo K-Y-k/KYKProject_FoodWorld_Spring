@@ -267,10 +267,14 @@ public class BoardServiceImpl implements BoardService {
     public Long findFirstCursorBoardId(String boardType) {
         return boardRepository.findFirstCursorBoardId(boardType);
     }
+    @Override
+    public Long findFirstCursorBoardIdInMember(Long memberId, String boardType) {
+        return boardRepository.findFirstCursorBoardIdInMember(memberId, boardType);
+    }
 
     @Override
-    public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
-        return boardRepository.searchBySlice(lastCursorBoardId, boardSearchCond, pageable, boardType);
+    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
+        return boardRepository.searchBySlice(memberId, lastCursorBoardId, first, boardSearchCond, pageable, boardType);
     }
 
 

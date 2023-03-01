@@ -16,9 +16,12 @@ import org.springframework.data.domain.SliceImpl;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.querydsl.core.types.ExpressionUtils.isNotNull;
+import static com.querydsl.core.types.ExpressionUtils.isNull;
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoardFile.boardFile;
 import static kyk.SpringFoodWorldProject.member.domain.entity.QMember.member;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 사용자 정의 인터페이스를 상속받은 사용자 정의 리포지토리
@@ -31,6 +34,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em); // 이렇게 JPAQueryFactory를 사용할 수는 있다.
     }
 
+    @Override
     public Long findFirstCursorBoardId(String boardType) {
         Board findBoard = queryFactory.selectFrom(board)
                 .where(
@@ -43,31 +47,59 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return findBoard.getId();
     }
 
+    @Override
+    public Long findFirstCursorBoardIdInMember(Long memberId, String boardType) {
+        Board findBoard = queryFactory.selectFrom(board)
+                .where(
+                        board.member.id.eq(memberId),
+                        board.boardType.eq(boardType)
+                )
+                .limit(1)
+                .orderBy(board.id.desc())
+                .fetchOne();
+
+        return findBoard.getId();
+    }
+
 
     @Override
-    public Slice<Board> searchBySlice(Long lastCursorBoardId, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
+    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
 
         List<Board> results = queryFactory.selectFrom(board)
+                .leftJoin(board.member, member).fetchJoin()
                 .leftJoin(board.boardFiles, boardFile).fetchJoin()
                 .where(
-                        ltBoardId(lastCursorBoardId),
-                        board.boardType.eq(boardType)
+                        ltBoardId(lastCursorBoardId, first),
+                        memberIdEq(memberId),
+                        boardTypeEq(boardType)
                 )
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(board.id.desc())
                 .fetch();
 
-        log.info("리스트 개수=", results.size());
+        log.info("리스트 개수={}", results.size());
 
         return checkLastPage(pageable, results);
     }
 
+    private BooleanExpression memberIdEq(String memberId) { // BooleanExpression으로 하면 조합 가능해지므로 이 객체를 사용하자
+        return hasText(memberId) ? board.member.id.eq(Long.valueOf(memberId)) : null;
+    }
+    private BooleanExpression boardTypeEq(String boardType) {
+        return hasText(boardType) ? board.boardType.eq(boardType) : null;
+    }
+
     // no-offset 방식 처리하는 메서드
-    private BooleanExpression ltBoardId(Long lastCursorBoardId) {
+    private BooleanExpression ltBoardId(Long lastCursorBoardId, Boolean first) {
         if (lastCursorBoardId == null) {
             return null;
         }
-        return board.id.loe(lastCursorBoardId);
+        else if (first) {
+            return board.id.loe(lastCursorBoardId);
+        }
+        else {
+            return board.id.lt(lastCursorBoardId);
+        }
     }
 
     // 무한 스크롤 방식 처리하는 메서드

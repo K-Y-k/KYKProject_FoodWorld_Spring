@@ -112,7 +112,9 @@
 
           <div class="row">
               <div class="col" style="margin-left: 2%">
-                  <th:block th:text="${board.writer}" style="float: left"/>
+                  <a th:href="@{|/members/profile/${board.member.id}|}" style="text-decoration-line: none;">
+                      <th:block th:text="${board.writer}" style="float: left"/>
+                  </a>
               </div>
 
               <div class="col" style="float: right; margin-left: 35%">

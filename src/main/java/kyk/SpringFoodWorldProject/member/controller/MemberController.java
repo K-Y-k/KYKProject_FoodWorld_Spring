@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.member.controller;
 
+import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
@@ -26,9 +27,7 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberServiceImpl memberService;
-
-    private final SpringDataJpaMemberRepository memberRepository;
-
+    private final BoardServiceImpl boardService;
 
 
     /**
@@ -114,25 +113,43 @@ public class MemberController {
 
 
     /**
-     *  프로필 수정 폼
+     *  회원 프로필 조회 폼
      */
     @GetMapping("/profile/{memberId}")
     public String memberProfileForm(@PathVariable Long memberId,
                                     Model model) {
+        String boardType = "먹스타그램";
+
         Member member = memberService.findById(memberId).get();
-        model.addAttribute("updateForm", member);
+        model.addAttribute("member", member);
+
+        Long firstCursorBoardIdInMember = boardService.findFirstCursorBoardIdInMember(memberId, boardType);
+        model.addAttribute("firstCursorBoardId", firstCursorBoardIdInMember);
+
         return "members/member_profile";
     }
 
+
     /**
-     * 프로필 기능
+     *  프로필 수정 폼
      */
-    @PostMapping("/profile/{memberId}")
-    public String memberProfile(@PathVariable Long memberId,
+    @GetMapping("/profile/{memberId}/edit")
+    public String memberProfileUpdateForm(@PathVariable Long memberId,
+                                    Model model) {
+        Member member = memberService.findById(memberId).get();
+        model.addAttribute("updateForm", member);
+        return "members/member_profileUpdate";
+    }
+
+    /**
+     * 프로필 수정 기능
+     */
+    @PostMapping("/profile/{memberId}/edit")
+    public String memberProfileUpdateForm(@PathVariable Long memberId,
                                 @Valid @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
                                 HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
-            return "members/member_profile";
+            return "members/member_profileUpdate";
         }
 
         // 업데이트 적용 아이디를 반환한 것을 가져온 이유는 아래 새로 재갱신하기 위해서

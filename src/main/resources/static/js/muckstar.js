@@ -1,6 +1,7 @@
 let page = 0;
-let lastCursorBoardId = $(".cursorBoardId").attr("id");
+let first = true;
 let scrollCheck = true;
+let lastCursorBoardId = $(".cursorBoardId").attr("id");
 
 //if($(window).scrollTop() + $(window).height() == $(document).height()) {
 //    storyLoad();
@@ -26,7 +27,7 @@ function storyLoad() {
 	    type: "GET",
 		url: '/boards/api/muckstarBoard',
 		dataType: "json",
-		data: {lastCursorBoardId},
+		data: {lastCursorBoardId, first},
 		beforeSend: function(){
 		    $('#loading').show();
 		},
@@ -37,7 +38,16 @@ function storyLoad() {
 		    if(result.last ==  true) {
 		        console.log("마지막 페이지");
 		        scrollCheck = false;
-		        return;
+
+		        $.each(result.content, function(index, board){
+                    console.log("JSON의 내용에서 가져온 요소: ", index);
+
+                	let muckstarItem = getStoryItem(board);
+                	$("#mucstarList").append(muckstarItem);
+
+                	lastCursorBoardId = board.id;
+                });
+
 		    }
 		    else {
 		        $.each(result.content, function(index, board){
@@ -48,6 +58,9 @@ function storyLoad() {
 
 		            lastCursorBoardId = board.id;
 		        });
+		        if(first) {
+                    first = false;
+                }
 		    }
 	    },
 	    error: function (error) {
@@ -56,9 +69,6 @@ function storyLoad() {
 	});
 }
 
-//                        <li style="display: inline;">
-//                            <img src="/image/muckstargram_img/muckstar_background.PNG" style="width: 20vw;">
-//                        </li>
 
 function getStoryItem(board) {
     let date = new Date(board.createdDate);
@@ -92,19 +102,18 @@ function getStoryItem(board) {
                                         <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
 
                                         <span id="date" style="float: right; margin-left: 40%;">${comparedDate}</span>
-
                                     </div>
                                 </div>
                             </td>
 
-                            <td> <img src="/image/food/sin.jpg" style="margin-left: 30%; width: 20vw;"></td>
-                        </tr>`;
-
-                        console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
-
-            item += `</table>
+                            <td>
+                                <img src="/image/food/sin.jpg" style="margin-left: 30%; width: 20vw;">
+                            </td>
+                        </tr>
+                    </table>
                 </div>`;
 
+    console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
     console.log("가져온 요소의 출력 결과", item);
 
 	return item;
@@ -125,6 +134,9 @@ function dateCompare(date, nowDate) {
         let nowYear = nowDate.getFullYear();
         let nowMonth = nowDate.getMonth() + 1;
         let nowDay = nowDate.getDate();
+
+        nowMonth = month >= 10 ? month : '0' + month;
+        nowDay = day >= 10 ? day : '0' + day;
 
         if (year == nowYear && month == nowMonth && day == nowDay) {
             return hour + ':' + minute;

@@ -123,7 +123,7 @@
                     <img src="/image/muckstargram_img/user_icon.PNG"
                          style="float: left; width: 2.5vw; height: 4vh;">
 
-                    <h5 th:text="${board.writer}" style="left: 5%; margin-top: 4%;"></h5>
+                    <a th:href="@{|/members/profile/${board.member.id}|}" style="text-decoration-line: none;"><h5 th:text="${board.writer}" style="left: 5%; margin-top: 4%;"></h5></a>
                 </div>
 
                 <div class="col" style="margin-left: 55%;">
