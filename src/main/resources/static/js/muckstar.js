@@ -28,7 +28,7 @@ function storyLoad() {
 		url: '/boards/api/muckstarBoard',
 		dataType: "json",
 		data: {lastCursorBoardId, first},
-		beforeSend: function(){
+		beforeSend: function() {
 		    $('#loading').show();
 		},
 		async: false,

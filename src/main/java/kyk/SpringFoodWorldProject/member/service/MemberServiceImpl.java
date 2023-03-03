@@ -1,17 +1,26 @@
 package kyk.SpringFoodWorldProject.member.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
+import kyk.SpringFoodWorldProject.member.repository.ProfileFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.UUID;
 
 
 @Slf4j
@@ -21,7 +30,11 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final ProfileFileRepository profileFileRepository;
 
+
+    @Value("${file.profileLocation}")
+    private String profileLocation;
 
     /**
      * 회원가입
@@ -80,12 +93,42 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 수정
      */
-    public Long changeProfile(Long memberId, UpdateForm form) {
+    public Long changeProfile(Long memberId, UpdateForm form) throws IOException {
         Member member = memberRepository.findById(memberId).get();
-        member.changeProfile(form.getName(), form.getLoginId(), form.getPassword());
+
+        MultipartFile imageFile = form.getProfileImage();
+
+        log.info("받아온 파일이 뭔데?={}", imageFile.getOriginalFilename());
+
+        if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
+            member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
+            profileImageUpload(form, member);
+            log.info("케이스1");
+        } else {
+            member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
+            log.info("케이스2");
+        }
 
         log.info("회원 변경");
         return member.getId();
+    }
+
+    private void profileImageUpload(UpdateForm form, Member member) throws IOException {
+        String originalFilename = form.getProfileImage().getOriginalFilename();
+
+        // 파일에 이름을 붙일 랜덤으로 식별자 지정
+        UUID uuid = UUID.randomUUID();
+        String storedFileName = uuid + "_" + originalFilename;
+        String savePath = profileLocation;
+
+        // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
+        form.getProfileImage().transferTo(new File(savePath, storedFileName));
+
+        String attachedType = "yes";
+
+        // DB에 파일 관련 필드 값 저장
+        ProfileFile profileFileEntity = ProfileFile.toProfileFileEntity(member, originalFilename, storedFileName, attachedType);
+        profileFileRepository.save(profileFileEntity);
     }
 
 

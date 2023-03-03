@@ -49,7 +49,6 @@ public class Board extends BaseTimeEntity{
 
     // 양방향 관계를 맺어줌
     // 게시글이 삭제되면 파일 또한 삭제되어야 하기 때문에 CascadeType.REMOVE와 orphanRemoval = true 속성을 사용
-    @Builder.Default
     @JsonIgnoreProperties({"board"}) // API JSON으로 가져오고 싶은 엔티티 필드이면 이렇게 따로 속성 무시하여 가져오게 할 수 있다!!!
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardFile> boardFiles = new ArrayList<>();

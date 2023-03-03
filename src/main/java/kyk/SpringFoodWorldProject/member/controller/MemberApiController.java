@@ -30,7 +30,7 @@ public class MemberApiController {
     public ResponseEntity<?> muckstarBoardsScroll(@RequestParam(value = "lastCursorBoardId", defaultValue = "0") Long lastCursorBoardId,
                                                   @RequestParam(value = "memberId") String memberId,
                                                   @RequestParam(value = "first") Boolean first,
-                                                  @PageableDefault(size=9) Pageable pageable,
+                                                  @PageableDefault(size=27) Pageable pageable,
                                                   BoardSearchCond boardSearchCond) {
         String boardType = "먹스타그램";
         log.info("회원 아이디 = {}", memberId);

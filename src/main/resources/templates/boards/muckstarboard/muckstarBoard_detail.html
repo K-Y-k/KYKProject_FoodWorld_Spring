@@ -133,8 +133,7 @@
                               th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')} + '   조회: '+ ${board.count}"/>
 
                     <button th:if="${session.loginMember != null && session.loginMember.id != board.member.id}"
-                            class="btn btn-danger mt-3" id="chat"
-                            style="">DM
+                            class="btn btn-danger mt-3" id="chat">DM
                     </button>
                 </div>
             </div>

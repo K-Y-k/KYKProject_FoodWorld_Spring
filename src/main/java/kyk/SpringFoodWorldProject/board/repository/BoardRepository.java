@@ -67,5 +67,10 @@ public interface BoardRepository {
      */
     int updateCount(Long boardId);
 
+    /**
+     * 한 회원이 작성한 게시글 수 카운트
+     */
+    int boardsTotalCount(Long memberId);
+
 
 }

@@ -92,6 +92,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.updateCount(boardId);
     }
 
+    @Override
+    public int boardsTotalCount(Long memberId) {
+        return boardRepository.boardsTotalCount(memberId);
+    }
+
     public void clear() {
         boardRepository.deleteAll();
     }

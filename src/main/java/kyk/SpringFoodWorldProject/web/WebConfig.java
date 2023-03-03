@@ -18,6 +18,9 @@ public class WebConfig implements WebMvcConfigurer {
 //    @Value("${attachFile.dir}")
 //    String attachFileUploadPath;
 
+    @Value("${profileFile.dir}")
+    String profileFileUploadPath;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/imageFileUpload/**")
@@ -27,5 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
 
 //        registry.addResourceHandler("/attachFileUpload/**")
 //                .addResourceLocations(attachFileUploadPath);
+
+
+        registry.addResourceHandler("/profileImageUpload/**")
+                // 웹 브라우저에 입력하는 url에 /fileUpload로 시작하는 경우 uploadPath에 설정한 폴더 기준으로 파일을 읽어오도록 설정
+                .addResourceLocations(profileFileUploadPath);
     }
 }

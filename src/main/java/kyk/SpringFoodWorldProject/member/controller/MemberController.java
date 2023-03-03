@@ -6,6 +6,7 @@ import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -120,9 +123,22 @@ public class MemberController {
                                     Model model) {
         String boardType = "먹스타그램";
 
-        Member member = memberService.findById(memberId).get();
+        // 회원 정보
+        Member member = memberService.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
         model.addAttribute("member", member);
 
+        ProfileFile profileFile = member.getProfileFile();
+        log.info("파일좀={}", profileFile);
+        if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
+            model.addAttribute("profileFile", profileFile);
+        }
+
+        // 해당 회원이 작성한 게시글 총 개수
+        int boardsTotalCount = boardService.boardsTotalCount(memberId);
+        model.addAttribute("boardsTotalCount", boardsTotalCount);
+
+        // 회원이 작성한 먹스타그램 제일 최근 id
         Long firstCursorBoardIdInMember = boardService.findFirstCursorBoardIdInMember(memberId, boardType);
         model.addAttribute("firstCursorBoardId", firstCursorBoardIdInMember);
 
@@ -136,7 +152,8 @@ public class MemberController {
     @GetMapping("/profile/{memberId}/edit")
     public String memberProfileUpdateForm(@PathVariable Long memberId,
                                     Model model) {
-        Member member = memberService.findById(memberId).get();
+        Member member = memberService.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
         model.addAttribute("updateForm", member);
         return "members/member_profileUpdate";
     }
@@ -147,7 +164,7 @@ public class MemberController {
     @PostMapping("/profile/{memberId}/edit")
     public String memberProfileUpdateForm(@PathVariable Long memberId,
                                 @Valid @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
-                                HttpServletRequest request) {
+                                HttpServletRequest request) throws IOException {
         if (bindingResult.hasErrors()) {
             return "members/member_profileUpdate";
         }
@@ -163,7 +180,8 @@ public class MemberController {
             getSession.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
         }
 
-        Member member = memberService.findById(memberId).get();
+        Member member = memberService.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
         Member loginMember = memberService.login(member.getLoginId(), member.getPassword());
 
         HttpSession createSession = request.getSession();

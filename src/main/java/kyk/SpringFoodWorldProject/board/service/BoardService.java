@@ -73,10 +73,14 @@ public interface BoardService {
 
 
     /**
-     * 조회수 카운트
+     * 글 조회수 카운트
      */
     int updateCount(Long boardId);
 
+    /**
+     * 한 회원이 작성한 게시글 수 카운트
+     */
+    int boardsTotalCount(Long memberId);
 
     /**
      * 좋아요 개수 최신화

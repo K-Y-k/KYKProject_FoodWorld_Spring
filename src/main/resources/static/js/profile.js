@@ -4,6 +4,8 @@ let scrollCheck = true;
 let memberId = $(".memberId").attr("id");
 let lastCursorBoardId = $(".cursorBoardId").attr("id");
 
+const sectionHeight = document.getElementById('section-height');
+let plusHeight = 0;
 
 //if($(window).scrollTop() + $(window).height() == $(document).height()) {
 //    storyLoad();
@@ -29,7 +31,7 @@ function storyLoad() {
 		url: '/members/api/muckstarBoard',
 		dataType: "json",
 		data: {lastCursorBoardId, memberId, first},
-		beforeSend: function(){
+		beforeSend: function() {
 		    $('#loading').show();
 		},
 		async: false,
@@ -39,6 +41,9 @@ function storyLoad() {
 		    if(result.last ==  true) {
                 console.log("마지막 페이지");
             	scrollCheck = false;
+
+                plusHeight += 100
+		        sectionHeight.style.height = plusHeight+'vh';
 
             	$.each(result.content, function(index, board){
                     console.log("JSON의 내용에서 가져온 요소: ", index);
@@ -50,6 +55,9 @@ function storyLoad() {
                  });
             }
 		    else {
+		        plusHeight += 100
+            	sectionHeight.style.height = plusHeight+'vh';
+
 		        $.each(result.content, function(index, board){
 		            console.log("JSON의 내용에서 가져온 요소: ", index);
 
@@ -71,15 +79,12 @@ function storyLoad() {
 
 
 function getStoryItem(board) {
-    let item = `<img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}">`;
+    let item = `<a href="/boards/muckstarBoard/${board.id}">
+                    <img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}">
+                </a>`;
 
     console.log("첫번째 이미지: ", board.boardFiles[0].storedFileName)
     console.log("가져온 요소의 출력 결과", item);
 
 	return item;
-}
-
-function resize(obj) {
-    obj.style.height = '1px';
-    obj.style.height = (12 + obj.scrollHeight) + 'px';
 }

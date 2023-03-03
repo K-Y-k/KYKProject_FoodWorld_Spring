@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -99,23 +100,23 @@ class MemberServiceImplTest {
     }
 
 
-//    /**
-//     * 프로필 수정
-//     */
-//    @Test
-//    @Rollback(value = false)
-//    void changeProfile() {
-//        // given
-//        Member member1 = new Member("memberA", "id1", "pw1");
-//        Member savedMember = memberRepository.save(member1);
-//
-//        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw");
-//
-//        // when
-//        Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);
-//
-//        // then
-//        assertThat(updateMemberId).isEqualTo(savedMember.getId());
-//    }
+    /**
+     * 프로필 수정
+     */
+    @Test
+    void changeProfile() throws IOException {
+        // given
+        Member member1 = new Member("memberA", "id1", "pw1");
+        Member savedMember = memberRepository.save(member1);
+        memberService.login(savedMember.getLoginId(), savedMember.getPassword());
+
+        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw", "hello", null, "yes");
+
+        // when
+        Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);
+
+        // then
+        assertThat(updateMemberId).isEqualTo(savedMember.getId());
+    }
 
 }

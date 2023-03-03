@@ -82,7 +82,8 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return checkLastPage(pageable, results);
     }
 
-    private BooleanExpression memberIdEq(String memberId) { // BooleanExpression으로 하면 조합 가능해지므로 이 객체를 사용하자
+    // BooleanExpression으로 하면 조합 가능해진다.
+    private BooleanExpression memberIdEq(String memberId) {
         return hasText(memberId) ? board.member.id.eq(Long.valueOf(memberId)) : null;
     }
     private BooleanExpression boardTypeEq(String boardType) {

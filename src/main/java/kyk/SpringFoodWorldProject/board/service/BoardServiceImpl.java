@@ -99,7 +99,6 @@ public class BoardServiceImpl implements BoardService {
 
         try {
             if (!imageFiles.get(0).getOriginalFilename().isBlank()) {
-                // 여러 개의 파일일 수 있으므로 부모 객체인 Board부터 가져와야함
                 // + attached 속성 1로 설정한 toSaveFileEntity로 글 저장
                 Board boardEntity = boardDto.toSaveFileEntity(findMember, boardDto);
 
@@ -290,6 +289,11 @@ public class BoardServiceImpl implements BoardService {
         log.info("조회수 증가");
 
         return boardRepository.updateCount(boardId);
+    }
+
+    @Override
+    public int boardsTotalCount(Long memberId) {
+        return boardRepository.boardsTotalCount(memberId);
     }
 
 
