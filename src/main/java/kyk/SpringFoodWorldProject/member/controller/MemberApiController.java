@@ -45,7 +45,7 @@ public class MemberApiController {
     /**
      * 팔로우
      */
-    @PostMapping("/api/subscribe/{toUserId}")
+    @PostMapping("/api/follow/{toUserId}")
     public ResponseEntity<?> subscribe(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                                        @PathVariable Long toUserId){
         memberService.follow(loginMember.getId(), toUserId);
@@ -55,7 +55,7 @@ public class MemberApiController {
     /**
      * 팔로우 취소
      */
-    @DeleteMapping("/api/subscribe/{toUserId}")
+    @DeleteMapping("/api/follow/{toUserId}")
     public ResponseEntity<?> unSubscribe(@SessionAttribute(value = "loginMember")Member loginMember,
                                          @PathVariable Long toUserId){
         memberService.unFollow(loginMember.getId(), toUserId);
