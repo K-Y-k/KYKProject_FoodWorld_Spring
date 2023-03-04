@@ -3,6 +3,9 @@ package kyk.SpringFoodWorldProject.member.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberApiController {
     private final BoardServiceImpl boardService;
+    private final MemberServiceImpl memberService;
 
     /**
      * ajax 비동기로 받은 마지막 id를 기준으로 json 변형후 보내줌
@@ -38,5 +39,27 @@ public class MemberApiController {
         Slice<Board> boards = boardService.searchBySlice(memberId, lastCursorBoardId, first, boardSearchCond, pageable, boardType);
 
         return new ResponseEntity<>(boards, HttpStatus.OK);
+    }
+
+
+    /**
+     * 팔로우
+     */
+    @PostMapping("/api/subscribe/{toUserId}")
+    public ResponseEntity<?> subscribe(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
+                                       @PathVariable Long toUserId){
+        memberService.follow(loginMember.getId(), toUserId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 팔로우 취소
+     */
+    @DeleteMapping("/api/subscribe/{toUserId}")
+    public ResponseEntity<?> unSubscribe(@SessionAttribute(value = "loginMember")Member loginMember,
+                                         @PathVariable Long toUserId){
+        memberService.unFollow(loginMember.getId(), toUserId);
+        return new ResponseEntity<>(HttpStatus.OK);
+//        return new ResponseEntity<>(new CMRespDto<>(1, "팔로우 취소 성공", null), HttpStatus.OK);
     }
 }

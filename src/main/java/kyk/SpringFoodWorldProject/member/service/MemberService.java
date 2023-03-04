@@ -32,4 +32,9 @@ public interface MemberService {
     List<Member> findAll();
 
 
+    void follow(Long fromUserId, Long toUserId);
+
+    void unFollow(Long fromUserId, Long toUserId);
+
+
 }

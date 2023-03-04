@@ -20,4 +20,9 @@ public interface MemberRepository {
 
     Optional<Member> findByLoginId(String loginId);
 
+
+    void follow(Long fromUserId, Long toUserId);
+
+    void unFollow(Long fromUserId, Long toUserId);
+
 }
