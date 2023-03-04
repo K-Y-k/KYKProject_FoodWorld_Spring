@@ -129,7 +129,6 @@ public class MemberController {
         model.addAttribute("member", member);
 
         ProfileFile profileFile = member.getProfileFile();
-        log.info("파일좀={}", profileFile);
         if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
             model.addAttribute("profileFile", profileFile);
         }
@@ -180,8 +179,8 @@ public class MemberController {
             getSession.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
         }
 
-        Member member = memberService.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
+        Member member = memberService.findById(changeMemberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + changeMemberId));
         Member loginMember = memberService.login(member.getLoginId(), member.getPassword());
 
         HttpSession createSession = request.getSession();

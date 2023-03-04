@@ -95,21 +95,16 @@ public class MemberServiceImpl implements MemberService {
      */
     public Long changeProfile(Long memberId, UpdateForm form) throws IOException {
         Member member = memberRepository.findById(memberId).get();
-
         MultipartFile imageFile = form.getProfileImage();
-
-        log.info("받아온 파일이 뭔데?={}", imageFile.getOriginalFilename());
 
         if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
             member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
             profileImageUpload(form, member);
-            log.info("케이스1");
         } else {
             member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
-            log.info("케이스2");
         }
 
-        log.info("회원 변경");
+        log.info("회원 프로필 변경");
         return member.getId();
     }
 
