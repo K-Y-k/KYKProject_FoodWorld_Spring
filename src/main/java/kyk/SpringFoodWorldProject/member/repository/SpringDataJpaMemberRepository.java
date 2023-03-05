@@ -18,7 +18,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SpringDataJpaMemberRepository implements MemberRepository {
     private final JPAMemberRepository memberRepository;
-    private final FollowRepository followRepository;
 
     @Override
     public Member save(Member member) {
@@ -52,17 +51,6 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
     @Override
     public List<Member> findAll() {
         return memberRepository.findAll();
-    }
-
-
-    @Override
-    public void follow(Long fromUserId, Long toUserId) {
-        followRepository.follow(fromUserId, toUserId);
-    }
-
-    @Override
-    public void unFollow(Long fromUserId, Long toUserId) {
-        followRepository.unFollow(fromUserId, toUserId);
     }
 
 

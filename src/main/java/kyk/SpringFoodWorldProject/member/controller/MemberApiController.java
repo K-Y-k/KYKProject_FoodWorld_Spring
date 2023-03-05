@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.member.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.follow.service.FollowServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/members")
 public class MemberApiController {
     private final BoardServiceImpl boardService;
-    private final MemberServiceImpl memberService;
+    private final FollowServiceImpl followService;
 
     /**
      * ajax 비동기로 받은 마지막 id를 기준으로 json 변형후 보내줌
@@ -42,24 +43,13 @@ public class MemberApiController {
     }
 
 
-    /**
-     * 팔로우
-     */
-    @PostMapping("/api/follow/{toUserId}")
-    public ResponseEntity<?> subscribe(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
-                                       @PathVariable Long toUserId){
-        memberService.follow(loginMember.getId(), toUserId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
-     * 팔로우 취소
-     */
-    @DeleteMapping("/api/follow/{toUserId}")
-    public ResponseEntity<?> unSubscribe(@SessionAttribute(value = "loginMember")Member loginMember,
-                                         @PathVariable Long toUserId){
-        memberService.unFollow(loginMember.getId(), toUserId);
-        return new ResponseEntity<>(HttpStatus.OK);
-//        return new ResponseEntity<>(new CMRespDto<>(1, "팔로우 취소 성공", null), HttpStatus.OK);
-    }
+//    /**
+//     * 팔로우
+//     */
+//    @GetMapping("/api/follow/{toUserId}")
+//    public ResponseEntity<?> subscribe(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
+//                                       @PathVariable Long toUserId){
+//        followService.followAndUnFollow(loginMember.getId(), toUserId);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

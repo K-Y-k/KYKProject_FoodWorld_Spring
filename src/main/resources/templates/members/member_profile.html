@@ -114,7 +114,7 @@
             <table class="container2 mt-10"
                    style="white-space: nowrap; margin-top: 1%; position: absolute; margin-left: 10%;">
                 <tr>
-                    <h4 style="color: orangered; padding-top: 3%; margin-left: 42%;">Profile</h4>
+                    <h4 style="color: orangered; padding-top: 3%; margin-left: 45%;">Profile</h4>
                 </tr>
 
                 <tr style="position: relative; width:40vw;">
@@ -127,7 +127,7 @@
                                          style=" width: 5vw; height: 8vh;">
                                     <img th:if="${profileFile != null}"
                                          th:src="@{|/profileImageUpload/${profileFile.storedFileName}|}"
-                                         style="width: 5vw; height: 8vh;">
+                                         style="width: 5vw; height: 8vh; border: 2px solid black; border-radius: 100%;">
                                 </td>
                             </tr>
 
@@ -137,21 +137,31 @@
                         </table>
                     </td>
 
-                    <td style="padding-left: 28%;">
+                    <td>
                         <table>
-                            <tr>
+                            <tr style="text-align: center;">
                                 <td>
-                                    게시물: <th:block th:text="${boardsTotalCount}"></th:block>
+                                    <th:block style="text-align: center; width: 10vw;" th:text="${boardsTotalCount}"></th:block>
+                                </td>
+
+                                <td>
+                                    <th:block style="text-align: center; width: 10vw;" th:text="${followCount}"></th:block>
+                                </td>
+
+                                <td>
+                                    <th:block style="text-align: center; width: 10vw;" th:text="${followingCount}"></th:block>
                                 </td>
                             </tr>
+
                             <tr>
-                                <td>
-                                    팔로우: <th:block></th:block>
+                                <td class="col-md-4" style="text-align: center; width: 10vw;">
+                                    게시글
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    팔로워: <th:block></th:block>
+                                <td class="col-md-4" style="text-align: center; width: 10vw;">
+                                    팔로워
+                                </td>
+                                <td class="col-md-4" style="text-align: center; width: 10vws;">
+                                    팔로잉
                                 </td>
                             </tr>
                         </table>
@@ -165,15 +175,31 @@
                 <tr>
                     <td style="padding-top: 5%;">
                         <button type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px; margin-left: 50%;" id="follow"
-                                th:onclick="|location.href='@{/members/follow}'|">팔로우
+                                style="width: 80px; height: 35px; margin-left: 70%;" id="follow"
+                                th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow == null}"
+                                th:onclick="clicked()">팔로우
+                        </button>
+
+                        <button type="submit" class="btn btn-primary"
+                                style="width: 80px; height: 35px; margin-left: 70%;" id="unfollow"
+                                th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow != null}"
+                                th:onclick="clicked()">언팔로우
                         </button>
                     </td>
 
                     <td style="padding-top: 5%;">
                         <button type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px; margin-left: 50%;" id="chat"
-                                th:onclick="|location.href='@{/members/chat}'|">채팅
+                                style="width: 80px; height: 35px; margin-left: 60%;" id="chat"
+                                th:if="${session.loginMember != null and session.loginMember.id != member.id}"
+                                th:onclick="|location.href='@{/chat}'|">채팅
+                        </button>
+                    </td>
+
+                    <td style="padding-top: 5%;">
+                        <button type="submit" class="btn btn-primary"
+                                style="height: 35px;" id="profile-update"
+                                th:if="${session.loginMember != null and session.loginMember.id == member.id}"
+                                th:onclick="|location.href='@{/members/profile/{memberId}/edit(memberId=${session.loginMember.id})}'|">프로필 수정
                         </button>
                     </td>
                 </tr>
@@ -207,6 +233,11 @@
 
 
 <script type="text/javascript" th:src="@{/js/profile.js}" ></script>
-
+<script th:inline="javascript">
+function clicked() {
+    alert("완료");
+    location.href = [[|@{/members/follow/{memberId}(memberId=${member.id})}|]];
+}
+</script>
 </body>
 </html>

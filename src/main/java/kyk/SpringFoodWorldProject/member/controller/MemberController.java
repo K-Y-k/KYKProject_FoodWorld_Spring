@@ -1,6 +1,8 @@
 package kyk.SpringFoodWorldProject.member.controller;
 
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.follow.service.FollowServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
@@ -31,6 +33,7 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
     private final BoardServiceImpl boardService;
+    private final FollowServiceImpl followService;
 
 
     /**
@@ -119,15 +122,18 @@ public class MemberController {
      *  회원 프로필 조회 폼
      */
     @GetMapping("/profile/{memberId}")
-    public String memberProfileForm(@PathVariable Long memberId,
+    public String memberProfileForm(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                    @PathVariable Long memberId,
                                     Model model) {
         String boardType = "먹스타그램";
+
 
         // 회원 정보
         Member member = memberService.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
         model.addAttribute("member", member);
 
+        // 프로필 사진
         ProfileFile profileFile = member.getProfileFile();
         if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
             model.addAttribute("profileFile", profileFile);
@@ -137,9 +143,33 @@ public class MemberController {
         int boardsTotalCount = boardService.boardsTotalCount(memberId);
         model.addAttribute("boardsTotalCount", boardsTotalCount);
 
+        // 팔로우, 팔로워 수
+        int followCount = followService.countByToMember_Id(memberId);
+        model.addAttribute("followCount", followCount);
+
+        int followingCount = followService.countByFromMember_Id(memberId);
+        model.addAttribute("followingCount", followingCount);
+
+
         // 회원이 작성한 먹스타그램 제일 최근 id
-        Long firstCursorBoardIdInMember = boardService.findFirstCursorBoardIdInMember(memberId, boardType);
-        model.addAttribute("firstCursorBoardId", firstCursorBoardIdInMember);
+        try {
+            Optional<Follow> followState = followService.findByFromMember_IdAndToMember_Id(loginMember.getId(), memberId);
+
+            if (followState.isPresent()){
+                model.addAttribute("unFollow", followState);
+            }
+
+        } catch (NullPointerException e){
+            log.info("NPE 에러");
+        }
+
+        try {
+            Long firstCursorBoardIdInMember = boardService.findFirstCursorBoardIdInMember(memberId, boardType);
+            model.addAttribute("firstCursorBoardId", firstCursorBoardIdInMember);
+        } catch (NullPointerException e){
+            log.info("NPE 에러");
+        }
+
 
         return "members/member_profile";
     }
@@ -153,7 +183,15 @@ public class MemberController {
                                     Model model) {
         Member member = memberService.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
+
+        // 프로필 사진 가져오기
+        ProfileFile profileFile = member.getProfileFile();
+        if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
+            model.addAttribute("profileFile", profileFile);
+        }
+
         model.addAttribute("updateForm", member);
+
         return "members/member_profileUpdate";
     }
 

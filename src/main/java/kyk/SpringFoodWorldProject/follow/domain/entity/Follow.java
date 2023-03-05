@@ -1,6 +1,7 @@
-package kyk.SpringFoodWorldProject.member.domain.entity;
+package kyk.SpringFoodWorldProject.follow.domain.entity;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 		uniqueConstraints = {
 				@UniqueConstraint(
 						name="follow_uk",
-						columnNames = {"fromUserId", "toUserId"}
+						columnNames = {"fromMember_Id", "toMember_Id"}
 				)
 		}
 )
@@ -23,14 +24,14 @@ public class Follow extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@JoinColumn(name = "fromUserId") // 이렇게 컬럼명 만들어! 니 맘대로 만들지 말고!!
+
 	@ManyToOne
-	private Member fromUser;
-	
-	@JoinColumn(name = "toUserId")
+	@JoinColumn(name = "fromMember_Id")
+	private Member fromMember;
+
 	@ManyToOne
-	private Member toUser;
+	@JoinColumn(name = "toMember_Id")
+	private Member toMember;
 
 
 }

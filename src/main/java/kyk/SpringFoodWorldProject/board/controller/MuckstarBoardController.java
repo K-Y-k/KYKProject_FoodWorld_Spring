@@ -14,6 +14,7 @@ import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,11 +93,18 @@ public class MuckstarBoardController {
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
-
+        
         // 파일 가져오기
         List<BoardFile> boardFiles = board.getBoardFiles();
         if (boardFiles != null && !boardFiles.isEmpty()) {
             model.addAttribute("boardFiles", boardFiles);
+        }
+
+        // 프로필 사진 가져오기
+        Member member = board.getMember();
+        ProfileFile profileFile = member.getProfileFile();
+        if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
+            model.addAttribute("profileFile", profileFile);
         }
 
         model.addAttribute("board", board);

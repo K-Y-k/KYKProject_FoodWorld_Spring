@@ -5,6 +5,7 @@ import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,7 @@ public interface MemberService {
      */
     List<Member> findAll();
 
-
-    void follow(Long fromUserId, Long toUserId);
-
-    void unFollow(Long fromUserId, Long toUserId);
+    Long changeProfile(Long memberId, UpdateForm form) throws IOException;
 
 
 }

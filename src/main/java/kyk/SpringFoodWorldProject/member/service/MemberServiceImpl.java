@@ -93,6 +93,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 수정
      */
+    @Override
     public Long changeProfile(Long memberId, UpdateForm form) throws IOException {
         Member member = memberRepository.findById(memberId).get();
         MultipartFile imageFile = form.getProfileImage();
@@ -126,26 +127,6 @@ public class MemberServiceImpl implements MemberService {
         profileFileRepository.save(profileFileEntity);
     }
 
-
-    /**
-     * 팔로우
-     */
-    @Transactional
-    public void follow(Long fromUserId, Long toUserId) {
-        try {
-            memberRepository.follow(fromUserId, toUserId);
-        } catch (Exception e) {
-            throw new IllegalStateException("이미 팔로우를 하였습니다.");
-        }
-    }
-
-    /**
-     * 팔로우 해제
-     */
-    @Transactional
-    public void unFollow(Long fromUserId, Long toUserId) {
-        memberRepository.unFollow(fromUserId, toUserId);
-    }
 
 }
 

@@ -1,6 +1,8 @@
 package kyk.SpringFoodWorldProject.member.repository;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +21,5 @@ public interface MemberRepository {
     Member findByName(String name);
 
     Optional<Member> findByLoginId(String loginId);
-
-
-    void follow(Long fromUserId, Long toUserId);
-
-    void unFollow(Long fromUserId, Long toUserId);
 
 }
