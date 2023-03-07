@@ -1,8 +1,6 @@
 package kyk.SpringFoodWorldProject.follow.domain.dto;
 
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
-import kyk.SpringFoodWorldProject.like.domain.entity.Like;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.Getter;
 import lombok.Setter;

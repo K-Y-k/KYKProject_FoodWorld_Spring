@@ -24,11 +24,9 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public int followAndUnFollow(Long fromMemberId, Long toMemberId) {
         Optional<Follow> findFollow = followRepository.findByFromMember_IdAndToMember_Id(fromMemberId, toMemberId);
-        log.info("참과 거짓 = {}", findFollow);
 
         if (findFollow.isPresent()){
             followRepository.deleteByFromMember_IdAndToMember_Id(fromMemberId, toMemberId);
-
             return 0;
         } else {
             Member fromMemberEntity = memberRepository.findById(fromMemberId).orElseThrow(() ->
@@ -38,7 +36,6 @@ public class FollowServiceImpl implements FollowService{
 
             Follow followEntity = FollowDto.toEntity(fromMemberEntity, toMemberEntity);
             followRepository.save(followEntity);
-
             return 1;
         }
     }

@@ -2,6 +2,7 @@ package kyk.SpringFoodWorldProject.follow.domain.entity;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
 		uniqueConstraints = {
@@ -32,8 +33,6 @@ public class Follow extends BaseTimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "toMember_Id")
 	private Member toMember;
-
-
 }
 
 
