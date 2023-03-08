@@ -1,8 +1,9 @@
-package kyk.SpringFoodWorldProject.chat;
+package kyk.SpringFoodWorldProject.chat.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -20,11 +21,34 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
+
+    /**
+     * 소켓 연결 후 동작 메서드
+     */
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    }
+
+
+    /**
+     * 메시지 발송 : 메시지 수신 후 동작하는 메서드
+     */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String input = message.getPayload();
-        log.info("채팅 로그 = {}", input); // 채팅 log
-        TextMessage textMessage = new TextMessage("kyk \n 웹소켓 테스트");
+        String input = message.getPayload(); // 패킷 단위의 페이로드를 담음
+        log.info("채팅 로그 = {}", input);
+
+        TextMessage textMessage = new TextMessage("kyk 웹소켓 테스트");
         session.sendMessage(textMessage);
     }
+
+
+    /**
+     * 소켓 종료 후 동작 메서드
+     */
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
+    }
+
 }

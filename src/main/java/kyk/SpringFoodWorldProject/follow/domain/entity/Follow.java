@@ -24,6 +24,7 @@ import javax.persistence.*;
 public class Follow extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "follow_id")
 	private int id;
 
 	@ManyToOne
