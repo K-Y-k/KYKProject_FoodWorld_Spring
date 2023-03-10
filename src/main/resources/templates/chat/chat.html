@@ -12,71 +12,105 @@
 </head>
 
 <body>
-  <header style="position: relative;"> <!--네비게이션바-->
-    <img src="/image/main_img/logo2.PNG" class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
-    <div class="px-3 py-2 bg-dark text-white">
-      <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <img src = "/image/main_img/chat_icon.PNG" width = "60px" height="50px" >
-          <a href="chat.html" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;채팅방</h4></a>
-          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-            <li>
-              <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
-              <a href="main.html" class="nav-link text-white" style="font-size: 16px;">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
-              </a>
-            </li>
-            <li>
-              <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 100px; margin-top: 10px;">
-              <a href="free_main.html" class="nav-link text-white" style="font-size: 16px;">
-               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
-              </a>
-            </li>
-            <li>
-              <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 105px; margin-top: 10px;">
-              <a href="store_recommend.html" class="nav-link text-white" style="font-size: 16px;">
-               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;식당추천게시판
-              </a>
-            </li>
-            <li>
-              <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 85px; margin-top: 10px;">
-              <a href="muckstar_main.html" class="nav-link text-white" style="font-size: 16px;">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
-              </a>
-            </li>
-            <li>
-              <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 65px; margin-top: 10px;">
-              <a href="menu_recommend.html" class="nav-link text-white" style="font-size: 16px;">
-               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </a>
-            </li>
-            <li>
-            <h5 id = "userName" style="font-size : 13px; margin-top: 20px; color: white;"></h5>
+<header style="position: relative;">
+  <img src="/image/main_img/logo2.PNG"
+       class = "logo" style="position: absolute; z-index: 3; width: 170px; height: 90px; left: 2.5%; top: 10%;" id = "logo2">
+
+  <div class="px-3 py-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <img src = "/image/main_img/chat_icon.PNG" width = "50px" height="50px" >
+        <a href="/chat" class="navbar-brand"><h4 class = "thema">&nbsp;&nbsp;채팅방 </h4></a>
+        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <li>
+            <img src = "/image/main_img/home_icon.PNG" width = "45px" height="40px" style="margin-left: 151px; margin-top: 10px;">
+            <a href="/" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메인
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 105px; margin-top: 10px;">
+            <a href="/boards/freeBoard" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;자유게시판
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 90px; margin-top: 10px;">
+            <a href="/boards/recommendBoard" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추천게시판
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 88px; margin-top: 10px;">
+            <a href="/boards/muckstarBoard" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;먹스타그램
+            </a>
+          </li>
+          <li>
+            <img src = "/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 70px; margin-top: 10px;">
+            <a href="/recommendMenu" class="nav-link text-white">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;메뉴추천&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+          </li>
+
+          <li>
+            <h5 th:if="${session.loginMember != null}"
+                th:text="${session.loginMember.name}+ '님 접속중'"
+                id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+
             <br/>
-            <button type="submit" class="btn btn-primary" id="logout" style="width: 90px; height: 35px; position :absolute; top: 56%; display: none;">로그아웃</button> 
-            <a href = "main_login.html" > <button type="submit" class="btn btn-primary" style = "width: 80px; height: 35px; display: none; position :absolute; top: 56%;" id = "login">로그인</button></a>
-            </li>
-          </ul>
-        </div>
+
+            <form th:action="@{/members/logout}" method="post">
+              <button th:if="${session.loginMember != null}"
+                      type="submit" class="btn btn-primary" id="logout"
+                      style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                      th:onclick="@{/members/logout}">로그아웃
+              </button>
+            </form>
+
+            <button th:if="${session.loginMember == null}"
+                    type="submit" class="btn btn-primary"
+                    style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                    th:onclick="|location.href='@{/members/login}'|">로그인
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
   <br>
   <br>
-<div class="main" style="position: relative;"> 
-  <h3 style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 10px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;" id = "chat_title" >채팅방</h3>
+<div class="main" style="position: relative;">
+  <h3 th:if="${session.loginMember != null}"
+      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 10px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;" id = "chat_title"
+      th:text="|${session.loginMember.name}의 채팅방|"></h3>
+
+  <h3 th:if="${session.loginMember == null}"
+      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 10px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;">
+      채팅방</h3>
+
   <div class="container p-4 detail">
     <div class="row">
       <div class="col-3 p-0">
-        <ul class="list-group chat-list">
-          <li class="list-group-item" style="background-color: rgb(247, 173, 207);"> <!--채팅방 목록-->
-          </li>
+        <ul class="list-group chat-list"> <!--채팅방 목록-->
+          <div th:each="chatRoom : ${member1ChatRoom}">
+            <li class="list-group-item" style="background-color: rgb(247, 173, 207);"
+                th:if="${session.loginMember.id != chatRoom.member1.id}"
+                th:text="${chatRoom.member1.name}">
+            </li>
+
+            <li class="list-group-item" style="background-color: rgb(247, 173, 207);"
+                th:if="${session.loginMember.id != chatRoom.member2.id}"
+                th:text="${chatRoom.member2.name}">
+            </li>
+          </div>
         </ul>
       </div>
       
       <div class="col-9 p-0">  <!--채팅화면-->
-        <div class="chat-room" style="background: url(./image/chat_img/chat_background1.PNG); background-size: cover; width: 700px;" id = "chat_room">
+        <div class="chat-room" style="background: url('image/chat_img/chat_background1.PNG'); background-size: cover; width: 700px;" id = "chat_room">
           <ul class="list-group chat-content" id = "chatContent" style="height: 600px;">
           </ul>
           <div class="input-group">
@@ -89,131 +123,17 @@
  </div> 
 
  <div style= "position: absolute; top: 25%; left: 75%; display: inline;">
-  <img src = "/image/chat_img/chat_background2.PNG" style=" margin-top: 10px; width: 450px;">
+  <img src = "/image/chat_img/chat_background2.PNG" style="margin-top: 10px; width: 450px;">
  </div>
 </div>
-  <script src="/__/firebase/9.8.1/firebase-app-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-auth-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-firestore-compat.js"></script>
-  <script src="/__/firebase/9.8.1/firebase-storage-compat.js"></script>
-  
-  <!--bootstrapjs-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-  
+
+
+
   <!--jquery-->
   <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-
-  <!--firebase-->
-  <script>
-    const firebaseConfig = {
-    apiKey: "AIzaSyCqNsH4WnQVWyOtpmP3I6Js3mFwThDcOQI",
-    authDomain: "espsensortestcbj.firebaseapp.com",
-    databaseURL: "https://espsensortestcbj-default-rtdb.firebaseio.com",
-    projectId: "espsensortestcbj",
-    storageBucket: "espsensortestcbj.appspot.com",
-    messagingSenderId: "574319666940",
-    appId: "1:574319666940:web:fb395ba5d9d47f475d5979",
-    measurementId: "G-LXM4LVYD4V"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
-  </script>
-
-  <script>
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    const login_btn = document.getElementById('login');
-    const logout_btn = document.getElementById('logout');
-    const chat_room = document.getElementById('chat_room');
-
-    var user_name = JSON.parse(localStorage.getItem('user')).displayName;
-    var my_uid = JSON.parse(localStorage.getItem('user')).uid;
-    var chat_id;
-
-    firebase.auth().onAuthStateChanged((user)=> { // 로그인시/로그아웃시/새로고침시 실행된다. 이 유저 정보를 user에 담는다.
-       if(user) { // 로그인된 상태라면
-         console.log(user.uid)
-         console.log(user.displayName)
-         $('#userName').html(user.displayName + '님 접속중')      // 유저 이름을 이용해서 로그인한 상태일시 출력해줌
-         $('#chat_title').html(user.displayName + '님의 채팅방')  // 유저 이름을 이용해서 채팅방에 추가해서 출력해줌
-          localStorage.setItem('user', JSON.stringify(user))     // 오브젝트 문자열로 변환해서 넣는다.
-
-          logout_btn.style.display = 'inline';
-          login_btn.style.display = 'none';
-        }
-        else {
-          logout_btn.style.display = 'none';
-          login_btn.style.display = 'inline';
-          alert('채팅방을 이용하시려면 로그인 먼저 해주세요')
-          window.location.href = '/main.html';
-        }
-     })
-
-     db.collection('muckstar_chatroom').where('chat_useruid', 'array-contains', my_uid).get().then((result)=>{
-            result.forEach((a)=>{
-                console.log(a.data())
-                var view = `<div style = "position: relative; height: 50px;"> 
-                             <h4 style = "position: absolute; top: 10%; left: 25%; z-index: 10;">${a.data().title}</h4> 
-                              <li class="list-group-item" style = "height: 50px; z-index: 0;"> 
-                              <h6 class="text-small" style = "color: white; height: 40px; position: absolute; top: 5%; left: 1%; width: 315px;">${a.id}</h6> 
-                              </li>
-                            </div>`
-                            $('.chat-list').append(view)
-
-              $('.list-group-item').click(function(e){
-                chat_room.style.visibility = 'visibility';  // 채팅방 목록을 클릭했을 때
-                chat_id = $(this).children('.text-small').text()   // 내가 누른 채팅방 목록 요소의 텍스트를 찾아줌
-
-                e.stopImmediatePropagation(); // 이벤트 버블링 현상을 막음
-
-                db.collection('muckstar_chatroom').doc(chat_id).collection('message').orderBy('date').onSnapshot((result)=>{ // 변경이 발생할 때 발생하는 이벤트 리스너 onSnapshot
-                    $('.chat-content').html('');  // 기존 있던 내용 안겹치게 초기화
-                    
-                    result.forEach((a)=>{ // 누른 채팅방 목록 요소의 채팅 메시지들 출력 
-                        console.log(a.data())
-                        if(my_uid == a.data().uid){
-                          var view =`<li><span class="chat-box mine" style = "background-color: white;"> <span style="font-size: 10px; margin-right: 30px;">${a.data().date.toDate().toLocaleString()}</span>  <span style = "background-color: lightyellow; font-size : 20px;">${a.data().content}</span></span></li>`;
-                           $('.chat-content').append(view)
-                        }
-                        else{
-                          var view =`<li><span class="chat-box" style = "background-color: white;"> <span style = "background-color: rgb(247, 173, 207); font-size : 20px;">${a.data().content}</span> <span style="font-size: 10px; margin-left: 30px;">${a.data().date.toDate().toLocaleString()}</span> </span></li>`;
-                           $('.chat-content').append(view)
-                        }
-                    })
-                    $('#chatContent').scrollTop($('#chatContent')[0].scrollHeight);   // 스크롤바 아래에서부터로 적용
-                })
-
-              })
-            })
-        })
-
-
-    $('#send').click(function(){  // 채팅 메시지 전송을 클릭할 때 채팅 메시지 내용물을 컬렉션 안에 추가한다.
-        var data = {
-            name : user_name,
-            content : $('#chat-input').val(),
-            date : new Date(),
-            uid : my_uid
-        }
-
-        db.collection('muckstar_chatroom').doc(chat_id).collection('message').add(data).then(()=>{
-          $('#chat-input').val('')
-        })
-    })
-   
-
-    $('#logout').click(function(user){  // 로그아웃 버튼을 눌렀을 때 로그아웃
-       if(user) {
-       firebase.auth().signOut().then(()=>{
-        alert('로그아웃 되었습니다')
-        location.reload();
-       })
-      }
-     })
-  </script>
 
 
 </body>
