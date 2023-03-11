@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.chat.controller;
 
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
@@ -26,33 +27,57 @@ public class ChatRoomController {
                              Model model){
 
         if (loginMember != null) {
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
+            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
 
             if (!member1ChatRoom.isEmpty()) {
                 model.addAttribute("member1ChatRoom", member1ChatRoom);
             }
+        } else {
+            log.info("회원이 아님 = {}", loginMember.getId());
         }
 
         return "chat/chat";
     }
 
 
-    @GetMapping("/room/{memberId}")
+    @GetMapping("/matchingRoom/{memberId}")
     public String goChatRoom(@PathVariable Long memberId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                              Model model){
 
+        // 현재 회원과 채팅을 원하는 상대 회원의 채팅방을 찾아
         ChatRoom membersChatRoom = chatService.findMembersChatRoom(loginMember.getId(), memberId);
 
-        if (membersChatRoom == null) {
-            ChatRoom createChatRoom = chatService.createChatRoom(loginMember.getId(), memberId);
+        if (membersChatRoom == null) { // 채팅방이 없으면 새로 만든 후 전체 채팅방 조회
+            chatService.createChatRoom(loginMember.getId(), memberId);
 
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
+            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
             model.addAttribute("member1ChatRoom", member1ChatRoom);
-        } else {
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
+        } else { // 기존에 있으면 전체 채팅방 조회
+            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
             model.addAttribute("member1ChatRoom", member1ChatRoom);
         }
+
+        return "chat/chat";
+    }
+
+
+    @GetMapping("/room/{roomId}")
+    public String goChatRoom(@PathVariable String roomId,
+                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                             Model model){
+        // 클릭한 방을 조회
+        ChatRoom targetChatRoom = chatService.findRoomByRoomId(roomId);
+
+        if (targetChatRoom == null) {
+        } else { // 클릭한 방의 메시지 가져오기
+            List<ChatMessage> chatMessage = targetChatRoom.getChatMessage();
+            model.addAttribute("chatMessage", chatMessage);
+        }
+
+        // 전체 채팅방 리스트
+        List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
+        model.addAttribute("member1ChatRoom", member1ChatRoom);
 
         return "chat/chat";
     }

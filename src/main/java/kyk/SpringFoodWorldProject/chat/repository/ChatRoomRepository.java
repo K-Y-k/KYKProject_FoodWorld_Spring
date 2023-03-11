@@ -9,8 +9,9 @@ public interface ChatRoomRepository {
 
     ChatRoom save(ChatRoom chatRoom);
 
-    List<ChatRoom> findByMember1(Long member1Id);
+    List<ChatRoom> findByMember1_IdOrMember2_Id(Long member1Id, Long member2Id);
 
     ChatRoom findByMember1_IdAndMember2_Id(Long member1Id, Long member2Id);
 
+    ChatRoom findByRoomId(String roomId);
 }

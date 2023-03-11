@@ -18,8 +18,8 @@ public class ChatService {
     private final ChatRoomRepositoryImpl chatRoomRepository;
     private final MemberRepository memberRepository;
 
-    public List<ChatRoom> findMember1ChatRoom(Long member1Id) {
-        return chatRoomRepository.findByMember1(member1Id);
+    public List<ChatRoom> findMember1ChatRoom(Long member1Id, Long member2Id) {
+        return chatRoomRepository.findByMember1_IdOrMember2_Id(member1Id, member2Id);
     }
 
     public ChatRoom createChatRoom(Long member1Id, Long member2Id) {
@@ -29,7 +29,9 @@ public class ChatService {
         Member findMember2 = memberRepository.findById(member2Id).orElseThrow(() ->
                 new IllegalArgumentException("회원 찾기 실패: " + member2Id));
 
+
         ChatRoom chatRoom = ChatRoom.builder()
+                .roomId(UUID.randomUUID().toString())
                 .member1(findMember1)
                 .member2(findMember2)
                 .build();
@@ -41,6 +43,9 @@ public class ChatService {
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
     }
 
+    public ChatRoom findRoomByRoomId(String roomId) {
+        return chatRoomRepository.findByRoomId(roomId);
+    }
 
 //    private Map<String, ChatRoomDto> chatRoomMap;
 //

@@ -138,7 +138,7 @@
 
                     <button th:if="${session.loginMember != null && session.loginMember.id != board.member.id}"
                             class="btn btn-danger mt-3" id="chat"
-                            th:onclick="|location.href='@{/chat/room/{memberId}(memberId=${board.member.id})}'|">DM
+                            th:onclick="|location.href='@{/chat/matchingRoom/{memberId}(memberId=${board.member.id})}'|">DM
                     </button>
                 </div>
             </div>

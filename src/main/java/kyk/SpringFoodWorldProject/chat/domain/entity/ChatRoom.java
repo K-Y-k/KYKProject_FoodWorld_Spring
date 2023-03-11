@@ -24,6 +24,8 @@ public class ChatRoom extends BaseTimeEntity {
     @Column(name = "chatRoom_id")
     private Long Id;
 
+    private String roomId;
+
     @ManyToOne
     @JoinColumn(name = "member1_id")
     private Member member1;

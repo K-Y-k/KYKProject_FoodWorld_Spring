@@ -19,12 +19,17 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
     }
 
     @Override
-    public List<ChatRoom> findByMember1(Long member1Id) {
-        return chatRoomRepository.findByMember1_Id(member1Id);
+    public List<ChatRoom> findByMember1_IdOrMember2_Id(Long member1Id, Long member2Id) {
+        return chatRoomRepository.findByMember1_IdOrMember2_Id(member1Id, member2Id);
     }
 
     @Override
     public ChatRoom findByMember1_IdAndMember2_Id(Long member1Id, Long member2Id) {
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
+    }
+
+    @Override
+    public ChatRoom findByRoomId(String roomId) {
+        return chatRoomRepository.findByRoomId(roomId);
     }
 }

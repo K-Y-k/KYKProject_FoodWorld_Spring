@@ -1,7 +1,7 @@
 //package kyk.SpringFoodWorldProject.chat.controller;
 //
 //import kyk.SpringFoodWorldProject.chat.domain.MessageType;
-//import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDTO;
+//import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
 //import kyk.SpringFoodWorldProject.chat.service.ChatService;
 //import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 //import lombok.RequiredArgsConstructor;
@@ -33,61 +33,60 @@
 //
 //    @Autowired ChatService chatService;
 //
-//    // MessageMapping을 통해 webSocket로 들어오는 메시지를 발신 처리한다.
+//    // MessageMapping을 통해 웹 소켓으로 들어오는 메시지를 발신 처리한다.
 //    // 이때 클라이언트에서는 /pub/chat/message로 요청하게 되고 이것을 controller가 받아서 처리한다.
 //    // 처리가 완료되면 /sub/chat/room/roomId로 메시지가 전송된다.
 //    @MessageMapping("/chat/enterUser")
-//    public void enterUser(@Payload ChatMessageDTO chat, SimpMessageHeaderAccessor headerAccessor) {
+//    public void enterUser(@Payload ChatMessageDto messageDto, SimpMessageHeaderAccessor headerAccessor) {
 //
-//        // 반환 결과를 socket session에 userUUID 로 저장
-//        headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
 //
-//        chat.setMessage(chat.getSender() + " 님 입장!!");
-//        template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
-//
+//        messageDto.setMessage(messageDto.getSender() + " 님 입장!!");
+//        template.convertAndSend("/chat/room/" + messageDto.getRoomId(), messageDto);
 //    }
 //
 //    // 해당 유저
 //    @MessageMapping("/chat/sendMessage")
-//    public void sendMessage(@Payload ChatMessageDTO chat) {
-//        log.info("CHAT {}", chat);
-//        chat.setMessage(chat.getMessage());
-//        template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
+//    public void sendMessage(@Payload ChatMessageDto messageDto) {
+//        log.info("CHAT {}", messageDto);
+//
+//
+//        messageDto.setMessage(messageDto.getMessage());
+//        template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
 //
 //    }
 //
 //    // 유저 퇴장 시에는 EventListener을 통해서 유저 퇴장을 확인
-//    @EventListener
-//    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
-//        log.info("DisConnEvent {}", event);
-//
-//        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-//
-//        // stomp 세션에 있던 uuid 와 roomId 를 확인해서 채팅방 유저 리스트와 room 에서 해당 유저를 삭제
-//        String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
-//        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-//
-//        log.info("headAccessor {}", headerAccessor);
-//
-//        // 채팅방 유저 -1
-//
-//        // 채팅방 유저 리스트에서 UUID 유저 닉네임 조회 및 리스트에서 유저 삭제
-//        String username = chatService.getUserName(roomId, userUUID);
-//        chatService.delUser(roomId, userUUID);
-//
-//        if (username != null) {
-//            log.info("User Disconnected : " + username);
-//
-//            // builder 어노테이션 활용
-//            ChatMessageDTO chat = ChatMessageDTO.builder()
-//                    .type(MessageType.LEAVE)
-//                    .sender(username)
-//                    .message(username + " 님 퇴장!!")
-//                    .build();
-//
-//            template.convertAndSend("/sub/chat/room/" + roomId, chat);
-//        }
-//    }
+////    @EventListener
+////    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
+////        log.info("DisConnEvent {}", event);
+////
+////        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+////
+////        // stomp 세션에 있던 uuid 와 roomId 를 확인해서 채팅방 유저 리스트와 room 에서 해당 유저를 삭제
+////        String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
+////        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+////
+////        log.info("headAccessor {}", headerAccessor);
+////
+////        // 채팅방 유저 -1
+////
+////        // 채팅방 유저 리스트에서 UUID 유저 닉네임 조회 및 리스트에서 유저 삭제
+////        String username = chatService.getUserName(roomId, userUUID);
+////        chatService.delUser(roomId, userUUID);
+////
+////        if (username != null) {
+////            log.info("User Disconnected : " + username);
+////
+////            // builder 어노테이션 활용
+////            ChatMessageDTO chat = ChatMessageDTO.builder()
+////                    .type(MessageType.LEAVE)
+////                    .sender(username)
+////                    .message(username + " 님 퇴장!!")
+////                    .build();
+////
+////            template.convertAndSend("/sub/chat/room/" + roomId, chat);
+////        }
+////    }
 //
 //
 //

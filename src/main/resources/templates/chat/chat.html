@@ -96,15 +96,14 @@
       <div class="col-3 p-0">
         <ul class="list-group chat-list"> <!--채팅방 목록-->
           <div th:each="chatRoom : ${member1ChatRoom}">
-            <li class="list-group-item" style="background-color: rgb(247, 173, 207);"
-                th:if="${session.loginMember.id != chatRoom.member1.id}"
-                th:text="${chatRoom.member1.name}">
-            </li>
-
-            <li class="list-group-item" style="background-color: rgb(247, 173, 207);"
-                th:if="${session.loginMember.id != chatRoom.member2.id}"
-                th:text="${chatRoom.member2.name}">
-            </li>
+              <li class="list-group-item" style="background-color: rgb(247, 173, 207);">
+                <a th:href="@{/chat/room/${roomId}(roomId=${chatRoom.roomId})}">
+                  <th:block th:if="${session.loginMember.id != chatRoom.member1.id}"
+                       th:text="${chatRoom.member1.name}"></th:block>
+                  <th:block th:if="${session.loginMember.id != chatRoom.member2.id}"
+                            th:text="${chatRoom.member2.name}"></th:block>
+                </a>
+              </li>
           </div>
         </ul>
       </div>
