@@ -26,10 +26,7 @@ public class ChatMessage extends BaseTimeEntity {
     @JoinColumn(name = "chatRoom_id")
     private ChatRoom chatRoom;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member sender;
+    private Long sender;
 
     private String content;
 

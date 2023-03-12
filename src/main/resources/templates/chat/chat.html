@@ -84,12 +84,21 @@
   <br>
 <div class="main" style="position: relative;">
   <h3 th:if="${session.loginMember != null}"
-      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 10px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;" id = "chat_title"
+      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border: solid 7px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;"
       th:text="|${session.loginMember.name}의 채팅방|"></h3>
+
+  <h3 th:if="${targetChatRoom != null and session.loginMember.id != targetChatRoom.member1.id}"
+      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 7px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;"
+      th:text="|채팅 상대 : ${targetChatRoom.member1.name}|"></h3>
+
+  <h3 th:if="${targetChatRoom != null and session.loginMember.id != targetChatRoom.member2.id}"
+      style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 7px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;"
+      th:text="|채팅 상대 : ${targetChatRoom.member2.name}|"></h3>
 
   <h3 th:if="${session.loginMember == null}"
       style="margin-left: 800px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 545; border : solid 10px; border-radius: 1.5rem; border-color: blueviolet; width: 300px; text-align: center; padding-top: 5px;">
       채팅방</h3>
+
 
   <div class="container p-4 detail">
     <div class="row">
@@ -97,25 +106,39 @@
         <ul class="list-group chat-list"> <!--채팅방 목록-->
           <div th:each="chatRoom : ${member1ChatRoom}">
               <li class="list-group-item" style="background-color: rgb(247, 173, 207);">
-                <a th:href="@{/chat/room/${roomId}(roomId=${chatRoom.roomId})}">
+                <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}" th:data-id="${chatRoom.roomId}">
                   <th:block th:if="${session.loginMember.id != chatRoom.member1.id}"
-                       th:text="${chatRoom.member1.name}"></th:block>
+                            th:text="${chatRoom.member1.name}"></th:block>
                   <th:block th:if="${session.loginMember.id != chatRoom.member2.id}"
                             th:text="${chatRoom.member2.name}"></th:block>
+
+                  <button class="btn btn-primary" type="submit" th:onclick="@{/chat/room/delete(roomId=${chatRoom.roomId})}">나가기</button>
                 </a>
               </li>
           </div>
         </ul>
       </div>
-      
-      <div class="col-9 p-0">  <!--채팅화면-->
-        <div class="chat-room" style="background: url('image/chat_img/chat_background1.PNG'); background-size: cover; width: 700px;" id = "chat_room">
-          <ul class="list-group chat-content" id = "chatContent" style="height: 600px;">
-          </ul>
-          <div class="input-group">
-            <input class="form-control chat-input" id="chat-input" placeholder="채팅하고 싶은 채팅방을 클릭하고 이용해주세요.">
-            <button class="btn btn-secondary" id="send">전송</button>
+
+      <div class="col-9 p-0">  <!--채팅 화면-->
+        <div class="chat-container" style="background: url('image/chat_img/chat_background1.PNG'); position: relative; background-size: cover; width: 700px;"
+             id = "chat-room">
+
+          <!--채팅 연결-->
+          <div class="connecting"
+               style="text-align: center; color: #777; position: absolute; width: 100%;">
+            Connecting...
           </div>
+
+          <!--채팅 기록-->
+          <ul class="list-group chat-content" id="chatContent" style="height: 600px;">
+          </ul>
+
+          <!--채팅 전송-->
+          <div class="input-group">
+            <input class="form-control chat-input" id="message" placeholder="채팅하고 싶은 채팅방을 클릭하고 이용해주세요.">
+            <button class="btn btn-secondary" type="submit" onclick="sendMessage();">전송</button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -127,13 +150,27 @@
 </div>
 
 
+<!--jquery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
 
-  <!--jquery-->
-  <script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
 
+<!--웹소켓을 지원하지 않는 브라우저에서도 웹소켓을 사용할 수 있도록 지원하는 SockJS 라이브러리 불러오기-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+
+<!--SockJS와 함께 사용되는 STOMP 라이브러리 불러오기-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+<script th:inline="javascript">
+    var username = /*[[${session.loginMember.name}]]*/ '';
+    var userId = /*[[${session.loginMember.id}]]*/ '';
+
+    console.log("Hello, " + username);
+</script>
+
+<script src="/js/chat.js"></script>
 
 </body>
 </html>

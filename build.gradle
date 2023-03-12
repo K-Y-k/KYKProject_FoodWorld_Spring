@@ -23,12 +23,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// 타임리프 추가
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 	// 검증기 추가
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	// 웹 소켓
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// sockjs
+	implementation 'org.webjars:sockjs-client:1.5.1'
+	// stomp
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	// gson
+	implementation 'com.google.code.gson:gson:2.9.0'
+
 	// QueryDSL 추가
 	implementation "com.querydsl:querydsl-jpa"
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정

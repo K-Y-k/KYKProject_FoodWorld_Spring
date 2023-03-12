@@ -13,7 +13,4 @@ public class ChatRoomDto {
     private String roomName; // 채팅방 이름
     private int userCount; // 채팅방 인원수
 
-    private HashMap<String, String> userList = new HashMap<String, String>();
-
-
 }

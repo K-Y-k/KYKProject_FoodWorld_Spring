@@ -24,3 +24,26 @@
   .list-group-item :hover {
     background-color: aqua;
   }
+
+  #chat-room .event-message {
+      width: 100%;
+      text-align: center;
+      clear: both;
+  }
+
+  #chat-room .event-message p {
+      color: #777;
+      font-size: 14px;
+      word-wrap: break-word;
+  }
+
+  #chat-room ul li {
+      line-height: 1.5rem;
+      padding: 10px 20px;
+      margin: 0;
+      border-bottom: 1px solid #f4f4f4;
+  }
+
+  #chat-room ul li p {
+      margin: 0;
+  }

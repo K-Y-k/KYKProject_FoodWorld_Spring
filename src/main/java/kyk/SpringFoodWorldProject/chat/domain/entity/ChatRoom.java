@@ -20,10 +20,7 @@ import java.util.Set;
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chatRoom_id")
-    private Long Id;
-
     private String roomId;
 
     @ManyToOne

@@ -32,8 +32,6 @@ public class ChatRoomController {
             if (!member1ChatRoom.isEmpty()) {
                 model.addAttribute("member1ChatRoom", member1ChatRoom);
             }
-        } else {
-            log.info("회원이 아님 = {}", loginMember.getId());
         }
 
         return "chat/chat";
@@ -42,7 +40,7 @@ public class ChatRoomController {
 
     @GetMapping("/matchingRoom/{memberId}")
     public String goChatRoom(@PathVariable Long memberId,
-                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                              Model model){
 
         // 현재 회원과 채팅을 원하는 상대 회원의 채팅방을 찾아
@@ -62,20 +60,19 @@ public class ChatRoomController {
     }
 
 
-    @GetMapping("/room/{roomId}")
-    public String goChatRoom(@PathVariable String roomId,
-                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+    @GetMapping("/room")
+    public String goChatRoom(@RequestParam String roomId,
+                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                              Model model){
         // 클릭한 방을 조회
         ChatRoom targetChatRoom = chatService.findRoomByRoomId(roomId);
+        model.addAttribute("targetChatRoom", targetChatRoom);
 
-        if (targetChatRoom == null) {
-        } else { // 클릭한 방의 메시지 가져오기
-            List<ChatMessage> chatMessage = targetChatRoom.getChatMessage();
-            model.addAttribute("chatMessage", chatMessage);
-        }
+        // 클릭한 방의 메시지 가져오기
+        List<ChatMessage> chatMessage = targetChatRoom.getChatMessage();
+        model.addAttribute("chatMessage", chatMessage);
 
-        // 전체 채팅방 리스트
+        // 현재 회원의 전체 채팅방 리스트
         List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
         model.addAttribute("member1ChatRoom", member1ChatRoom);
 
