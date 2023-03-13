@@ -106,21 +106,26 @@
         <ul class="list-group chat-list"> <!--채팅방 목록-->
           <div th:each="chatRoom : ${member1ChatRoom}">
               <li class="list-group-item" style="background-color: rgb(247, 173, 207);">
-                <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}" th:data-id="${chatRoom.roomId}">
+                <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}">
                   <th:block th:if="${session.loginMember.id != chatRoom.member1.id}"
+                            th:id="receiver"
+                            th:value="${chatRoom.member1.id}"
                             th:text="${chatRoom.member1.name}"></th:block>
                   <th:block th:if="${session.loginMember.id != chatRoom.member2.id}"
+                            th:id="receiver"
+                            th:value="${chatRoom.member1.id}"
                             th:text="${chatRoom.member2.name}"></th:block>
-
-                  <button class="btn btn-primary" type="submit" th:onclick="@{/chat/room/delete(roomId=${chatRoom.roomId})}">나가기</button>
                 </a>
+
+                <button class="btn btn-primary" type="submit" th:onclick="@{/chat/room/delete(roomId=${chatRoom.roomId})}">나가기</button>
               </li>
           </div>
         </ul>
       </div>
 
       <div class="col-9 p-0">  <!--채팅 화면-->
-        <div class="chat-container" style="background: url('image/chat_img/chat_background1.PNG'); position: relative; background-size: cover; width: 700px;"
+        <div class="chat-container"
+             style="background: url('image/chat_img/chat_background1.PNG'); position: relative; background-size: cover; width: 700px;"
              id = "chat-room">
 
           <!--채팅 연결-->
@@ -135,7 +140,7 @@
 
           <!--채팅 전송-->
           <div class="input-group">
-            <input class="form-control chat-input" id="message" placeholder="채팅하고 싶은 채팅방을 클릭하고 이용해주세요.">
+            <input class="form-control chat-input" id="message" placeholder="채팅하고 싶은 채팅방을 클릭하고 이용해주세요." onkeydown="handleKeyDown(event)">
             <button class="btn btn-secondary" type="submit" onclick="sendMessage();">전송</button>
           </div>
 
@@ -164,10 +169,10 @@
 
 
 <script th:inline="javascript">
-    var username = /*[[${session.loginMember.name}]]*/ '';
-    var userId = /*[[${session.loginMember.id}]]*/ '';
+      var username = /*[[${session.loginMember.name}]]*/ '';
+      var userId = /*[[${session.loginMember.id}]]*/ '';
 
-    console.log("Hello, " + username);
+      console.log("Hello, " + username);
 </script>
 
 <script src="/js/chat.js"></script>

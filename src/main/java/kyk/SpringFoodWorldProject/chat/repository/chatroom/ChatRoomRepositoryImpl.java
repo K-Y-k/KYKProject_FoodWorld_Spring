@@ -1,11 +1,10 @@
-package kyk.SpringFoodWorldProject.chat.repository;
+package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

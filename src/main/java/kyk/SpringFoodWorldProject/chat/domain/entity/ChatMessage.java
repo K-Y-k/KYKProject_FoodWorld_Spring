@@ -7,7 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Setter
+@Builder
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +26,9 @@ public class ChatMessage extends BaseTimeEntity {
     @JoinColumn(name = "chatRoom_id")
     private ChatRoom chatRoom;
 
-    private Long sender;
+    private Long senderId;
+
+    private String senderName;
 
     private String content;
 

@@ -1,49 +1,32 @@
-.chat-content {
+#chatContent {
     height: 450px;
     overflow-y: scroll;
     padding: 10px;
-  }
-  .chat-content li {
-    margin-top: 10px;
-  }
-  .text-small {
-    font-size: 12px;
-    color: gray;
-    margin-bottom: 0;
-  }
-  .chat-box {
-    background: #eee;
-    padding: 5px;
-    border-radius: 5px;
-    float: left;
-  }
-  .mine {
-    float: right;
   }
 
   .list-group-item :hover {
     background-color: aqua;
   }
 
-  #chat-room .event-message {
+  #chatContent .event-message {
       width: 100%;
       text-align: center;
       clear: both;
   }
 
-  #chat-room .event-message p {
+  #chatContent .event-message p {
       color: #777;
       font-size: 14px;
       word-wrap: break-word;
   }
 
-  #chat-room ul li {
+  #chatContent ul li {
       line-height: 1.5rem;
       padding: 10px 20px;
       margin: 0;
       border-bottom: 1px solid #f4f4f4;
   }
 
-  #chat-room ul li p {
+  #chatContent ul li p {
       margin: 0;
   }

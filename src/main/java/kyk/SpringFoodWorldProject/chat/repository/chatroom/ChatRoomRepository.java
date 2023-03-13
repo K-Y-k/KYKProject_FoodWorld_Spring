@@ -1,4 +1,4 @@
-package kyk.SpringFoodWorldProject.chat.repository;
+package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 

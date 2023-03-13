@@ -22,6 +22,10 @@ public class ChatRoomController {
 
     private final ChatService chatService;
 
+    
+    /**
+     * 채팅방 기본 폼
+     */
     @GetMapping("")
     public String chatRoomList(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                              Model model){
@@ -38,28 +42,35 @@ public class ChatRoomController {
     }
 
 
+    /**
+     * 채팅하기 버튼 클릭시 채팅방 매칭
+     */
     @GetMapping("/matchingRoom/{memberId}")
     public String goChatRoom(@PathVariable Long memberId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
+                             RedirectAttributes redirectAttributes,
                              Model model){
 
-        // 현재 회원과 채팅을 원하는 상대 회원의 채팅방을 찾아
-        ChatRoom membersChatRoom = chatService.findMembersChatRoom(loginMember.getId(), memberId);
+        // 현재 회원과 채팅을 원하는 상대 회원의 채팅방을 찾고
+        ChatRoom findMembersChatRoom1 = chatService.findMembersChatRoom(loginMember.getId(), memberId);
+        ChatRoom findMembersChatRoom2 = chatService.findMembersChatRoom(memberId, loginMember.getId());
 
-        if (membersChatRoom == null) { // 채팅방이 없으면 새로 만든 후 전체 채팅방 조회
+        if (findMembersChatRoom1 == null && findMembersChatRoom2 == null) { // 채팅방이 없으면 새로 만든 후 전체 채팅방 조회
             chatService.createChatRoom(loginMember.getId(), memberId);
 
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
-            model.addAttribute("member1ChatRoom", member1ChatRoom);
+            redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         } else { // 기존에 있으면 전체 채팅방 조회
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
-            model.addAttribute("member1ChatRoom", member1ChatRoom);
+            redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         }
-
-        return "chat/chat";
+        return "redirect:/chat";
     }
 
 
+    /**
+     * 클릭한 채팅방 조회
+     */
     @GetMapping("/room")
     public String goChatRoom(@RequestParam String roomId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
@@ -80,20 +91,6 @@ public class ChatRoomController {
     }
 
 
-//    private final ChatService chatService;
-//
-//
-//    // 채팅 리스트 화면
-//    // 요청이 들어오면 전체 채팅룸 리스트를 담아서 return
-//    @GetMapping("/chat/{memberId}")
-//    public String goChatRoom(@PathVariable Long memberId,
-//                             Model model){
-//
-//        model.addAttribute("list", chatService.findAllRoom());
-//
-//        log.info("SHOW ALL ChatList {}", chatService.findAllRoom());
-//        return "chat/chat";
-//    }
 //
 //
 //    // 채팅방 생성 : 채팅방 생성 후 다시 return
