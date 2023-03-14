@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 
+import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,11 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
     public ChatRoom findByMember1_IdAndMember2_Id(Long member1Id, Long member2Id) {
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
     }
+
+//    @Override
+//    public ChatRoom findRoom(String roomId, Long memberId) {
+//        return chatRoomRepository.findRoom(roomId, memberId);
+//    }
 
     @Override
     public ChatRoom findByRoomId(String roomId) {

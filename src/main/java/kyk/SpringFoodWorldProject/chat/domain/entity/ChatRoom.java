@@ -32,7 +32,7 @@ public class ChatRoom extends BaseTimeEntity {
     private Member member2;
 
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ChatMessage> chatMessage = new ArrayList<>();
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
 
 //    private Set<WebSocketSession> sessions = new HashSet<>();

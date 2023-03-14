@@ -13,5 +13,8 @@ public interface ChatRoomRepository {
 
     ChatRoom findByMember1_IdAndMember2_Id(Long member1Id, Long member2Id);
 
+//    ChatRoom findRoom(String roomId, Long memberId);
+
     ChatRoom findByRoomId(String roomId);
+
 }

@@ -1,7 +1,7 @@
 package kyk.SpringFoodWorldProject.chat.domain.entity;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
-import kyk.SpringFoodWorldProject.chat.domain.MessageType;
+import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
@@ -28,9 +28,8 @@ public class ChatMessage extends BaseTimeEntity {
 
     private Long senderId;
 
-    private String senderName;
+    private String sender;
 
     private String content;
-
 
 }

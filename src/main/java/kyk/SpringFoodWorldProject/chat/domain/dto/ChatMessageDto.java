@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.chat.domain.dto;
 
-import kyk.SpringFoodWorldProject.chat.domain.MessageType;
+import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;

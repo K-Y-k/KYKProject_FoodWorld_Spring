@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.chat.service;
 
 import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
+import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.repository.chatmessage.ChatMessageRepositoryImpl;
@@ -23,6 +24,9 @@ public class ChatService {
     private final MemberRepository memberRepository;
 
 
+    /**
+     * 채팅방 서비스
+     */
     // 현재 유저와 관련된 모든 채팅방 조회
     public List<ChatRoom> findMember1ChatRoom(Long member1Id, Long member2Id) {
         return chatRoomRepository.findByMember1_IdOrMember2_Id(member1Id, member2Id);
@@ -58,10 +62,18 @@ public class ChatService {
         return chatRoomRepository.findByRoomId(roomId);
     }
 
+//    public ChatRoom findRoom(String roomId, Long memberId) {
+//        return chatRoomRepository.findRoom(roomId, memberId);
+//    }
 
 
 
-    public ChatMessage saveChatMessage(ChatMessageDto chatMessageDto) {
+
+    /**
+     * 채팅 메시지 서비스
+     */
+    // 메시지 저장
+    public void saveChatMessage(ChatMessageDto chatMessageDto) {
 
         ChatRoom findChatRoom = chatRoomRepository.findByRoomId(chatMessageDto.getRoomId());
 
@@ -70,10 +82,15 @@ public class ChatService {
                 .messageType(chatMessageDto.getType())
                 .content(chatMessageDto.getMessage())
                 .senderId(chatMessageDto.getSenderId())
-                .senderName(chatMessageDto.getSender())
+                .sender(chatMessageDto.getSender())
                 .build();
 
-        return chatMessageRepository.save(chatMessageEntity);
+        chatMessageRepository.save(chatMessageEntity);
+    }
+
+    // 해당 회원이 입장했던 메시지 저장되어있는지 조회
+    public Optional<ChatMessage> findEnterMessage(String roomId, MessageType messageType, Long senderId) {
+       return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
 }

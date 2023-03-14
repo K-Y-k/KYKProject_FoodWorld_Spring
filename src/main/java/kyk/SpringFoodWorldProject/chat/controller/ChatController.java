@@ -1,7 +1,8 @@
 package kyk.SpringFoodWorldProject.chat.controller;
 
-import kyk.SpringFoodWorldProject.chat.domain.MessageType;
+
 import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.Optional;
+
 
 @Slf4j
 @Controller
@@ -29,18 +32,28 @@ public class ChatController {
     private final ChatService chatService;
 
 
-    // MessageMapping을 통해 웹 소켓으로 들어오는 메시지를 발신 처리한다.
-    // 이때 클라이언트에서는 /pub/chat/message로 요청하게 되고 이것을 controller가 받아서 처리한다.
-    // 처리가 완료되면 /sub/chat/room/roomId로 메시지가 전송된다.
+    /**
+     * 입장 시
+     * : MessageMapping을 통해 웹 소켓으로 들어오는 메시지를 발신 처리한다.
+     *   이때 클라이언트에서는 /pub/chat/message로 요청하게 되고 이것을 controller가 받아서 처리한다.
+     *   처리가 완료되면 /sub/chat/room/roomId로 메시지가 전송된다.
+     */
     @MessageMapping("/chat/enterUser")
-    public void enterUser(@Payload ChatMessageDto messageDto, SimpMessageHeaderAccessor headerAccessor) {
+    public void enterUser(@Payload ChatMessageDto messageDto) {
+        Optional<ChatMessage> isEnter = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
 
-        messageDto.setMessage(messageDto.getSender() + " 입장!!");
-        template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
-        chatService.saveChatMessage(messageDto);
+        if (isEnter.isEmpty()) {
+            messageDto.setMessage(messageDto.getSender() + " 입장");
+            template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
+            chatService.saveChatMessage(messageDto);
+        }
     }
 
-    // 해당 유저 메세지 전송
+
+    /**
+     * 채팅 전송시
+     * : 해당 유저 메세지 전송
+     */
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatMessageDto messageDto) {
         log.info("CHAT {}", messageDto);
@@ -50,6 +63,22 @@ public class ChatController {
         template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         chatService.saveChatMessage(messageDto);
 
+    }
+
+
+    /**
+     * 퇴장 시
+     * : 입장할때와 동일한 메커니즘
+     */
+    @MessageMapping("/chat/leaveUser")
+    public void leaveUser(@Payload ChatMessageDto messageDto) {
+        Optional<ChatMessage> isLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
+
+        if (isLeave.isEmpty()) {
+            messageDto.setMessage(messageDto.getSender() + " 퇴장하였습니다");
+            template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
+            chatService.saveChatMessage(messageDto);
+        }
     }
 
 

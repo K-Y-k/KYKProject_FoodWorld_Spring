@@ -43,7 +43,7 @@ public class ChatRoomController {
 
 
     /**
-     * 채팅하기 버튼 클릭시 채팅방 매칭
+     * 처음 상대방과 채팅하기 버튼 클릭시 채팅방 매칭
      */
     @GetMapping("/matchingRoom/{memberId}")
     public String goChatRoom(@PathVariable Long memberId,
@@ -80,8 +80,12 @@ public class ChatRoomController {
         model.addAttribute("targetChatRoom", targetChatRoom);
 
         // 클릭한 방의 메시지 가져오기
-        List<ChatMessage> chatMessage = targetChatRoom.getChatMessage();
+        List<ChatMessage> chatMessage = targetChatRoom.getChatMessages();
         model.addAttribute("chatMessage", chatMessage);
+
+        for (ChatMessage message : chatMessage) {
+            log.info("해당 방의 메시지들 = {}", message.getMessageType());
+        }
 
         // 현재 회원의 전체 채팅방 리스트
         List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
@@ -89,40 +93,5 @@ public class ChatRoomController {
 
         return "chat/chat";
     }
-
-
-//
-//
-//    // 채팅방 생성 : 채팅방 생성 후 다시 return
-//    @PostMapping("/chat/createroom/{memberId}")
-//    public String createRoom(@RequestParam String name, RedirectAttributes redirectAttributes) {
-//        ChatRoomDto room = chatService.createRoom(name);
-//        log.info("CREATE Chat Room {}", room);
-//
-//        redirectAttributes.addFlashAttribute("roomName", room);
-//        return "redirect:/chat";
-//    }
-//
-//    // 채팅방 입장 화면
-//    // 파라미터로 넘어오는 roomId를 확인후 해당 roomId를 기준으로 채팅방을 찾아서 클라이언트를 chatroom으로 보낸다.
-//    @GetMapping("/chat/{roomId}")
-//    public String roomDetail(@PathVariable String roomId,
-//                             Model model){
-//
-//        log.info("roomId {}", roomId);
-//        model.addAttribute("room", chatService.findRoomById(roomId));
-//        return "chatroom";
-//    }
-
-
-//    @PostMapping
-//    public ChatRoom createRoom(@RequestParam Member member1, @RequestParam Member member2) {
-//        return chatService.createRoom(member1, member2);
-//    }
-//
-//    @GetMapping
-//    public List<ChatRoom> findAllRoom() {
-//        return chatService.findAllRoom();
-//    }
 
 }

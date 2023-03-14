@@ -8,7 +8,7 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet"> <!-- ../은 상위 경로를 뜻한다. -->
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/chat/chat.css" th:href="@{/chat.css}">
+  <link rel="stylesheet" type="text/css" href="../css/chat/chat.css" th:href="@{/css/chat/chat.css}">
 </head>
 
 <body>
@@ -117,7 +117,11 @@
                             th:text="${chatRoom.member2.name}"></th:block>
                 </a>
 
-                <button class="btn btn-primary" type="submit" th:onclick="@{/chat/room/delete(roomId=${chatRoom.roomId})}">나가기</button>
+                <form th:action="@{/chat/room/leave(roomId=${chatRoom.roomId})}" method="post">
+                  <button class="btn btn-primary" type="submit" th:onclick="onLeave();">
+                    나가기
+                  </button>
+                </form>
               </li>
           </div>
         </ul>
@@ -125,17 +129,72 @@
 
       <div class="col-9 p-0">  <!--채팅 화면-->
         <div class="chat-container"
-             style="background: url('image/chat_img/chat_background1.PNG'); position: relative; background-size: cover; width: 700px;"
+             style="background: url('/image/chat_img/chat_background1.PNG'); position: relative; background-size: cover; width: 700px;"
              id = "chat-room">
 
-          <!--채팅 연결-->
-          <div class="connecting"
-               style="text-align: center; color: #777; position: absolute; width: 100%;">
-            Connecting...
-          </div>
-
           <!--채팅 기록-->
-          <ul class="list-group chat-content" id="chatContent" style="height: 600px;">
+          <ul class="list-group chat-content" id="chatContent" style="height: 600px; overflow-y: scroll;">
+            <!--채팅 연결-->
+            <div class="connecting"
+                 style="text-align: center; color: white;">
+              연결중...
+            </div>
+
+            <!--DB에 저장된 채팅 메시지-->
+            <div th:each="chatMessage : ${chatMessage}">
+              <!--현재 회원이 보낸 것이면-->
+              <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
+                  style="list-style-type: none; border-radius: 5px; margin-top: 3%;">
+                <table style="float: right;">
+                  <tr>
+                    <td style="vertical-align: bottom;">
+                      <span style="font-size: 15px; padding: 0px 5px 0px 5px;">
+                         시간
+                      </span>
+                    </td>
+
+                    <td>
+                      <span style="background-color: lightyellow; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                            th:text="${chatMessage.content}">
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </li>
+
+              <!--상대방 회원이 보낸 것이면-->
+              <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId != session.loginMember.id}"
+                  style="list-style-type: none; border-radius: 5px; margin-top: 3%;">
+                <table style="float: left;">
+                  <tr>
+                    <td>
+                      <img src="/image/muckstargram_img/user_icon.PNG" style="width: 5vw; height: 8vh;"/>
+                    </td>
+
+                    <td>
+                      <table>
+                        <tr th:text="${chatMessage.sender}">
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <span style="background-color: violet; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                                  th:text="${chatMessage.content}">
+                            </span>
+                          </td>
+
+                          <td style="vertical-align: bottom;">
+                            <span style="font-size: 15px; margin-right: 30px; padding: 0px 5px 0px 5px;">
+                              시간
+                            </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </li>
+            </div>
           </ul>
 
           <!--채팅 전송-->
@@ -169,10 +228,10 @@
 
 
 <script th:inline="javascript">
-      var username = /*[[${session.loginMember.name}]]*/ '';
-      var userId = /*[[${session.loginMember.id}]]*/ '';
+    var username = [[${session.loginMember?.name}]] || 'Guest';
+    var userId = [[${session.loginMember?.id}]] || 'GuestId';
 
-      console.log("Hello, " + username);
+    console.log("Hello, " + username);
 </script>
 
 <script src="/js/chat.js"></script>
