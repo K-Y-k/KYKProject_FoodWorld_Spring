@@ -1,5 +1,4 @@
 var connectingElement = document.querySelector('.connecting');
-var receiver = $("#receiver").val();
 var chatContent = document.querySelector('#chatContent');
 var messageInput = document.querySelector('#message');
 
@@ -20,7 +19,7 @@ if (roomId != null) {
 // 소켓 실행 시
 function connect() {
     console.log("현재 회원 이름: ", username)
-    console.log("상대 회원: ", receiver)
+    console.log("상대 회원 Id: ", receiverId)
     console.log("방 이름: ", roomId)
 
 
@@ -45,11 +44,13 @@ function onConnected() {
                 "roomId": roomId,
                 sender: username,
                 senderId: userId,
+                receiverId: receiverId,
                 type: 'ENTER'
             })
         )
 
     connectingElement.style.display='none';
+    chatContent.scrollTop = chatContent.scrollHeight;
 }
 
 // 회원 퇴장시
@@ -62,6 +63,7 @@ function onLeave() {
                 "roomId": roomId,
                 sender: username,
                 senderId: userId,
+                receiverId: receiverId,
                 type: 'LEAVE'
             })
         )
@@ -85,6 +87,7 @@ function sendMessage() {
             "roomId": roomId,
             sender: username,
             senderId: userId,
+            receiverId: receiverId,
             message: messageInput.value,
             type: 'TALK'
         };
@@ -122,7 +125,7 @@ function onMessageReceived(payload) {
         let nowTime = createTime(date);
 
         if (chat.senderId == userId){ // 본인이 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; border-radius: 5px; margin-top: 3%;">
+            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
                                  <table style="float: right;">
                                     <tr>
                                         <td style="vertical-align: bottom;">
@@ -142,7 +145,7 @@ function onMessageReceived(payload) {
 
             $("#chatContent").append(talkMessage);
         } else { // 상대가 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; border-radius: 5px; margin-top: 3%;">
+            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
                                     <table style="float: left;">
                                         <tr>
                                             <td>

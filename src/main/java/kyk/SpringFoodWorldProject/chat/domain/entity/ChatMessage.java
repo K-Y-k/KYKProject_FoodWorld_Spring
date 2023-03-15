@@ -26,9 +26,9 @@ public class ChatMessage extends BaseTimeEntity {
     @JoinColumn(name = "chatRoom_id")
     private ChatRoom chatRoom;
 
-    private Long senderId;
-
     private String sender;
+    private Long senderId;
+    private Long receiverId;
 
     private String content;
 

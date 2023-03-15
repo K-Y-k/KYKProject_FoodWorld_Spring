@@ -52,7 +52,7 @@ public class ChatService {
         return chatRoom;
     }
 
-    // 현재 유저와 관련된 채팅방 조회
+    // 현재 유저와 상대 유저가 관련된 채팅방 조회
     public ChatRoom findMembersChatRoom(Long member1Id, Long member2Id) {
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
     }
@@ -73,7 +73,7 @@ public class ChatService {
      * 채팅 메시지 서비스
      */
     // 메시지 저장
-    public void saveChatMessage(ChatMessageDto chatMessageDto) {
+    public ChatMessage saveChatMessage(ChatMessageDto chatMessageDto) {
 
         ChatRoom findChatRoom = chatRoomRepository.findByRoomId(chatMessageDto.getRoomId());
 
@@ -81,11 +81,12 @@ public class ChatService {
                 .chatRoom(findChatRoom)
                 .messageType(chatMessageDto.getType())
                 .content(chatMessageDto.getMessage())
-                .senderId(chatMessageDto.getSenderId())
                 .sender(chatMessageDto.getSender())
+                .senderId(chatMessageDto.getSenderId())
+                .receiverId(chatMessageDto.getReceiverId())
                 .build();
 
-        chatMessageRepository.save(chatMessageEntity);
+        return chatMessageRepository.save(chatMessageEntity);
     }
 
     // 해당 회원이 입장했던 메시지 저장되어있는지 조회

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -90,6 +91,9 @@ public class ChatRoomController {
         // 현재 회원의 전체 채팅방 리스트
         List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
         model.addAttribute("member1ChatRoom", member1ChatRoom);
+
+        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
+        model.addAttribute("localDateTime", LocalDateTime.now());
 
         return "chat/chat";
     }
