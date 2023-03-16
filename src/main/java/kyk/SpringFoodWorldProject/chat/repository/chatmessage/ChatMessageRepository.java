@@ -26,6 +26,10 @@ public interface ChatMessageRepository {
      */
     Optional<ChatMessage> findEnterMessage(String roomId, MessageType messageType, Long senderId);
 
-    void deleteByMessageTypeAndSenderId(String roomId, MessageType messageType, Long memberId);
+
+    /**
+     * 해당 방에 현재 회원이 퇴장했던 메시지가 저장되어있으면 삭제
+     */
+    void deleteByLeaveMessage(String roomId, Long memberId);
 
 }

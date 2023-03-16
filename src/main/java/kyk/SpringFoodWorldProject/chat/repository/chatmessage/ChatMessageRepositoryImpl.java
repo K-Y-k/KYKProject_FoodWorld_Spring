@@ -30,8 +30,9 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
     }
 
     @Override
-    public void deleteByMessageTypeAndSenderId(String roomId, MessageType messageType, Long memberId) {
-        chatMessageRepository.deleteByMessageTypeAndSenderId(roomId, messageType, memberId);
+    public void deleteByLeaveMessage(String roomId, Long memberId){
+        chatMessageRepository.deleteByLeaveMessage(roomId, memberId);
     }
+
 
 }

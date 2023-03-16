@@ -33,7 +33,7 @@ public class ChatRoomController {
                              Model model){
 
         if (loginMember != null) {
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
+            List<ChatRoom> member1ChatRoom = chatService.findNotLeaveMessageRoom(loginMember.getId());
 
             if (!member1ChatRoom.isEmpty()) {
                 model.addAttribute("member1ChatRoom", member1ChatRoom);
@@ -60,16 +60,19 @@ public class ChatRoomController {
         if (findMembersChatRoom1 == null && findMembersChatRoom2 == null) { // 채팅방이 없으면 새로 만든 후 전체 채팅방 조회
             chatService.createChatRoom(loginMember.getId(), memberId);
 
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
+            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         } else { // 기존에 있으면 전체 채팅방 조회
             // 만약 기존에 채팅을 하다가 퇴장했을 경우를 위해 양쪽 모두 퇴장 메시지를 먼저 지움
-            chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), MessageType.LEAVE, loginMember.getId());
-            chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), MessageType.LEAVE, memberId);
-            chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), MessageType.LEAVE, loginMember.getId());
-            chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), MessageType.LEAVE, memberId);
+            if (findMembersChatRoom1 != null) {
+                chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), loginMember.getId());
+                chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), memberId);
+            } else {
+                chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), loginMember.getId());
+                chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), memberId);
+            }
 
-            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
+            List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         }
         return "redirect:/chat";
@@ -91,12 +94,8 @@ public class ChatRoomController {
         List<ChatMessage> chatMessage = targetChatRoom.getChatMessages();
         model.addAttribute("chatMessage", chatMessage);
 
-        for (ChatMessage message : chatMessage) {
-            log.info("해당 방의 메시지들 = {}", message.getMessageType());
-        }
-
         // 현재 회원의 전체 채팅방 리스트
-        List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
+        List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
         model.addAttribute("member1ChatRoom", member1ChatRoom);
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것

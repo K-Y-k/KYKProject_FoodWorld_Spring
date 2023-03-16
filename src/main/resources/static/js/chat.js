@@ -67,6 +67,11 @@ function onLeave() {
         )
 }
 
+// 연결 끊기
+stompClient.disconnect(function() {
+    console.log('STOMP 클라이언트 연결 종료');
+});
+
 // 에러 발생시
 function onError(error) {
     connectingElement.style.display = 'block';
@@ -116,7 +121,7 @@ function onMessageReceived(payload) {
                            `</li>`
 
         $('#chatContent').append(leaveMessage);
-
+        stompClient.disconnect()
         window.location = "http://localhost:8080/chat";
     } else {                           // talk라면
         let date = new Date();

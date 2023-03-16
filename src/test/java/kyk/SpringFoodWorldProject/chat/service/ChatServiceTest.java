@@ -62,7 +62,7 @@ class ChatServiceTest {
 
 
         // when
-        List<ChatRoom> member1ChatRooms = chatService.findMember1ChatRoom(savedMember1.getId(), savedMember1.getId());
+        List<ChatRoom> member1ChatRooms = chatService.findMember1ChatRoom(savedMember1.getId());
 
 
         // then
@@ -118,9 +118,39 @@ class ChatServiceTest {
         ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(LEAVE, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지"));
 
         // when
-        chatService.deleteLeaveMessage(createChatRoom.getRoomId(), LEAVE, savedMember1.getId());
+        chatService.deleteLeaveMessage(createChatRoom.getRoomId(), savedMember1.getId());
 
         // then
-        assertThat(chatMessage.getMessageType()).isEqualTo(LEAVE);
+        assertThrows(RuntimeException.class,
+                ()->  chatService.findEnterMessage(chatMessage.getChatRoom().getRoomId(), LEAVE, savedMember1.getId())
+                        .orElseThrow(
+                                () -> new RuntimeException("해당 방의 해당 회원의 퇴장 메시지 찾을 수 없음")
+                        )
+        );
+    }
+
+    @Test
+    @DisplayName("현재 회원이 이미 퇴장햇던 메시지가 있는 방은 조회를 안하고 다른 채팅방들만 조회")
+    void findNotLeaveMessageChatRoom() {
+        // given
+        Member savedMember1 = memberRepository.save(new Member("ddd", "dd", "dd"));
+        Member savedMember2 = memberRepository.save(new Member("aaa", "aa", "aa"));
+        Member savedMember3 = memberRepository.save(new Member("ccc", "cc", "cc"));
+
+        ChatRoom chatRoom1 = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
+        ChatRoom chatRoom2 = chatService.createChatRoom(savedMember1.getId(), savedMember3.getId());
+        System.out.println("chatRoom1의 방 = " + chatRoom1.getRoomId());
+        System.out.println("chatRoom2의 방 = " + chatRoom2.getRoomId());
+
+        chatService.saveChatMessage(new ChatMessageDto(LEAVE, chatRoom1.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "savedMember1이 퇴장한 메시지"));
+
+        // when
+        List<ChatRoom> notLeaveMessageRoom = chatService.findNotLeaveMessageRoom(savedMember1.getId());
+        for (ChatRoom chatRoom : notLeaveMessageRoom) {
+            System.out.println("퇴장한 채팅방은 제외한 채팅방들 = " + chatRoom.getRoomId());
+        }
+
+        // then
+        assertThat(notLeaveMessageRoom.get(0).getRoomId()).isEqualTo(chatRoom2.getRoomId());
     }
 }

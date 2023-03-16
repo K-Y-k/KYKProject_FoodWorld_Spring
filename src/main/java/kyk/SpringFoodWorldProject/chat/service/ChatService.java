@@ -11,10 +11,12 @@ import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Slf4j
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -28,8 +30,8 @@ public class ChatService {
      * 채팅방 서비스
      */
     // 현재 유저와 관련된 모든 채팅방 조회
-    public List<ChatRoom> findMember1ChatRoom(Long member1Id, Long member2Id) {
-        return chatRoomRepository.findByMember1_IdOrMember2_Id(member1Id, member2Id);
+    public List<ChatRoom> findMember1ChatRoom(Long memberId) {
+        return chatRoomRepository.findByMember1_IdOrMember2_Id(memberId);
     }
 
     // 채팅방 생성
@@ -39,7 +41,6 @@ public class ChatService {
 
         Member findMember2 = memberRepository.findById(member2Id).orElseThrow(() ->
                 new IllegalArgumentException("회원 찾기 실패: " + member2Id));
-
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(UUID.randomUUID().toString())
@@ -62,9 +63,10 @@ public class ChatService {
         return chatRoomRepository.findByRoomId(roomId);
     }
 
-//    public ChatRoom findRoom(String roomId, Long memberId) {
-//        return chatRoomRepository.findRoom(roomId, memberId);
-//    }
+    // 현재 유저가 퇴장한 채팅방은 제외한 채팅방들을 조회
+    public List<ChatRoom> findNotLeaveMessageRoom(Long memberId) {
+        return chatRoomRepository.findNotLeaveMessageRoom(memberId);
+    }
 
 
 
@@ -94,7 +96,7 @@ public class ChatService {
        return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
-    public void deleteLeaveMessage(String roomId, MessageType messageType, Long memberId) {
-        chatMessageRepository.deleteByMessageTypeAndSenderId(roomId, messageType, memberId);
+    public void deleteLeaveMessage(String roomId, Long memberId) {
+        chatMessageRepository.deleteByLeaveMessage(roomId, memberId);
     }
 }

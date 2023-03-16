@@ -18,9 +18,10 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
         return chatRoomRepository.save(chatRoom);
     }
 
+
     @Override
-    public List<ChatRoom> findByMember1_IdOrMember2_Id(Long member1Id, Long member2Id) {
-        return chatRoomRepository.findByMember1_IdOrMember2_Id(member1Id, member2Id);
+    public List<ChatRoom> findByMember1_IdOrMember2_Id(Long member1Id) {
+        return chatRoomRepository.findMemberChatRoom(member1Id);
     }
 
     @Override
@@ -28,10 +29,11 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
     }
 
-//    @Override
-//    public ChatRoom findRoom(String roomId, Long memberId) {
-//        return chatRoomRepository.findRoom(roomId, memberId);
-//    }
+    @Override
+    public List<ChatRoom> findNotLeaveMessageRoom(Long memberId) {
+        return chatRoomRepository.findNotLeaveMessageRoom(memberId);
+    }
+
 
     @Override
     public ChatRoom findByRoomId(String roomId) {
