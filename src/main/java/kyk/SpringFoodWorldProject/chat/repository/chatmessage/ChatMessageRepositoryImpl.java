@@ -29,4 +29,9 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
         return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
+    @Override
+    public void deleteByMessageTypeAndSenderId(String roomId, MessageType messageType, Long memberId) {
+        chatMessageRepository.deleteByMessageTypeAndSenderId(roomId, messageType, memberId);
+    }
+
 }

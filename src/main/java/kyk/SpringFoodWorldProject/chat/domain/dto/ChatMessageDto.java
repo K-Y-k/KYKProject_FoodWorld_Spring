@@ -20,6 +20,5 @@ public class ChatMessageDto {
     private Long senderId;    // 채팅 보낸 사람 Id
     private Long receiverId;  // 채팅 받는 사람 Id
     private String message;   // 메시지
-    private String time;      // 채팅 발송 시간
 
 }

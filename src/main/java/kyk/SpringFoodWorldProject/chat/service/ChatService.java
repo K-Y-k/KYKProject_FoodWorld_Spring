@@ -94,4 +94,7 @@ public class ChatService {
        return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
+    public void deleteLeaveMessage(String roomId, MessageType messageType, Long memberId) {
+        chatMessageRepository.deleteByMessageTypeAndSenderId(roomId, messageType, memberId);
+    }
 }

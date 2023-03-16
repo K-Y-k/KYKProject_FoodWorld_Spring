@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static kyk.SpringFoodWorldProject.chat.domain.dto.MessageType.ENTER;
+import static kyk.SpringFoodWorldProject.chat.domain.dto.MessageType.LEAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ChatServiceTest {
 
     @Autowired ChatService chatService;
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
 
     @BeforeEach
     public void init() {
@@ -81,7 +81,7 @@ class ChatServiceTest {
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
 
         // when
-        ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(ENTER, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지", "0000"));
+        ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(ENTER, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지"));
 
         // then
         assertThat(chatMessage.getContent()).isEqualTo("메시지");
@@ -96,7 +96,7 @@ class ChatServiceTest {
 
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
 
-        ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(ENTER, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지", "0000"));
+        ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(ENTER, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지"));
 
         // when
         ChatMessage enterMessage = chatService.findEnterMessage(chatMessage.getChatRoom().getRoomId(), chatMessage.getMessageType(), chatMessage.getSenderId()).orElseThrow(() ->
@@ -104,5 +104,23 @@ class ChatServiceTest {
 
         // then
         assertThat(enterMessage.getMessageType()).isEqualTo(ENTER);
+    }
+
+    @Test
+    @DisplayName("해당 방에 퇴장한 유저 메시지를 지우는 작업")
+    void deleteLeaveMessage() {
+        // given
+        Member savedMember1 = memberRepository.save(new Member("ddd", "dd", "dd"));
+        Member savedMember2 = memberRepository.save(new Member("aaa", "aa", "aa"));
+
+        ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
+
+        ChatMessage chatMessage = chatService.saveChatMessage(new ChatMessageDto(LEAVE, createChatRoom.getRoomId(), savedMember1.getName(), savedMember1.getId(), savedMember2.getId(), "메시지"));
+
+        // when
+        chatService.deleteLeaveMessage(createChatRoom.getRoomId(), LEAVE, savedMember1.getId());
+
+        // then
+        assertThat(chatMessage.getMessageType()).isEqualTo(LEAVE);
     }
 }

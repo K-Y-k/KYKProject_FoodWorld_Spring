@@ -34,19 +34,4 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
-
-//    private Set<WebSocketSession> sessions = new HashSet<>();
-
-
-//    public void handleActions(WebSocketSession session, ChatMessage chatMessage, ChatService chatService) {
-//        if (chatMessage.getMessageType().equals(MessageType.ENTER)) {
-//            sessions.add(session);
-//            chatMessage.setContent(chatMessage.getSender() + "님이 입장했습니다.");
-//        }
-//        sendMessage(chatMessage, chatService);
-//    }
-//
-//    public <T> void sendMessage(T message, ChatService chatService) {
-//        sessions.parallelStream().forEach(session -> chatService.sendMessage(session, message));
-//    }
 }

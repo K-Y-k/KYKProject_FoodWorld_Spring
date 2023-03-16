@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.chat.controller;
 
+import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
@@ -62,6 +63,12 @@ public class ChatRoomController {
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         } else { // 기존에 있으면 전체 채팅방 조회
+            // 만약 기존에 채팅을 하다가 퇴장했을 경우를 위해 양쪽 모두 퇴장 메시지를 먼저 지움
+            chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), MessageType.LEAVE, loginMember.getId());
+            chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), MessageType.LEAVE, memberId);
+            chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), MessageType.LEAVE, loginMember.getId());
+            chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), MessageType.LEAVE, memberId);
+
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId(), loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
         }

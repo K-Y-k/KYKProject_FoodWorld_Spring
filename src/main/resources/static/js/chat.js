@@ -55,8 +55,6 @@ function onConnected() {
 
 // 회원 퇴장시
 function onLeave() {
-    stompClient.subscribe('/sub/chat/room/'+ roomId, onMessageReceived);
-
     stompClient.send("/pub/chat/leaveUser",
             {},
             JSON.stringify({
@@ -67,8 +65,6 @@ function onLeave() {
                 type: 'LEAVE'
             })
         )
-
-    connectingElement.style.display='none';
 }
 
 // 에러 발생시
@@ -120,6 +116,8 @@ function onMessageReceived(payload) {
                            `</li>`
 
         $('#chatContent').append(leaveMessage);
+
+        window.location = "http://localhost:8080/chat";
     } else {                           // talk라면
         let date = new Date();
         let nowTime = createTime(date);
@@ -187,7 +185,7 @@ function onMessageReceived(payload) {
 
 // 메시지 전송을 키보드 엔터키로 누를 때
 function handleKeyDown(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode == 13) {
       sendMessage()
     }
  }

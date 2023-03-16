@@ -10,13 +10,6 @@ import org.springframework.web.socket.config.annotation.*;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer { // STOMP로 메시지를 처리하는 방법들을 정의한 interface
 
-//    private final WebSocketHandler webSocketHandler; // 만들었던 핸들러를 주입
-
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(webSocketHandler, "/chat").setAllowedOrigins("*");
-//    }
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) { // 클라이언트가 웹소켓 서버에 연결하는데 사용할 엔드포인트를 등록
         registry.addEndpoint("/ws-stomp") // stomp 접속 주소 url로 연결될 endPoint

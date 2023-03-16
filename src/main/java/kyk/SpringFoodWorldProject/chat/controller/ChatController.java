@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Optional;
@@ -56,10 +57,8 @@ public class ChatController {
      */
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatMessageDto messageDto) {
-        log.info("CHAT {}", messageDto);
+        log.info("채팅 전송한 메시지 = {}", messageDto);
 
-
-        messageDto.setMessage(messageDto.getMessage());
         template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         chatService.saveChatMessage(messageDto);
 
@@ -71,7 +70,7 @@ public class ChatController {
      * : 입장할때와 동일한 메커니즘
      */
     @MessageMapping("/chat/leaveUser")
-    public void leaveUser(@Payload ChatMessageDto messageDto) {
+    public String  leaveUser(@Payload ChatMessageDto messageDto) {
         Optional<ChatMessage> isLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
 
         if (isLeave.isEmpty()) {
@@ -79,6 +78,8 @@ public class ChatController {
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
             chatService.saveChatMessage(messageDto);
         }
+
+        return "redirect:/chat";
     }
 
 

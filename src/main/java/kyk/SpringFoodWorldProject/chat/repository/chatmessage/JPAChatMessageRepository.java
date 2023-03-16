@@ -16,6 +16,10 @@ public interface JPAChatMessageRepository extends JpaRepository<ChatMessage, Lon
             "where r.id = :roomId and m.messageType = :messageType and m.senderId = :senderId")
     Optional<ChatMessage> findEnterMessage(String roomId, MessageType messageType, Long senderId);
 
-    void deleteByMessageTypeAndSenderId(MessageType messageType, Long memberId);
+
+    @Query(value = "DELETE FROM ChatMessage m " +
+            "WHERE m IN (SELECT m FROM ChatMessage m LEFT JOIN m.chatRoom r " +
+            "WHERE r.id = :roomId AND m.messageType = :messageType AND m.senderId = :memberId)", nativeQuery = true)
+    void deleteByMessageTypeAndSenderId(String roomId, MessageType messageType, Long memberId);
 
 }
