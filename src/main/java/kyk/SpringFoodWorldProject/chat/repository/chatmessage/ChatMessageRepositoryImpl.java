@@ -21,10 +21,6 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
     }
 
     @Override
-    public List<ChatMessage> findByChatRoom(String roomId) {
-        return chatMessageRepository.findByChatRoom(roomId);
-    }
-    @Override
     public Optional<ChatMessage> findEnterMessage(String roomId, MessageType messageType, Long senderId) {
         return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }

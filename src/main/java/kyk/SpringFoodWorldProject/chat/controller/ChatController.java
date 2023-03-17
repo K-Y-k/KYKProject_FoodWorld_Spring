@@ -83,20 +83,21 @@ public class ChatController {
      * : 입장할때와 동일한 메커니즘
      */
     @MessageMapping("/chat/leaveUser")
-    public String leaveUser(@Payload ChatMessageDto messageDto) {
+    public void leaveUser(@Payload ChatMessageDto messageDto) {
         Optional<ChatMessage> youIsLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getReceiverId());
 
         // 상대방도 이미 퇴장한 상태라면 채팅방을 아예 지움
         if (youIsLeave.isPresent()) {
             ChatRoom findChatRoom = chatService.findRoomByRoomId(messageDto.getRoomId());
             chatService.delete(findChatRoom);
+            messageDto.setMessage("채팅방 삭제");
+            template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         }
         else { // 상대방이 퇴장하지 않은 상태이면
             messageDto.setMessage(messageDto.getSender() + " 퇴장하였습니다");
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
             chatService.saveChatMessage(messageDto);
         }
-        return "redirect:/chat";
     }
 
 

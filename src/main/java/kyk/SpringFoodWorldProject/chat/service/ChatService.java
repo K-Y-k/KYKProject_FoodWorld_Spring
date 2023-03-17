@@ -29,11 +29,6 @@ public class ChatService {
     /**
      * 채팅방 서비스
      */
-    // 현재 유저와 관련된 모든 채팅방 조회
-    public List<ChatRoom> findMember1ChatRoom(Long memberId) {
-        return chatRoomRepository.findByMember1_IdOrMember2_Id(memberId);
-    }
-
     // 채팅방 생성
     public ChatRoom createChatRoom(Long member1Id, Long member2Id) {
         Member findMember1 = memberRepository.findById(member1Id).orElseThrow(() ->
@@ -53,12 +48,17 @@ public class ChatService {
         return chatRoom;
     }
 
+    // 현재 유저와 관련된 모든 채팅방 조회
+    public List<ChatRoom> findMember1ChatRoom(Long memberId) {
+        return chatRoomRepository.findByMember1_IdOrMember2_Id(memberId);
+    }
+
     // 현재 유저와 상대 유저가 관련된 채팅방 조회
     public ChatRoom findMembersChatRoom(Long member1Id, Long member2Id) {
         return chatRoomRepository.findByMember1_IdAndMember2_Id(member1Id, member2Id);
     }
 
-    // 채팅방 번호로 채팅방 조회
+    // 채팅방 id로 채팅방 조회
     public ChatRoom findRoomByRoomId(String roomId) {
         return chatRoomRepository.findByRoomId(roomId);
     }
@@ -68,6 +68,7 @@ public class ChatService {
         return chatRoomRepository.findNotLeaveMessageRoom(memberId);
     }
 
+    // 채팅방 삭제
     public void delete(ChatRoom chatRoom) {
         chatRoomRepository.delete(chatRoom);
     }
@@ -100,6 +101,7 @@ public class ChatService {
        return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
+    // 해당 회원의 퇴장한 메시지 삭제
     public void deleteLeaveMessage(String roomId, Long memberId) {
         chatMessageRepository.deleteByLeaveMessage(roomId, memberId);
     }

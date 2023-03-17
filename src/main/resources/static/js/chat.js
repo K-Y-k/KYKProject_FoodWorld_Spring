@@ -67,12 +67,6 @@ function onLeave() {
         )
 }
 
-// 연결 끊기
-stompClient.disconnect(() => {
-    window.location = "http://localhost:8080/chat";
-});
-
-
 // 에러 발생시
 function onError(error) {
     connectingElement.style.display = 'block';
@@ -80,7 +74,7 @@ function onError(error) {
     connectingElement.style.color = 'red';
 }
 
-// 메시지 전송시 : 메시지 전송할 때는 JSON 형식을 메시지를 서버에 전달한다.
+// input에서 입력해서 메시지 전송시 : 메시지 전송할 때는 JSON 형식을 메시지를 서버에 전달한다.
 function sendMessage() {
     var messageContent = messageInput.value.trim();
 
@@ -106,23 +100,30 @@ function onMessageReceived(payload) {
     console.log("payload 정보 : " + payload);
     var chat = JSON.parse(payload.body);
 
-    if (chat.type === 'ENTER') {       // enter라면
-        chat.content = chat.message;
-
+    if (chat.type == 'ENTER') {       // enter라면
         let enterMessage = `<li style="list-style-type: none; text-align: center; color: white;">`
-                             + chat.content +
+                             + chat.message +
                            `</li>`
 
         $('#chatContent').append(enterMessage);
-    } else if (chat.type === 'LEAVE') { // leave라면
-        chat.content = chat.message;
+    } else if (chat.type == 'LEAVE') { // leave라면
 
         let leaveMessage = `<li style="list-style-type: none; text-align: center; color: white;">`
-                             + chat.content +
+                             + chat.message +
                            `</li>`
 
         $('#chatContent').append(leaveMessage);
-        stompClient.disconnect()
+
+        // 연결 끊기: 해당 클라이언트만 연결을 끊고 URL 변경
+        if (chat.senderId == userId) {
+            stompClient.disconnect(() => {
+                window.location.href = "http://localhost:8080/chat";
+            });
+        }
+
+        if (chat.message.equals('채팅방 삭제')) {
+            window.location.href = "http://localhost:8080/chat";
+        }
     } else {                           // talk라면
         let date = new Date();
         let nowTime = createTime(date);
