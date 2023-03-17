@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.chat.controller;
 
 import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -62,6 +64,17 @@ public class ChatController {
         template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         chatService.saveChatMessage(messageDto);
 
+
+        // 만약 회원이 퇴장을 했는데 기존 채팅방에 머문 상대가 다시 메시지를 보내면
+        // 다시 채팅방이 생성하도록 퇴장 메시지 삭제
+        ChatRoom findMembersChatRoom1 = chatService.findMembersChatRoom(messageDto.getSenderId(), messageDto.getReceiverId());
+        ChatRoom findMembersChatRoom2 = chatService.findMembersChatRoom(messageDto.getReceiverId(), messageDto.getSenderId());
+
+        if (findMembersChatRoom1 != null) {
+            chatService.deleteLeaveMessage(findMembersChatRoom1.getRoomId(), messageDto.getReceiverId());
+        } else {
+            chatService.deleteLeaveMessage(findMembersChatRoom2.getRoomId(), messageDto.getReceiverId());
+        }
     }
 
 
@@ -70,15 +83,19 @@ public class ChatController {
      * : 입장할때와 동일한 메커니즘
      */
     @MessageMapping("/chat/leaveUser")
-    public String  leaveUser(@Payload ChatMessageDto messageDto) {
-        Optional<ChatMessage> isLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
+    public String leaveUser(@Payload ChatMessageDto messageDto) {
+        Optional<ChatMessage> youIsLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getReceiverId());
 
-        if (isLeave.isEmpty()) {
+        // 상대방도 이미 퇴장한 상태라면 채팅방을 아예 지움
+        if (youIsLeave.isPresent()) {
+            ChatRoom findChatRoom = chatService.findRoomByRoomId(messageDto.getRoomId());
+            chatService.delete(findChatRoom);
+        }
+        else { // 상대방이 퇴장하지 않은 상태이면
             messageDto.setMessage(messageDto.getSender() + " 퇴장하였습니다");
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
             chatService.saveChatMessage(messageDto);
         }
-
         return "redirect:/chat";
     }
 

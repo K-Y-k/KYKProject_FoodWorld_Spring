@@ -17,4 +17,7 @@ public interface ChatRoomRepository {
 
     ChatRoom findByRoomId(String roomId);
 
+    void delete(ChatRoom chatRoom);
+
+
 }

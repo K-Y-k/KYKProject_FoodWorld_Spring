@@ -34,9 +34,13 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
         return chatRoomRepository.findNotLeaveMessageRoom(memberId);
     }
 
-
     @Override
     public ChatRoom findByRoomId(String roomId) {
         return chatRoomRepository.findByRoomId(roomId);
+    }
+
+    @Override
+    public void delete(ChatRoom chatRoom) {
+        chatRoomRepository.delete(chatRoom);
     }
 }

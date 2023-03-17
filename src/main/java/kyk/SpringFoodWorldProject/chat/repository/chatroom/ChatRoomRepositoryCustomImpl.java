@@ -40,22 +40,4 @@ public class ChatRoomRepositoryCustomImpl implements ChatRoomRepositoryCustom {
         return fetch;
     }
 
-    private BooleanExpression member1IdEq(Long memberId) {
-        if (memberId == null){
-            return null;
-        } else{
-            return chatRoom.member1.id.eq(memberId);
-        }
-
-    }
-    private BooleanExpression member2IdEq(Long memberId) {
-        if (memberId == null){
-            return null;
-        } else{
-            return chatRoom.member2.id.eq(memberId);
-        }
-    }
-
-
-
 }

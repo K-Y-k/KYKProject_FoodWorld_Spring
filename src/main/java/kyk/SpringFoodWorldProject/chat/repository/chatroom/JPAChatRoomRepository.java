@@ -14,8 +14,9 @@ import java.util.Optional;
 public interface JPAChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatRoomRepositoryCustom {
     ChatRoom findByMember1_IdAndMember2_Id(Long member1Id, Long member2Id);
 
-    @Query("select distinct r from ChatRoom r left join r.chatMessages m " +
-            "where r not in (select m.chatRoom from ChatMessage m where m.messageType = 'LEAVE' and m.senderId = :memberId)")
+    @Query("select r from ChatRoom r " +
+            "where r.id not in " +
+            "(select m.chatRoom.id from ChatMessage m where m.messageType = 'LEAVE' AND m.senderId = :memberId)")
     List<ChatRoom> findNotLeaveMessageRoom(Long memberId);
 
     ChatRoom findByRoomId(String roomId);

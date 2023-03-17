@@ -68,6 +68,10 @@ public class ChatService {
         return chatRoomRepository.findNotLeaveMessageRoom(memberId);
     }
 
+    public void delete(ChatRoom chatRoom) {
+        chatRoomRepository.delete(chatRoom);
+    }
+
 
 
 
