@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.member.repository;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  */
 public interface MemberRepository {
 
-    Member save(Member member);
+    Member saveMember(Member member);
 
     Optional<Member> findById(Long id);
 
@@ -21,5 +22,12 @@ public interface MemberRepository {
     Member findByName(String name);
 
     Optional<Member> findByLoginId(String loginId);
+
+
+    ProfileFile saveProfile(ProfileFile profileFile);
+
+    ProfileFile findByMember(Member member);
+
+    void updateProfileImage(String originalFileName, String storedFileName, Long memberId);
 
 }

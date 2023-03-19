@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.member.repository;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
@@ -18,9 +19,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SpringDataJpaMemberRepository implements MemberRepository {
     private final JPAMemberRepository memberRepository;
+    private final ProfileFileRepository profileFileRepository;
 
     @Override
-    public Member save(Member member) {
+    public Member saveMember(Member member) {
         return memberRepository.save(member);
     }
 
@@ -56,6 +58,23 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
 
     public void clear() {
         memberRepository.deleteAll();
+    }
+
+
+
+    @Override
+    public ProfileFile saveProfile(ProfileFile profileFile) {
+        return profileFileRepository.save(profileFile);
+    }
+
+    @Override
+    public ProfileFile findByMember(Member member) {
+        return profileFileRepository.findByMember(member);
+    }
+
+    @Override
+    public void updateProfileImage(String originalFileName, String storedFileName, Long memberId) {
+        profileFileRepository.updateProfileImage(originalFileName, storedFileName, memberId);
     }
 
 }

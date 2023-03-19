@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.member.service;
 import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

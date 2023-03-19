@@ -33,9 +33,9 @@ public class TestDataInit {
     @PostConstruct
     public void init() {
         // 회원 데이터 추가 3
-        Member savedMember1 = memberRepository.save(new Member("테스터1", "test", "test!"));
-        Member savedMember2 = memberRepository.save(new Member("ddd", "dd", "dd"));
-        Member savedMember3 = memberRepository.save(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("테스터1", "test", "test!"));
+        Member savedMember2 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
+        Member savedMember3 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
 
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember1));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember2));

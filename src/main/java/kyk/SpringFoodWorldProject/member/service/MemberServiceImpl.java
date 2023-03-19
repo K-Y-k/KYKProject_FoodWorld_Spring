@@ -31,8 +31,6 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final ProfileFileRepository profileFileRepository;
-
 
     @Value("${file.profileLocation}")
     private String profileLocation;
@@ -47,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
         // 중복 회원 검증 로직
         validateDuplicateMember(memberEntity);
 
-        Member savedMember = memberRepository.save(memberEntity);
+        Member savedMember = memberRepository.saveMember(memberEntity);
 
         ProfileFile profileFile = ProfileFile.builder()
                 .originalFileName("user_icon.PNG")
@@ -55,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
                 .member(memberEntity)
                 .build();
 
-        profileFileRepository.save(profileFile);
+        memberRepository.saveProfile(profileFile);
         return savedMember.getId();
     }
 
@@ -130,8 +128,8 @@ public class MemberServiceImpl implements MemberService {
         form.getProfileImage().transferTo(new File(savePath, storedFileName));
 
         // 회원의 기존 프로필 사진에서 교체
-        ProfileFile findMemberProfile = profileFileRepository.findByMember(member);
-        profileFileRepository.updateProfileImage(originalFileName, storedFileName, member.getId());
+        ProfileFile findMemberProfile = memberRepository.findByMember(member);
+        memberRepository.updateProfileImage(originalFileName, storedFileName, member.getId());
     }
 
 
@@ -142,7 +140,7 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 조회 실패: " + memberId));
 
-        ProfileFile findMemberProfile = profileFileRepository.findByMember(findMember);
+        ProfileFile findMemberProfile = memberRepository.findByMember(findMember);
 
         return findMemberProfile.getStoredFileName();
     }
