@@ -113,6 +113,7 @@ function onMessageReceived(payload) {
                            `</li>`
 
         $('#chatContent').append(leaveMessage);
+        chatContent.scrollTop = chatContent.scrollHeight;
 
         // 연결 끊기: 해당 클라이언트만 연결을 끊고 URL 변경
         if (chat.senderId == userId) {
@@ -125,6 +126,7 @@ function onMessageReceived(payload) {
         if (chat.message.equals('채팅방 삭제')) {
             window.location.href = "http://localhost:8080/chat";
         }
+
     } else {                           // talk라면
         let date = new Date();
         let nowTime = createTime(date);
