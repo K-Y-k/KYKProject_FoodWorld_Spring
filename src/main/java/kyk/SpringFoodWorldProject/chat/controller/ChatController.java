@@ -6,6 +6,7 @@ import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class ChatController {
 
     private final ChatService chatService;
 
+    private final MemberServiceImpl memberService;
+
 
     /**
      * 입장 시
@@ -43,9 +46,10 @@ public class ChatController {
      */
     @MessageMapping("/chat/enterUser")
     public void enterUser(@Payload ChatMessageDto messageDto) {
+        // 이전에 이 채팅방을 입장한 적이 있는지 확인
         Optional<ChatMessage> isEnter = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
 
-        if (isEnter.isEmpty()) {
+        if (isEnter.isEmpty()) { // 입장한 적이 없으면 입장 메시지 전송
             messageDto.setMessage(messageDto.getSender() + " 입장");
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
             chatService.saveChatMessage(messageDto);
@@ -60,6 +64,11 @@ public class ChatController {
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatMessageDto messageDto) {
         log.info("채팅 전송한 메시지 = {}", messageDto);
+
+        // 프로필 사진 갱신
+        String profileLocation = memberService.findProfileLocation(messageDto.getSenderId());
+        messageDto.setSenderProfile(profileLocation);
+        log.info("프로필 = {}", messageDto.getSenderProfile());
 
         template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         chatService.saveChatMessage(messageDto);

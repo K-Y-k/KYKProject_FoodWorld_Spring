@@ -48,6 +48,14 @@ public class MemberServiceImpl implements MemberService {
         validateDuplicateMember(memberEntity);
 
         Member savedMember = memberRepository.save(memberEntity);
+
+        ProfileFile profileFile = ProfileFile.builder()
+                .originalFileName("user_icon.PNG")
+                .storedFileName("user_icon.PNG")
+                .member(memberEntity)
+                .build();
+
+        profileFileRepository.save(profileFile);
         return savedMember.getId();
     }
 
@@ -111,23 +119,33 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void profileImageUpload(UpdateForm form, Member member) throws IOException {
-        String originalFilename = form.getProfileImage().getOriginalFilename();
+        String originalFileName = form.getProfileImage().getOriginalFilename();
 
         // 파일에 이름을 붙일 랜덤으로 식별자 지정
         UUID uuid = UUID.randomUUID();
-        String storedFileName = uuid + "_" + originalFilename;
+        String storedFileName = uuid + "_" + originalFileName;
         String savePath = profileLocation;
 
         // 실제 파일 저장 경로와 파일 이름 지정한 File 객체 생성 및 저장
         form.getProfileImage().transferTo(new File(savePath, storedFileName));
 
-        String attachedType = "yes";
-
-        // DB에 파일 관련 필드 값 저장
-        ProfileFile profileFileEntity = ProfileFile.toProfileFileEntity(member, originalFilename, storedFileName, attachedType);
-        profileFileRepository.save(profileFileEntity);
+        // 회원의 기존 프로필 사진에서 교체
+        ProfileFile findMemberProfile = profileFileRepository.findByMember(member);
+        profileFileRepository.updateProfileImage(originalFileName, storedFileName, member.getId());
     }
 
+
+    /**
+     * 회원 프로필 사진 경로 가져오기
+     */
+    public String findProfileLocation(Long memberId) {
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 조회 실패: " + memberId));
+
+        ProfileFile findMemberProfile = profileFileRepository.findByMember(findMember);
+
+        return findMemberProfile.getStoredFileName();
+    }
 
 }
 

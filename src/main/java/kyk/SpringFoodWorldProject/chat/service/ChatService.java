@@ -90,6 +90,7 @@ public class ChatService {
                 .content(chatMessageDto.getMessage())
                 .sender(chatMessageDto.getSender())
                 .senderId(chatMessageDto.getSenderId())
+                .senderProfile(chatMessageDto.getSenderProfile())
                 .receiverId(chatMessageDto.getReceiverId())
                 .build();
 

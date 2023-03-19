@@ -21,14 +21,13 @@ public class ProfileFile extends BaseTimeEntity {
 
     private String storedFileName;
 
-    private String fileAttached;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
 
-    public ProfileFile(String storedFileName, Member member) {
+    public ProfileFile(String originalFileName, String storedFileName, Member member) {
+        this.originalFileName = originalFileName;
         this.storedFileName = storedFileName;
         this.member = member;
     }
@@ -39,7 +38,6 @@ public class ProfileFile extends BaseTimeEntity {
                  .originalFileName(originalFileName)
                  .storedFileName(storedFileName)
                  .member(member)
-                 .fileAttached(fileAttached)
                  .build();
     }
 

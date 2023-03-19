@@ -29,6 +29,7 @@ public class ChatMessage extends BaseTimeEntity {
     private String sender;
     private Long senderId;
     private Long receiverId;
+    private String senderProfile;
 
     private String content;
 

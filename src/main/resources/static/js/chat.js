@@ -51,6 +51,7 @@ function onConnected() {
 
     connectingElement.style.display='none';
     chatContent.scrollTop = chatContent.scrollHeight;
+    messageInput.placeholder = "자유롭게 채팅을 입려해서 상대방에게 전송해보세요."
 }
 
 // 회원 퇴장시
@@ -91,7 +92,6 @@ function sendMessage() {
         stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
-
 }
 
 // 서버에서 보내온 메시지 받기
@@ -121,6 +121,7 @@ function onMessageReceived(payload) {
             });
         }
 
+        // 마지막 회원까지 퇴장하여 채팅방이 삭제된 경우 마지막 큻라이언트 회원 이동 처리
         if (chat.message.equals('채팅방 삭제')) {
             window.location.href = "http://localhost:8080/chat";
         }
@@ -153,7 +154,7 @@ function onMessageReceived(payload) {
                                     <table style="float: left;">
                                         <tr>
                                             <td>
-                                                <img src="/image/muckstargram_img/user_icon.PNG" style="width: 5vw; height: 8vh;"/>
+                                                <img src="/profileImageUpload/${chat.senderProfile}" style="width: 5vw; height: 8vh; border: 2px solid black; border-radius: 100%;"/>
                                             </td>
 
                                             <td>
@@ -189,7 +190,7 @@ function onMessageReceived(payload) {
 }
 
 
-// 메시지 전송을 키보드 엔터키로 누를 때
+// 메시지 전송을 키보드 엔터키로 누를 때를 위한 Enter키 처리 함수
 function handleKeyDown(event) {
     if (event.keyCode == 13) {
       sendMessage()
@@ -197,7 +198,7 @@ function handleKeyDown(event) {
  }
 
 
-// 날짜 생성
+// 날짜 생성 : 현재 날짜를 시간:분 형태로 출력하기 위한 변환 함수
 function createTime(date){
     let hour = date.getHours();
     let minute = date.getMinutes();
@@ -214,30 +215,3 @@ function createTime(date){
 
     return formattedTime;
 }
-// 날짜 시:분 형태로 변형
-function dateCompare(date, nowDate) {
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        let hour = date.getHours();
-        let minute = date.getMinutes();
-
-        month = month >= 10 ? month : '0' + month;
-        day = day >= 10 ? day : '0' + day;
-        hour = hour >= 10 ? hour : '0' + hour;
-        minute = minute >= 10 ? minute : '0' + minute;
-
-        let nowYear = nowDate.getFullYear();
-        let nowMonth = nowDate.getMonth() + 1;
-        let nowDay = nowDate.getDate();
-
-        nowMonth = month >= 10 ? month : '0' + month;
-        nowDay = day >= 10 ? day : '0' + day;
-
-        if (year == nowYear && month == nowMonth && day == nowDay) {
-            return hour + ':' + minute;
-        } else {
-            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
-        }
-}
-

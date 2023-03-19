@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.member.domain.dto;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -25,6 +26,8 @@ public class JoinForm {
     @NotBlank(message = "비밀번호를 입력해주세요")
     @Size(min = 3, max = 10, message = "최소 3글자, 최대 10글자입니다.")
     private String password;
+
+    private String profileLocation = "/image/muckstargram_img/comment_icon.PNG";
 
 
     // 생성자 레벨에 @Builder을 작성해주게되면

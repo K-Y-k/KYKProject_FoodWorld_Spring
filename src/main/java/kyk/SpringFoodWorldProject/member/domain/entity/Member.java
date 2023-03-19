@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * 회원 엔티티
  */
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
