@@ -44,20 +44,18 @@ class BoardServiceImplTest {
 
     @Autowired SpringDataJpaMemberRepository memberRepository;
     @Autowired BoardServiceImpl boardService;
-    @Autowired BoardFileRepository boardFileRepository;
     @Autowired SpringDataJpaBoardRepository boardRepository;
     @Autowired LikeServiceImpl likeService;
     @Autowired CommentServiceImpl commentService;
 
-    @Autowired EntityManager entityManager;
 
 
     @BeforeEach
     public void init() {
         // 회원 데이터 추가 3
-        memberRepository.save(new Member("테스터1", "test", "test!"));
-        Member savedMember1 = memberRepository.save(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.save(new Member("aaa", "aa", "aa"));
+        memberRepository.saveMember(new Member("테스터1", "test", "test!"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
 
 
         // 게시글 데이터 추가 20
@@ -85,7 +83,7 @@ class BoardServiceImplTest {
     void upload() throws Exception {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",
@@ -230,7 +228,7 @@ class BoardServiceImplTest {
     void delete() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",
@@ -268,7 +266,7 @@ class BoardServiceImplTest {
     void updateCount() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",
@@ -302,7 +300,7 @@ class BoardServiceImplTest {
     void like() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",
@@ -345,7 +343,7 @@ class BoardServiceImplTest {
     void comment() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",
@@ -381,7 +379,7 @@ class BoardServiceImplTest {
     void commentCount() throws IOException {
         // given
         Member member1 = new Member("이름1", "loginId", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
                 "file",

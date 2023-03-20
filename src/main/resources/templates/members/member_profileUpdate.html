@@ -112,14 +112,11 @@
       <h4 class="tm">프로필 수정</h4>
 
     <div class="container mt-3">
-      <img th:if="${profileFile == null}"
-           id="thumbnail"
-           src="/image/muckstargram_img/user_icon.PNG"
-           style=" width: 15vw; height: 23vh; border: 2px solid black; border-radius: 100%;">
       <img th:if="${profileFile != null}"
            th:id="thumbnail"
            th:src="@{|/profileImageUpload/${profileFile.storedFileName}|}"
-           style="width: 15vw; height: 23vh; border: 2px solid black; border-radius: 100%;">
+           class="rounded-circle"
+           style="width: 15vw; height: 23vh;">
 
       <form action="" th:action th:object="${updateForm}" method="post" enctype="multipart/form-data">
         <input class="form-control mt-2" id="InputImage" type="file" name="profileImage" onchange="readURL(this)">

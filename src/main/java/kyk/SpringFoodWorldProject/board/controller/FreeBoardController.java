@@ -7,6 +7,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
@@ -176,6 +177,53 @@ public class FreeBoardController {
         return "redirect:/boards/freeBoard/{boardId}";
     }
 
+    /**
+     * 댓글 수정
+     */
+    @PostMapping("/comments/{boardId}/{commentId}/edit")
+    public String commentUpdate(@PathVariable Long boardId, @PathVariable Long commentId,
+                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @ModelAttribute("comment") CommentUpdateDto commentDto,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+        commentService.updateComment(commentId, commentDto);
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        return "redirect:/boards/freeBoard/{boardId}";
+    }
+
+    /**
+     * 댓글 등록
+     */
+    @PostMapping("/comments/{boardId}/{commentId}/delete")
+    public String commentDelete(@PathVariable Long boardId, @PathVariable Long commentId,
+                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @ModelAttribute("comment") CommentUploadDto commentDto,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+        commentService.delete(commentId);
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        return "redirect:/boards/freeBoard/{boardId}";
+    }
 
     /**
      * 글 등록 폼
