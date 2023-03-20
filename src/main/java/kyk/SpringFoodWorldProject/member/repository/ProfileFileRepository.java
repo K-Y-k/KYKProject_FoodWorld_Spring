@@ -11,8 +11,14 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface ProfileFileRepository extends JpaRepository<ProfileFile, Long> {
 
+    /**
+     * 현재 회원의 프로필 사진 엔티티 조회
+     */
     ProfileFile findByMember(Member member);
 
+    /**
+     * 프로필 사진 엔티티의 필드 내용을 변경
+     */
     @Modifying
     @Query("update ProfileFile p set p.originalFileName = :originalFileName, p.storedFileName = :storedFileName where p.member.id = :memberId")
     void updateProfileImage(String originalFileName, String storedFileName, Long memberId);

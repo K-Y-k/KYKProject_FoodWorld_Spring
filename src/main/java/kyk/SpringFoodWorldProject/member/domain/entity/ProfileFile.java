@@ -31,15 +31,4 @@ public class ProfileFile extends BaseTimeEntity {
         this.storedFileName = storedFileName;
         this.member = member;
     }
-
-    // board 엔티티에 originalFileName, storedFileName 컬럼을 추가하지 않기 위해
-    public static ProfileFile toProfileFileEntity(Member member, String originalFileName, String storedFileName, String fileAttached) {
-         return ProfileFile.builder()
-                 .originalFileName(originalFileName)
-                 .storedFileName(storedFileName)
-                 .member(member)
-                 .build();
-    }
-
-
 }
