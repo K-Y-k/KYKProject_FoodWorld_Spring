@@ -8,6 +8,7 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentDto;
+import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
@@ -73,6 +74,7 @@ public class MuckstarBoardController {
     public String board_detail(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
+                        @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                         Model model) {
         // 조회수 상승
         boardService.updateCount(boardId);
@@ -122,6 +124,7 @@ public class MuckstarBoardController {
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 @ModelAttribute("comment") CommentUploadDto commentDto,
+                                BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
@@ -133,8 +136,11 @@ public class MuckstarBoardController {
             return "messages";
         }
 
+        if (bindingResult.hasErrors()) {
+            return "boards/muckstarBoard/muckstarBoard_detail";
+        }
+
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
-        boardService.updateCommentCount(boardId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/muckstarBoard/{boardId}";

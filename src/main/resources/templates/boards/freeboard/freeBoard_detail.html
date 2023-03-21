@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
     <!--css 적용-->
-    <link rel="stylesheet" type="text/css" href="../css/boards/board/board_detail_style.css" th:href="@{/board_detail_style.css}">
+    <link rel="stylesheet" type="text/css" href="../css/boards/board/board_detail_style.css" th:href="@{/css/boards/board/board_detail_style.css}">
 </head>
 
 <body>
@@ -230,12 +230,13 @@
                                               </button>
 
                                               <div class="dropdown-menu">
-                                                  <a class="dropdown-item" onclick="updateComment();">
+                                                  <a class="dropdown-item"
+                                                     th:onclick="updateComment([[${comment.id}]]);">
                                                       수정
                                                   </a>
 
                                                   <a class="dropdown-item"
-                                                     th:href="@{/comments/{boardId}/{commentId}/delete(boardId=${board.id}&commentId=${comment.id})}">
+                                                     th:href="@{/boards/comments/{boardId}/{commentId}/delete(boardId=${board.id}, commentId=${comment.id})}">
                                                       삭제
                                                   </a>
                                               </div>
@@ -245,8 +246,21 @@
                               </div>
                           </span>
 
-                          <div style="white-space: normal; word-break:break-all; position: absolute; left: 8.5%;"
+                          <div th:id="|commentContent_${comment.id}|"
+                               style="white-space: normal; word-break:break-all; position: absolute; left: 8.5%;"
                                th:text="${comment.content}"></div>
+
+                          <form th:id="|commentContentInput_${comment.id}|"
+                                style="display: none;"
+                                class="mb-4" th:action="@{/boards/comments/{boardId}/{commentId}/edit(boardId=${board.id}, commentId=${comment.id})}"
+                                th:object="${commentUpdate}" method="post">
+                              <div class="input-group">
+                                  <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"
+                                            th:errorclass="field-error"></textarea>
+                                  <button class="btn btn-secondary" id="commentUpdateInput" type="submit">수정</button>
+                              </div>
+                          </form>
+
 
 <!--                              &lt;!&ndash; 답글 &ndash;&gt;-->
 <!--                              <div class="d-flex mt-4">-->
@@ -266,15 +280,17 @@
                   </div>
               </div>
 
-              <ul class="chat-content">
-                  <!--채팅메시지--></ul>
           </div>
       </div>
   </div>
 </section>
 
-<script type="text/javascript">
+<!--jquery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
 </script>
+<script src="/js/comment.js"></script>
 
 </body>
 </html>

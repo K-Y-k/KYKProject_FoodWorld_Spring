@@ -118,6 +118,7 @@ public class FreeBoardController {
     public String board(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
+                        @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                         Model model) {
         // 조회수 상승
         boardService.updateCount(boardId);
@@ -160,6 +161,7 @@ public class FreeBoardController {
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 @ModelAttribute("comment") CommentUploadDto commentDto,
+                                BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
@@ -169,6 +171,10 @@ public class FreeBoardController {
             model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "boards/freeboard/freeBoard_detail";
         }
 
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
@@ -183,16 +189,21 @@ public class FreeBoardController {
     @PostMapping("/comments/{boardId}/{commentId}/edit")
     public String commentUpdate(@PathVariable Long boardId, @PathVariable Long commentId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentUpdateDto commentDto,
+                                @ModelAttribute("commentUpdate") CommentUpdateDto commentDto,
+                                BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
 
-            model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("message", "로그인 먼저 해주세요!");
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "boards/freeboard/freeBoard_detail";
         }
 
         commentService.updateComment(commentId, commentDto);
@@ -202,19 +213,18 @@ public class FreeBoardController {
     }
 
     /**
-     * 댓글 등록
+     * 댓글 삭제
      */
-    @PostMapping("/comments/{boardId}/{commentId}/delete")
+    @GetMapping("/comments/{boardId}/{commentId}/delete")
     public String commentDelete(@PathVariable Long boardId, @PathVariable Long commentId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentUploadDto commentDto,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
 
-            model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("message", "로그인 먼저 해주세요!");
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
         }
