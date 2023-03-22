@@ -118,6 +118,7 @@ public class FreeBoardController {
     public String board(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
+                        @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                         @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                         Model model) {
         // 조회수 상승
@@ -129,7 +130,6 @@ public class FreeBoardController {
 
         // 좋아요 개수 업데이트
         boardService.updateLikeCount(boardId, likeCount);
-
 
         // 댓글 가져오기
         Board board = boardService.findById(boardId).orElseThrow(() ->
@@ -160,7 +160,7 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentUploadDto commentDto,
+                                @Valid @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
@@ -173,11 +173,34 @@ public class FreeBoardController {
             return "messages";
         }
 
+        log.info("바인딩 에러 정보 = {}", bindingResult);
         if (bindingResult.hasErrors()) {
+            int likeCount = likeService.countByBoard_Id(boardId);
+            model.addAttribute("likeCount", likeCount);
+
+            boardService.updateLikeCount(boardId, likeCount);
+
+            Board board = boardService.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+            List<Comment> comments = board.getComments();
+
+            if (comments != null && !comments.isEmpty()) {
+                model.addAttribute("comments", comments);
+            }
+
+            List<BoardFile> boardFiles = board.getBoardFiles();
+            if (boardFiles != null && !boardFiles.isEmpty()) {
+                model.addAttribute("boardFiles", boardFiles);
+            }
+
+            model.addAttribute("board", board);
+
+            model.addAttribute("localDateTime", LocalDateTime.now());
+
             return "boards/freeboard/freeBoard_detail";
         }
 
-        commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        commentService.saveComment(loginMember.getId(), boardId, commentUploadDto);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/freeBoard/{boardId}";
@@ -189,8 +212,7 @@ public class FreeBoardController {
     @PostMapping("/comments/{boardId}/{commentId}/edit")
     public String commentUpdate(@PathVariable Long boardId, @PathVariable Long commentId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("commentUpdate") CommentUpdateDto commentDto,
-                                BindingResult bindingResult,
+                                @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
@@ -202,11 +224,7 @@ public class FreeBoardController {
             return "messages";
         }
 
-        if (bindingResult.hasErrors()) {
-            return "boards/freeboard/freeBoard_detail";
-        }
-
-        commentService.updateComment(commentId, commentDto);
+        commentService.updateComment(commentId, commentUpdateDto);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/freeBoard/{boardId}";
@@ -262,6 +280,7 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/upload")
     public String boardUpload(@SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                               @Valid @ModelAttribute("uploadForm") BoardUploadForm boardDto, BindingResult bindingResult) throws IOException {
+        log.info("바인딩 됐냐? = {}", bindingResult);
         if (bindingResult.hasErrors()) {
             return "boards/freeboard/freeBoard_upload";
         }

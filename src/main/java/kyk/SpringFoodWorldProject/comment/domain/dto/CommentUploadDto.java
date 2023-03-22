@@ -5,7 +5,7 @@ import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Getter
 public class CommentUploadDto {
     private Long id;
-    @NotEmpty(message = "내용을 입력해주세요")
+    @NotBlank(message = "내용을 입력해주세요")
     @Size(max = 250, message = "최대 250글자입니다.")
     private String content;
 

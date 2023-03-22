@@ -1,27 +1,47 @@
-var temp1
-var temp2
-var count = 0
+var updateInputs = document.querySelectorAll('.commentUpdateInput');
+var updateForms = document.querySelectorAll('.updateCommentArea');
 
+// 댓글 내용 입력안하고 공백만 등록시
+updateInputs.forEach(function(updateInput) {
+    updateInput.addEventListener('submit', function(e) {
+        e.preventDefault(); // 제출완료 페이지로 넘어가는 것 방지
+        alert('수정할 내용을 입력하세요');
+    });
+});
+
+// 1) 기존 댓글 내용 안 보이게하고 수정하는 input 폼 나타나게함
+// 2) 수정하는 input 폼이 나타난 상태에서 다른 댓글을 수정하려고 할 때 그 댓글의 수정폼만 남기게 하기위한 필터링 작업
 function updateComment(commentId) {
-    if (count == 0){  // 자기가 작성한 댓글이 여러개 일 때 쳐음 댓글에 수정작업에 들어갈 때
+    var commentContentClass = document.querySelectorAll('.updating-comment');
+    var commentInputClass = document.querySelectorAll('.updating-input');
+
+
+    if (commentContentClass.length > 0 && commentInputClass.length > 0) {
+        commentContentClass.forEach(comment => {
+            comment.style.display = 'block';
+        });
+
+        commentInputClass.forEach(input => {
+            input.style.display = 'none';
+        });
+
         var commentContentElement = document.getElementById('commentContent_' + commentId);
         var commentInputElement = document.getElementById('commentContentInput_' + commentId);
-        temp1 = document.getElementById('commentContent_' + commentId);
-        temp2 = document.getElementById('commentContentInput_' + commentId);
 
         commentContentElement.style.display = 'none';
         commentInputElement.style.display = 'block';
-        count += 1
+
+        commentContentElement.classList.add('updating-comment');
+        commentInputElement.classList.add('updating-input');
     }
-    else { // 자기가 작성한 댓글이 여러개 일 때 댓글에 수정을 걸어놓은 상태일 때 다른 댓글에 수정작업을 들어가면 기존 댓글의 수정작업을 닫기 위한 필터링
-        temp1.style.display = 'block';
-        temp2.style.display = 'none';
-
+    else {
         var commentContentElement = document.getElementById('commentContent_' + commentId);
         var commentInputElement = document.getElementById('commentContentInput_' + commentId);
 
         commentContentElement.style.display = 'none';
         commentInputElement.style.display = 'block';
-        count = 0
+
+        commentContentElement.classList.add('updating-comment');
+        commentInputElement.classList.add('updating-input');
     }
 }

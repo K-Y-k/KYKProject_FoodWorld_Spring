@@ -141,11 +141,59 @@ public class MuckstarBoardController {
         }
 
         commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        boardService.updateCommentCount(boardId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/muckstarBoard/{boardId}";
     }
 
+    /**
+     * 댓글 수정
+     */
+    @PostMapping("/muckstarBoard/comments/{boardId}/{commentId}/edit")
+    public String commentUpdate(@PathVariable Long boardId, @PathVariable Long commentId,
+                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+        commentService.updateComment(commentId, commentUpdateDto);
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        return "redirect:/boards/muckstarBoard/{boardId}";
+    }
+
+    /**
+     * 댓글 삭제
+     */
+    @GetMapping("/muckstarBoard/comments/{boardId}/{commentId}/delete")
+    public String commentDelete(@PathVariable Long boardId, @PathVariable Long commentId,
+                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+        commentService.delete(commentId);
+        boardService.updateCommentCount(boardId);
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        return "redirect:/boards/muckstarBoard/{boardId}";
+    }
 
     /**
      * 글 등록 폼
