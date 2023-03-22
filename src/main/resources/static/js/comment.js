@@ -2,9 +2,13 @@ var updateInputs = document.querySelectorAll('.commentUpdateInput');
 
 // 댓글 내용 입력안하고 공백만 등록시
 updateInputs.forEach(function(updateInput) {
+    var textarea = updateInput.querySelector('textarea'); // 내부 textarea 가져오기
+
     updateInput.addEventListener('submit', function(e) {
-        e.preventDefault(); // 제출완료 페이지로 넘어가는 것 방지
-        alert('수정할 내용을 입력하세요');
+        if (textarea.value.trim() == '') {
+            e.preventDefault();
+            alert('수정할 내용을 입력하세요');
+         }
     });
 });
 
