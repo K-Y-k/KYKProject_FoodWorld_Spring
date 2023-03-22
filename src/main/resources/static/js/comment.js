@@ -1,5 +1,4 @@
 var updateInputs = document.querySelectorAll('.commentUpdateInput');
-var updateForms = document.querySelectorAll('.updateCommentArea');
 
 // 댓글 내용 입력안하고 공백만 등록시
 updateInputs.forEach(function(updateInput) {

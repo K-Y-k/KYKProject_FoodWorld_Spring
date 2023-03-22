@@ -256,11 +256,10 @@
                                 th:action="@{/boards/comments/{boardId}/{commentId}/edit(boardId=${board.id}, commentId=${comment.id})}"
                                 th:object="${commentUpdate}" method="post">
                               <div class="input-group">
-                                  <textarea class="updateCommentArea" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
+                                  <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
                                   <button class="btn btn-secondary" type="submit">수정</button>
                               </div>
                           </form>
-
 
 
 <!--                              &lt;!&ndash; 답글 &ndash;&gt;-->

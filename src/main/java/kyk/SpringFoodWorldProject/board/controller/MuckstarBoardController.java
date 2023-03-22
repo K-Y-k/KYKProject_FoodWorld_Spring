@@ -74,6 +74,7 @@ public class MuckstarBoardController {
     public String board_detail(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
+                        @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                         @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                         Model model) {
         // 조회수 상승
@@ -123,7 +124,7 @@ public class MuckstarBoardController {
     @PostMapping("/muckstarBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentUploadDto commentDto,
+                                @Valid @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
@@ -136,12 +137,43 @@ public class MuckstarBoardController {
             return "messages";
         }
 
+        log.info("바인딩 에러 정보 = {}", bindingResult);
         if (bindingResult.hasErrors()) {
-            return "boards/muckstarBoard/muckstarBoard_detail";
+            int likeCount = likeService.countByBoard_Id(boardId);
+            model.addAttribute("likeCount", likeCount);
+
+            boardService.updateLikeCount(boardId, likeCount);
+
+            Board board = boardService.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+            List<Comment> comments = board.getComments();
+            if (comments != null && !comments.isEmpty()) {
+                model.addAttribute("comments", comments);
+            }
+
+            List<BoardFile> boardFiles = board.getBoardFiles();
+            if (boardFiles != null && !boardFiles.isEmpty()) {
+                model.addAttribute("boardFiles", boardFiles);
+            }
+
+            Member member = board.getMember();
+            ProfileFile profileFile = member.getProfileFile();
+            if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
+                model.addAttribute("profileFile", profileFile);
+            }
+
+            model.addAttribute("board", board);
+
+            // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
+            model.addAttribute("localDateTime", LocalDateTime.now());
+
+            return "boards/muckstarboard/muckstarBoard_detail";
         }
 
-        commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        commentService.saveComment(loginMember.getId(), boardId, commentUploadDto);
         boardService.updateCommentCount(boardId);
+
+        redirectAttributes.addAttribute("boardId", boardId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/muckstarBoard/{boardId}";

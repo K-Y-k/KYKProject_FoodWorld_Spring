@@ -199,12 +199,12 @@
           <div class="card bg-light">
               <div class="card-body">
                   <!-- 댓글 전송 폼 -->
-                  <form class="mb-4" th:action="@{/boards/recommendBoard/{boardId}/comment(boardId=${board.id})}" th:object="${comment}" method="post">
-                    <div class="input-group">
-                      <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"
-                              th:errorclass="field-error"></textarea>
-                      <button class="btn btn-secondary" id="reply_send" type="submit">전송</button>
-                    </div>
+                  <form class="mb-4" th:action="@{/boards/recommendBoard/{boardId}/comment(boardId=${board.id})}" th:object="${commentUpload}" method="post">
+                      <div class="input-group">
+                        <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"
+                                  th:errorclass="is-invalid"></textarea>
+                          <button class="btn btn-secondary" id="reply_send" type="submit">전송</button>
+                      </div>
                   </form>
 
                   <!-- 댓글 -->
@@ -265,10 +265,11 @@
                                 th:action="@{/boards/comments/{boardId}/{commentId}/edit(boardId=${board.id}, commentId=${comment.id})}"
                                 th:object="${commentUpdate}" method="post">
                               <div class="input-group">
-                                  <textarea class="form-control" id="commentUpdateContent" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
+                                  <textarea class="form-control" th:field="*{content}" rows="3" placeholder="댓글을 자유롭게 작성해보세요!"></textarea>
                                   <button class="btn btn-secondary" type="submit">수정</button>
                               </div>
                           </form>
+
 
 <!--                              &lt;!&ndash; 답글 &ndash;&gt;-->
 <!--                              <div class="d-flex mt-4">-->

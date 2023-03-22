@@ -111,6 +111,7 @@ public class RecommendBoardController {
     public String board(@PathVariable Long boardId,
                         @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                         @ModelAttribute("comment") CommentDto commentDto,
+                        @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                         @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                         Model model) {
         // 조회수 상승
@@ -153,7 +154,7 @@ public class RecommendBoardController {
     @PostMapping("/recommendBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                @ModelAttribute("comment") CommentUploadDto commentDto,
+                                @Valid @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
@@ -166,11 +167,34 @@ public class RecommendBoardController {
             return "messages";
         }
 
+        log.info("바인딩 에러 정보 = {}", bindingResult);
         if (bindingResult.hasErrors()) {
-            return "boards/recommendBoard/recommendBoard_detail";
+            int likeCount = likeService.countByBoard_Id(boardId);
+            model.addAttribute("likeCount", likeCount);
+
+            boardService.updateLikeCount(boardId, likeCount);
+
+            Board board = boardService.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+            List<Comment> comments = board.getComments();
+
+            if (comments != null && !comments.isEmpty()) {
+                model.addAttribute("comments", comments);
+            }
+
+            List<BoardFile> boardFiles = board.getBoardFiles();
+            if (boardFiles != null && !boardFiles.isEmpty()) {
+                model.addAttribute("boardFiles", boardFiles);
+            }
+
+            model.addAttribute("board", board);
+
+            model.addAttribute("localDateTime", LocalDateTime.now());
+
+            return "boards/recommendboard/recommendBoard_detail";
         }
 
-        commentService.saveComment(loginMember.getId(), boardId, commentDto);
+        commentService.saveComment(loginMember.getId(), boardId, commentUploadDto);
 
         redirectAttributes.addAttribute("boardId", boardId);
         return "redirect:/boards/recommendBoard/{boardId}";
