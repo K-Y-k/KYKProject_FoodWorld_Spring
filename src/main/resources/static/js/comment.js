@@ -2,7 +2,7 @@ var updateInputs = document.querySelectorAll('.commentUpdateInput');
 
 // 댓글 내용 입력안하고 공백만 등록시
 updateInputs.forEach(function(updateInput) {
-    var textarea = updateInput.querySelector('textarea'); // 내부 textarea 가져오기
+    var textarea = updateInput.querySelector('textarea'); // 해당 form 태그의 내부 textarea 가져오기
 
     updateInput.addEventListener('submit', function(e) {
         if (textarea.value.trim() == '') {
