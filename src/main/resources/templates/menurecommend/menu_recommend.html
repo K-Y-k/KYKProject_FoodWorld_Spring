@@ -90,11 +90,107 @@
 
 
 	<div class="main">
-		<div class="overlay_"></div> <!--삼각 형태로 감싼 것-->
+		<div class="overlay"></div> <!--삼각 형태로 감싼 것-->
 
 		<div id="recommend_main">
+			<h2 style="position: relative; left: -350px;">내가 추가한 메뉴 리스트</h2>
+			<div style="position: relative; left: -120px; width: 520px; height : 75%; background-color: white; border-color:rgb(11, 44, 6); border-width: 0.1rem; border-radius: 0rem;">
+					<table class="table" style="position: absolute;">
+						<thead class="table-dark">
+						<tr>
+							<th class="col-md-2" style="text-align: center; margin: 0 auto;">번호</th>
+							<th class="col-md-2" style="text-align: center; margin: 0 auto;">카테고리</th>
+							<th class="col-md-2" style="text-align: center; margin: 0 auto;">식당/ 체인점</th>
+							<th class="col-md-2" style="text-align: center; margin: 0 auto;">메뉴</th>
+							<th class="col-md-2" style="text-align: center; margin: 0 auto;">날짜</th>
+							<th class="col-md-2">
+								<button class="btn btn-primary" type="submit"
+										th:onclick="|location.href='@{/menu/upload}'|"
+										style="width: 95px; height: 40px;">
+									등록하기
+								</button>
+							</th>
+						</tr>
+						</thead>
+
+						<tbody>
+						<tr th:each="menuRecommend : ${menuRecommends}">
+							<td class="col-md-2" style="text-align: center; margin: 0 auto;"
+								th:text="${menuRecommend.id}">
+							</td>
+
+							<td class="col-md-2" style="text-align: center; margin: 0 auto;"
+								th:text="${menuRecommend.category}">
+							</td>
+
+							<td class="col-md-2" style="text-align: center; margin: 0 auto;"
+								th:text="${menuRecommend.franchises}">
+							</td>
+
+							<td class="col-md-2" style="text-align: center; margin: 0 auto;"
+								th:text="${menuRecommend.menuName}">
+							</td>
+
+							<td class="col-md-2"
+								style="text-align: center; margin: 0 auto;"
+								th:text="${#temporals.format(menuRecommend.createdDate, 'yy-MM-dd')}">
+							</td>
+
+							<td>
+								<div class="dropdown" style="float: right;">
+									<button type="button"
+											class="btn btn-lg btn-secondary dropdown-toggle dropdown-toggle-split"
+											data-bs-toggle="dropdown">
+									</button>
+
+									<div class="dropdown-menu">
+										<a class="dropdown-item"
+										   th:onclick="updateComment([[${menuRecommend.id}]]);">
+											수정
+										</a>
+
+										<a class="dropdown-item"
+										   th:href="@{/menu/{menuRecommendId}/delete(menuRecommendId=${menuRecommend.id})}">
+											삭제
+										</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+
+				<!--페이지-->
+				<nav th:if="${session.loginMember != null}"
+						aria-label="Page navigation example" style="position: absolute; top: 90%; left: 30%;">
+					<ul class="pagination justify-content-center">
+						<li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
+							<a class="page-link" th:href="@{/menu(page=${menuRecommends.pageable.pageNumber - 1})}">이전</a>
+						</li>
+
+						<li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+							<a class="page-link"
+							   th:if="${page != nowPage} and ${page != 0}"
+							   th:href="@{/menu(page = ${page - 1})}"
+							   th:text="${page}"></a>
+
+
+							<strong class="page-link"
+									th:if="${page == nowPage}"
+									th:text="${page}" style="color: red;"></strong>
+						</li>
+
+
+						<li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
+							<a class="page-link" th:href="@{/menu(page=${menuRecommends.pageable.pageNumber + 1})}">다음</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+
 			<div id="circle">  <!--원-->
-				<div class="feature one"> <!--원 안에 카테고리-->
+				<div class="feature one"> <!--원 안의 카테고리-->
 					<img src="/image/menu_img/write.PNG">
 					<div><a href="/boards/freeBoard" style="text-decoration: none;"><h2 class="lightBlue">자유게시판</h2></a>
 					</div>
@@ -124,13 +220,16 @@
 
 		<div class="menu_background">  <!--음식 메뉴 추천-->
 			<div class="card">
-				<h1 id="top_padding">음식 메뉴 추천</h1>
+				<h1 id="top_padding">음식 메뉴 랜덤 추천</h1>
 
 				<br>
 
 				<button id="random_btn">오늘의 메뉴는?!</button>
 
 				<br>
+
+				<h1 class="category">카테고리: </h1>
+
 				<br>
 
 				<img id="menu_img" src="/image/menu_img/00.PNG">
@@ -138,13 +237,13 @@
 				<br>
 				<br>
 
-				<h2 class="color1">메뉴</h2>
-				<h3 id="menu_name"></h3>
+				<h2 class="color2">식당 체인점</h2>
+				<h3 id="franchise"></h3>
 
 				<br>
 
-				<h2 class="color2">식당</h2>
-				<h3 id="franchise"></h3>
+				<h2 class="color1">메뉴</h2>
+				<h3 id="menu_name"></h3>
 
 				<br>
 			</div>

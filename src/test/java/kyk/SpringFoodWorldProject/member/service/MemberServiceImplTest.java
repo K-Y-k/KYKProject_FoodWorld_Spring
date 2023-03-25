@@ -37,7 +37,7 @@ class MemberServiceImplTest {
         Member member = new Member("memberA", "id1", "paw123");
 
         // when
-        Member savedMember = memberRepository.save(member);
+        Member savedMember = memberRepository.saveMember(member);
 
         // then
         Member findMember = memberRepository.findById(member.getId()).get();
@@ -56,7 +56,7 @@ class MemberServiceImplTest {
 
         // when
 //        Long savedMemberId = memberService.join(form);
-        Member savedMember = memberRepository.save(member);
+        Member savedMember = memberRepository.saveMember(member);
 
         // then
         Member findMember = memberService.findById(savedMember.getId()).get();
@@ -74,8 +74,8 @@ class MemberServiceImplTest {
         Member member1 = new Member("memberA", "id1", "pw1");
         Member member2 = new Member("memberB", "id2", "pw2");
 
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        memberRepository.saveMember(member1);
+        memberRepository.saveMember(member2);
 
         // when
         List<Member> findAllMember = memberRepository.findAll();
@@ -91,7 +91,7 @@ class MemberServiceImplTest {
     void login() {
         // given
         Member member1 = new Member("memberA", "id1", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
 
         // when
         Member loginMember = memberService.login(savedMember.getLoginId(), savedMember.getPassword());
@@ -108,7 +108,7 @@ class MemberServiceImplTest {
     void changeProfile() throws IOException {
         // given
         Member member1 = new Member("memberA", "id1", "pw1");
-        Member savedMember = memberRepository.save(member1);
+        Member savedMember = memberRepository.saveMember(member1);
         memberService.login(savedMember.getLoginId(), savedMember.getPassword());
 
         UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw", "hello", null, "yes");

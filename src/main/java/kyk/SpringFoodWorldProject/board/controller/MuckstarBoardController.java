@@ -253,9 +253,16 @@ public class MuckstarBoardController {
      */
     @PostMapping("/muckstarBoard/upload")
     public String boardUpload(@SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
-                              @Valid @ModelAttribute("uploadForm") MucstarUploadForm boardDto, BindingResult bindingResult) throws IOException {
+                              @Valid @ModelAttribute("uploadForm") MucstarUploadForm boardDto, BindingResult bindingResult,
+                              Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             return "boards/muckstarboard/muckstarBoard_upload";
+        }
+
+        if (boardDto.getImageFiles().get(0).getOriginalFilename().equals("")) {
+            model.addAttribute("message", "먹스타그램은 사진이 필수입니다!");
+            model.addAttribute("redirectUrl", "/boards/muckstarBoard/upload");
+            return "messages";
         }
 
         boardService.muckstarUpload(loginMember.getId(), boardDto);

@@ -13,7 +13,7 @@
     z-index: 2;
 }
 
-.overlay_ {
+.overlay {
     width: 1900px;
     height: 90vh;
     position: relative;
@@ -24,7 +24,6 @@
 }
 
 #recommend_main {
-    padding-top: 50px;
     width: 1000px;
     height: 1000px;
     position: absolute;
@@ -107,22 +106,9 @@
 }
 
 
-.overlay {
-    width: 100%;
-    height: 0;
-    border-top: 550px solid lightblue;
-    border-bottom: 650px solid lightblue;
-    border-left: 650px solid lightblue;
-    border-right: 900px solid transparent;
-    position: absolute;
-    left: -50%;
-    top: -16%;
-}
-
 .menu_background {
-    top: 5%;
+    top: 2%;
     position: absolute;
-    left: 27%;
     text-align: center;
 }
 
@@ -133,7 +119,7 @@
     border-radius: 5rem;
     width: 550px;
     height : 100%;
-    left: 20%;
+    left: 650px;
 }
 
 #top_padding {
