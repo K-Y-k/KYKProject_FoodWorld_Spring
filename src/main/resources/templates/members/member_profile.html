@@ -189,7 +189,7 @@
                         <button type="submit" class="btn btn-primary"
                                 style="width: 80px; height: 35px; margin-left: 60%;" id="chat"
                                 th:if="${session.loginMember != null and session.loginMember.id != member.id}"
-                                th:onclick="|location.href='@{/chat}'|">채팅
+                                th:onclick="|location.href='@{/chat/matchingRoom/{memberId}(memberId=${member.id})}'|">채팅하기
                         </button>
                     </td>
 
