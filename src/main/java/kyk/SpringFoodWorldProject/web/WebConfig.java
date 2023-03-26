@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/profileImageUpload/**")
                 .addResourceLocations(profileFileUploadPath);
 
-        registry.addResourceHandler("/menuRecommendUpload/**")
+        registry.addResourceHandler("/menuRecommendImageUpload/**")
                 .addResourceLocations(menuRecommendUploadPath);
     }
 }

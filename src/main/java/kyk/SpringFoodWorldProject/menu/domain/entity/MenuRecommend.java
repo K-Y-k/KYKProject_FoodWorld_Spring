@@ -2,9 +2,11 @@ package kyk.SpringFoodWorldProject.menu.domain.entity;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUpdateForm;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -32,4 +34,27 @@ public class MenuRecommend extends BaseTimeEntity {
     private String storedFileName;
 
 
+    public MenuRecommend(String category, String franchises, String menuName, Member member, String originalFileName, String storedFileName) {
+        this.category = category;
+        this.franchises = franchises;
+        this.menuName = menuName;
+        this.member = member;
+        this.originalFileName = originalFileName;
+        this.storedFileName = storedFileName;
+    }
+
+
+    public void updateMenu(MenuRecommendUpdateForm updateForm) {
+        this.category = updateForm.getCategory();
+        this.franchises = updateForm.getFranchises();
+        this.menuName = updateForm.getMenuName();
+    }
+
+    public void updateMenuNewFile(MenuRecommendUpdateForm updateForm, String originalFileName, String storedFileName) {
+        this.category = updateForm.getCategory();
+        this.franchises = updateForm.getFranchises();
+        this.menuName = updateForm.getMenuName();
+        this.originalFileName = originalFileName;
+        this.storedFileName = storedFileName;
+    }
 }

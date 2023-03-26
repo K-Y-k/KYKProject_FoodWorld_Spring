@@ -29,4 +29,9 @@ public class SpringDataJpaMenuRecommendRepository implements MenuRecommendReposi
     public Page<MenuRecommend> findByMemberId(Pageable pageable, Long memberId) {
         return menuRecommendRepository.findPageListByMemberId(pageable, memberId);
     }
+
+    @Override
+    public void delete(Long menuRecommendId) {
+        menuRecommendRepository.deleteById(menuRecommendId);
+    }
 }

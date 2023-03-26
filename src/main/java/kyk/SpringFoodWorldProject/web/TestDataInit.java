@@ -10,11 +10,16 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import kyk.SpringFoodWorldProject.member.repository.ProfileFileRepository;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
+import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUploadForm;
+import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
+import kyk.SpringFoodWorldProject.menu.repository.MenuRecommendRepository;
+import kyk.SpringFoodWorldProject.menu.service.MenuRecommendServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.Optional;
 
 @Profile("local")
@@ -26,12 +31,13 @@ public class TestDataInit {
     private final SpringDataJpaBoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final CommentServiceImpl commentService;
+    private final MenuRecommendRepository menuRecommendRepository;
 
     /**
      * 테스트용 데이터 추가
      */
     @PostConstruct
-    public void init() {
+    public void init() throws IOException {
         // 회원 데이터 추가 3
         Member savedMember1 = memberRepository.saveMember(new Member("테스터1", "test", "test!"));
         Member savedMember2 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
@@ -64,6 +70,14 @@ public class TestDataInit {
         // 댓글 데이터 추가 2
         commentService.saveComment(savedMember2.getId(), savedBoard.getId(), new CommentUploadDto(1L,"안녕하세요"));
         commentService.saveComment(savedMember3.getId(), savedBoard.getId(), new CommentUploadDto(2L,"안녕하세요2"));
+
+
+        // 메뉴 데이터 추가
+        int menuCount = 1;
+        while (menuCount < 10) {
+            menuRecommendRepository.save(new MenuRecommend( "한식", "식당" + menuCount, "메뉴" + menuCount, savedMember3, null, null));
+            menuCount++;
+        }
     }
 
 }

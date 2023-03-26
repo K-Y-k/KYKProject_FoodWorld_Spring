@@ -87,9 +87,9 @@
 </header>
 
 <section style="position: relative; width: 90vw; height: 30vh;">
-    <h2 id="categoryMenuRecommend" style="position: absolute; left: 50%; top: 10%;"><b>메뉴 등록하기</b></h2>
+    <h2 id="categoryMenuRecommend" style="position: absolute; left: 50%; top: 10%;"><b>메뉴 수정하기</b></h2>
 
-    <form th:action th:object="${uploadForm}" method="post" enctype="multipart/form-data">
+    <form th:action th:object="${updateForm}" method="post" enctype="multipart/form-data">
         <div class="container mt-3" style="position: absolute; top: 20%; width: 50vw; left: 25%">
             <div class="field-error" style="color: red;" th:errors="*{category}"></div>
             <div class="form-group col-sm-2">
@@ -118,7 +118,7 @@
             <label th:for="img">메뉴 이미지 선택</label>
             <br>
             <img th:id="thumbnail"
-                 th:src="@{|/menuRecommendImageUpload/bin.JPG|}"
+                 th:src="@{|/menuRecommendImageUpload/${updateForm.storedFileName}|}"
                  style="width: 30vw; height: 40vh;">
             <input class="form-control mt-2" id="InputImage" type="file" name="imageFile" onchange="readURL(this)">
 

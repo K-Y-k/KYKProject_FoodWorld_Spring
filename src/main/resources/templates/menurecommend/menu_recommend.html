@@ -94,22 +94,22 @@
 
 		<div id="recommend_main">
 			<h2 style="position: relative; left: -350px;">내가 추가한 메뉴 리스트</h2>
-			<div style="position: relative; left: -120px; width: 520px; height : 75%; background-color: white; border-color:rgb(11, 44, 6); border-width: 0.1rem; border-radius: 0rem;">
+			<button class="btn btn-primary" type="submit"
+					th:onclick="|location.href='@{/menu/upload}'|"
+					style="position: relative; left: -150px; width: 150px; height: 35px;">
+				메뉴 등록하기
+			</button>
+
+			<div style="position: relative; left: -120px; margin-top: 10px; width: 550px; height : 70%; background-color: white; border-color:rgb(11, 44, 6); border-width: 0.1rem; border-radius: 0rem;">
 					<table class="table" style="position: absolute;">
 						<thead class="table-dark">
 						<tr>
 							<th class="col-md-2" style="text-align: center; margin: 0 auto;">번호</th>
 							<th class="col-md-2" style="text-align: center; margin: 0 auto;">카테고리</th>
-							<th class="col-md-2" style="text-align: center; margin: 0 auto;">식당/ 체인점</th>
-							<th class="col-md-2" style="text-align: center; margin: 0 auto;">메뉴</th>
+							<th class="col-md-3" style="text-align: center; margin: 0 auto;">식당/ 체인점</th>
+							<th class="col-md-3" style="text-align: center; margin: 0 auto;">메뉴</th>
 							<th class="col-md-2" style="text-align: center; margin: 0 auto;">날짜</th>
-							<th class="col-md-2">
-								<button class="btn btn-primary" type="submit"
-										th:onclick="|location.href='@{/menu/upload}'|"
-										style="width: 95px; height: 40px;">
-									등록하기
-								</button>
-							</th>
+							<th class="col-md-1" style="text-align: center; margin: 0 auto;"></th>
 						</tr>
 						</thead>
 
@@ -145,7 +145,7 @@
 
 									<div class="dropdown-menu">
 										<a class="dropdown-item"
-										   th:onclick="updateComment([[${menuRecommend.id}]]);">
+										   th:href="@{/menu/{menuRecommendId}/edit(menuRecommendId=${menuRecommend.id})}">
 											수정
 										</a>
 
@@ -162,7 +162,7 @@
 
 				<!--페이지-->
 				<nav th:if="${session.loginMember != null}"
-						aria-label="Page navigation example" style="position: absolute; top: 90%; left: 30%;">
+						aria-label="Page navigation example" style="position: relative; top: 93%;">
 					<ul class="pagination justify-content-center">
 						<li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
 							<a class="page-link" th:href="@{/menu(page=${menuRecommends.pageable.pageNumber - 1})}">이전</a>

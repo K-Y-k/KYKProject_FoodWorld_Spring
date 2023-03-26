@@ -2,6 +2,7 @@ package kyk.SpringFoodWorldProject.menu.service;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
+import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUpdateForm;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUploadForm;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import kyk.SpringFoodWorldProject.menu.repository.MenuRecommendRepository;
@@ -17,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -61,7 +66,54 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
     }
 
 
+    @Override
     public Page<MenuRecommend> PageList(Long memberId, Pageable pageable) {
         return menuRecommendRepository.findByMemberId(pageable, memberId);
+    }
+
+    @Override
+    public void updateMenu(Long menuRecommendId, MenuRecommendUpdateForm updateForm) throws IOException {
+        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
+                new IllegalArgumentException("메뉴 조회 실패: " + menuRecommendId));
+
+        MultipartFile imageFile = updateForm.getImageFile();
+
+        if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
+            // 기존 디렉토리에 저장되었던 파일 삭제
+            Path beforeFilePath = Paths.get(menuRecommendLocation+"\\"+menuRecommend.getStoredFileName());
+            Files.delete(beforeFilePath);
+
+            // 다시 새로 등록
+            String originalFileName = imageFile.getOriginalFilename();
+
+            UUID uuid = UUID.randomUUID();
+            String storedFileName = uuid + "_" + originalFileName;
+            String savePath = menuRecommendLocation;
+
+            imageFile.transferTo(new File(savePath, storedFileName));
+
+            menuRecommend.updateMenuNewFile(updateForm, originalFileName, storedFileName);
+
+        } else {
+            menuRecommend.updateMenu(updateForm);
+        }
+    }
+
+    @Override
+    public MenuRecommend findById(Long menuRecommendId) {
+        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
+                new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
+        return menuRecommend;
+    }
+
+    @Override
+    public void delete(Long menuRecommendId) throws IOException {
+        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
+                new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
+
+        Path beforeFilePath = Paths.get(menuRecommendLocation+"\\"+menuRecommend.getStoredFileName());
+        Files.delete(beforeFilePath);
+
+        menuRecommendRepository.delete(menuRecommendId);
     }
 }
