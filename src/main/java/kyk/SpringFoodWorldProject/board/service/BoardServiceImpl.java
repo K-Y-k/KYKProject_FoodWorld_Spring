@@ -11,6 +11,7 @@ import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
+import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -118,7 +123,7 @@ public class BoardServiceImpl implements BoardService {
     private Board uploadBoard(BoardUploadForm boardDto, Member findMember) {
         Board board = boardDto.toSaveEntity(findMember, boardDto);
         Board uploadBoard = boardRepository.save(board);
-        log.info("uploadBoard={}", board);
+        log.info("uploadBoard = {}", board);
         return uploadBoard;
     }
 
@@ -202,9 +207,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
-        Board findBoard = findById(boardId).orElseThrow();
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
-        log.info("서브 타입 : ", findBoard.getSubType());
+        log.info("서브 타입 = {}", findBoard.getSubType());
 
         findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
 
@@ -279,7 +285,32 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void delete(Long boardId) {
-        log.info("삭제 완료");
+        Board board = boardRepository.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+
+        List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
+        for (BoardFile boardFile : findBoardFiles) {
+            if(boardFile.getAttachedType().equals("attached")) {
+                Path beforeAttachPath = Paths.get(attachFileLocation+"\\" + boardFile.getStoredFileName());
+                try {
+                    Files.deleteIfExists(beforeAttachPath);
+                } catch (DirectoryNotEmptyException e) {
+                    log.info("디렉토리가 비어있지 않습니다");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                Path beforeFilePath = Paths.get(imageFileLocation+"\\" + boardFile.getStoredFileName());
+                try {
+                    Files.deleteIfExists(beforeFilePath);
+                } catch (DirectoryNotEmptyException e) {
+                    log.info("디렉토리가 비어있지 않습니다");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         boardRepository.delete(boardId);
     }
