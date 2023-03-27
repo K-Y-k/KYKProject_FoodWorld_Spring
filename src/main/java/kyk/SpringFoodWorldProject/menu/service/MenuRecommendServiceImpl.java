@@ -18,10 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
@@ -72,6 +73,33 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
     }
 
     @Override
+    public MenuRecommend findById(Long menuRecommendId) {
+        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
+                new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
+        return menuRecommend;
+    }
+
+
+    @Override
+    public MenuRecommend randomPick(String selectedCategory) {
+        if (selectedCategory == null) {
+            Random random = new Random();
+            Long lastId = menuRecommendRepository.findLastId();
+            int randomId = random.nextInt(lastId.intValue()) + 1; // 랜덤 함수는 0~넣은값-1까지 랜덤으로 가져오므로 1~넣은값으로 가져오고 싶어 +1
+
+            return menuRecommendRepository.findById((long) randomId).orElseThrow(() ->
+                    new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + randomId));
+        }
+        else {
+            Long findRandomId = menuRecommendRepository.findLastIdWithCategory(selectedCategory);
+
+            return menuRecommendRepository.findById(findRandomId).orElseThrow(() ->
+                    new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + findRandomId));
+        }
+    }
+
+
+    @Override
     public void updateMenu(Long menuRecommendId, MenuRecommendUpdateForm updateForm) throws IOException {
         MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
                 new IllegalArgumentException("메뉴 조회 실패: " + menuRecommendId));
@@ -81,7 +109,15 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
         if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
             // 기존 디렉토리에 저장되었던 파일 삭제
             Path beforeFilePath = Paths.get(menuRecommendLocation+"\\"+menuRecommend.getStoredFileName());
-            Files.delete(beforeFilePath);
+
+            try {
+                Files.deleteIfExists(beforeFilePath);
+            } catch (DirectoryNotEmptyException e) {
+                log.info("디렉토리가 비어있지 않습니다");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             // 다시 새로 등록
             String originalFileName = imageFile.getOriginalFilename();
@@ -100,19 +136,19 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
     }
 
     @Override
-    public MenuRecommend findById(Long menuRecommendId) {
-        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
-                new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
-        return menuRecommend;
-    }
-
-    @Override
     public void delete(Long menuRecommendId) throws IOException {
         MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
                 new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
 
         Path beforeFilePath = Paths.get(menuRecommendLocation+"\\"+menuRecommend.getStoredFileName());
-        Files.delete(beforeFilePath);
+
+        try {
+            Files.deleteIfExists(beforeFilePath);
+        } catch (DirectoryNotEmptyException e) {
+            log.info("디렉토리가 비어있지 않습니다");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         menuRecommendRepository.delete(menuRecommendId);
     }

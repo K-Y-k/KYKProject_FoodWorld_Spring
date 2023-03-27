@@ -192,22 +192,27 @@
 			<div id="circle">  <!--원-->
 				<div class="feature one"> <!--원 안의 카테고리-->
 					<img src="/image/menu_img/write.PNG">
-					<div><a href="/boards/freeBoard" style="text-decoration: none;"><h2 class="lightBlue">자유게시판</h2></a>
+					<div>
+						<a href="/boards/freeBoard" style="text-decoration: none;"><h2 class="lightBlue">자유게시판</h2></a>
 					</div>
 				</div>
 				<div class="feature two">
 					<img src="/image/menu_img/write.PNG">
-					<div><a href="/boards/recommendBoard" style="text-decoration: none;"><h2 class="lightBlue">
-						식당추천게시판</h2></a></div>
+					<div>
+						<a href="/boards/recommendBoard" style="text-decoration: none;"><h2 class="lightBlue">식당추천게시판</h2></a>
+					</div>
 				</div>
 				<div class="feature three">
 					<img src="/image/menu_img/muckstar_icon1.PNG">
-					<div><a href="/boards/muckstarBoard" style="text-decoration: none;"><h2 class="lightBlue">먹스타그램</h2>
-					</a></div>
+					<div>
+						<a href="/boards/muckstarBoard" style="text-decoration: none;"><h2 class="lightBlue">먹스타그램</h2></a>
+					</div>
 				</div>
 				<div class="feature four">
 					<img src="/image/menu_img/home_icon.PNG">
-					<div><a href="/" style="text-decoration: none;"><h2 class="lightBlue">메인 홈</h2></a></div>
+					<div>
+						<a href="/" style="text-decoration: none;"><h2 class="lightBlue">메인 홈</h2></a>
+					</div>
 				</div>
 			</div>
 
@@ -224,26 +229,49 @@
 
 				<br>
 
+				<div class="form-group col-sm-5">
+					<select class="form-select" style="margin-left: 310px;">
+						<option value="">카테고리 분류 선택</option>
+						<option value="한식">한식</option>
+						<option value="중식">중식</option>
+						<option value="일식/돈까스">일식/돈까스</option>
+						<option value="회/초밥">회/초밥</option>
+						<option value="치킨">치킨</option>
+						<option value="피자">피자</option>
+						<option value="족빌/보쌈">족발/보쌈</option>
+						<option value="햄버거">햄버거</option>
+						<option value="샌드위치">샌드위치</option>
+						<option value="분식">분식</option>
+						<option value="찜/탕">찜/탕</option>
+						<option value="샐러드">샐러드</option>
+						<option value="도시락/죽">도시락/죽</option>
+						<option value="아시안">아시안</option>
+						<option value="프랜차이즈">프랜차이즈</option>
+						<option value="기타">기타</option>
+					</select>
+				</div>
+
+				<br>
+
 				<button id="random_btn">오늘의 메뉴는?!</button>
+				<br>
+
+				<h1 id="category">카테고리: </h1>
 
 				<br>
 
-				<h1 class="category">카테고리: </h1>
-
-				<br>
-
-				<img id="menu_img" src="/image/menu_img/00.PNG">
+				<img id="menuImg" src="/image/menu_img/00.PNG">
 
 				<br>
 				<br>
 
 				<h2 class="color2">식당 체인점</h2>
-				<h3 id="franchise"></h3>
+				<h3 id="franchises"></h3>
 
 				<br>
 
 				<h2 class="color1">메뉴</h2>
-				<h3 id="menu_name"></h3>
+				<h3 id="menuName"></h3>
 
 				<br>
 			</div>

@@ -16,5 +16,8 @@ public interface MenuRecommendRepository {
 
     Page<MenuRecommend> findByMemberId(Pageable pageable, Long memberId);
 
+    Long findLastId();
+    Long findLastIdWithCategory(String selectedCategory);
+
     void delete(Long boardId);
 }

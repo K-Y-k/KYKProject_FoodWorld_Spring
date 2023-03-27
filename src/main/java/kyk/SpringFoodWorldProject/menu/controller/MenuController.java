@@ -27,8 +27,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/menu")
 public class MenuController {
-
-    private final MemberServiceImpl memberService;
     private final MenuRecommendServiceImpl menuRecommendService;
 
 

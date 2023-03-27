@@ -6,7 +6,7 @@
     
 .main {
     width: 100%;
-    height: 90vh;
+    height: 100vh;
     position: relative;
     overflow: hidden;
     background: linear-gradient(to right, lightblue, lightyellow);
@@ -15,7 +15,7 @@
 
 .overlay {
     width: 1900px;
-    height: 90vh;
+    height: 100vh;
     position: relative;
     border-top: 395px solid lightblue;
 	border-bottom: 455px solid lightblue;
@@ -140,7 +140,7 @@
     margin-left: 170px;
 }
 
-#menu_img {
+#menuImg {
     width: 400px;
     height: 300px;
     margin-left: 70px;
@@ -156,6 +156,6 @@
     color: rgb(13, 126, 9);
 }
 
-#franchise {
+#franchises {
     word-break: keep-all;
 }

@@ -31,6 +31,16 @@ public class SpringDataJpaMenuRecommendRepository implements MenuRecommendReposi
     }
 
     @Override
+    public Long findLastId() {
+        return menuRecommendRepository.findLastId();
+    }
+
+    @Override
+    public Long findLastIdWithCategory(String selectedCategory) {
+        return menuRecommendRepository.findLastIdWithCategory(selectedCategory);
+    }
+
+    @Override
     public void delete(Long menuRecommendId) {
         menuRecommendRepository.deleteById(menuRecommendId);
     }

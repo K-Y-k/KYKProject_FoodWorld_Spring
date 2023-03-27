@@ -20,22 +20,25 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/menu")
 public class MenuApiController {
-    private final MemberServiceImpl memberService;
     private final MenuRecommendServiceImpl menuRecommendService;
 
     @GetMapping("/api/menuRecommendList")
     public ResponseEntity<?> menuRecommendList(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        if (loginMember == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-        }
-
         Page<MenuRecommend> menuRecommends = menuRecommendService.PageList(loginMember.getId(), pageable);
 
         for (MenuRecommend menuRecommend : menuRecommends) {
-            log.info("리스트 = {}", menuRecommends.getContent());
+            log.info("리스트 각 메뉴들 = {}", menuRecommend.getMenuName());
         }
 
         return new ResponseEntity<>(menuRecommends, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/randomMenu")
+    public ResponseEntity<?> randomMenuPick(String selectedCategory) {
+        log.info("선택된 카테고리 = {}", selectedCategory);
+        MenuRecommend randomPick = menuRecommendService.randomPick(selectedCategory);
+
+        return new ResponseEntity<>(randomPick, HttpStatus.OK);
     }
 }

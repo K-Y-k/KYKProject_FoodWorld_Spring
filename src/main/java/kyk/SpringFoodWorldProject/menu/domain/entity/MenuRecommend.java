@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.menu.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUpdateForm;
@@ -26,6 +27,7 @@ public class MenuRecommend extends BaseTimeEntity {
     private String menuName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "member_id")
     private Member member;
 
