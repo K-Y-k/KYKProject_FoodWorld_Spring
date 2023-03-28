@@ -82,7 +82,7 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
 
     @Override
     public MenuRecommend randomPick(String selectedCategory) {
-        if (selectedCategory == null) {
+        if (selectedCategory == null || selectedCategory.equals("전체")) {
             Random random = new Random();
             Long lastId = menuRecommendRepository.findLastId();
             int randomId = random.nextInt(lastId.intValue()) + 1; // 랜덤 함수는 0~넣은값-1까지 랜덤으로 가져오므로 1~넣은값으로 가져오고 싶어 +1
