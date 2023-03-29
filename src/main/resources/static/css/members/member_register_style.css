@@ -47,19 +47,22 @@ aside{
     flex-wrap:wrap;
     align-items:flex-start;
     margin: 0 auto;
-
     border: solid 3px;
     border-color: rgb(47, 9, 136);
 }
 .grid-image img {
     position: relative;
-    width: 13vw;
-    margin:1px 1px 1px 1px;
+    width: 229px;
+    height: 229px;
+    object-fit: cover;
+    margin: 1px;
 }
 .grid-image a {
-    position: relative;
-    width: 13vw;
-    margin:1px 1px 1px 1px;
+   position: relative;
+   width: 229px;
+   height: 229px;
+   object-fit: cover;
+   margin: 1px;
 }
 
 
