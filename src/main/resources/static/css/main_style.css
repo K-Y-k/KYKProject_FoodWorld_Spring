@@ -2,10 +2,9 @@
     /*display: flex;
     align-items: center;
     */
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-
+    width: 1900px;
+    height: 110vh;
+    position: relative;
 }
 .nav {
     width: 100%;
@@ -41,7 +40,6 @@ section{
 
 aside{
     float: left;
-    width: 600px;
 }
 
 /* INPUT 가리기 */
@@ -89,11 +87,11 @@ aside{
 }
 .img_slide .slidelist .left {
     left:-300px;
-    background:url('./image/left_icon.PNG') center center / 100% no-repeat;
+    background:url('/image/main_img/left_icon.PNG') center center / 100% no-repeat;
 } /* LEFT -300px로 화살표가 안보이게 되어있도록 준 스타일 */
 .img_slide .slidelist .right {
     right:-300px;
-    background:url('./image/right_icon.PNG') center center / 100% no-repeat;
+    background:url('/image/main_img/right_icon.PNG') center center / 100% no-repeat;
 } /* RIGHT -300px로 화살표가 안보이게 되어있도록 준 스타일 */
 
 /* INPUT이 체크되면 변화값이 li까지 전달되는 스타일 */
@@ -115,9 +113,7 @@ aside{
 .img_slide input[id="slide05"]:checked ~ .slidewrap li:nth-child(5) .left {left:30px;transition:all .35s ease .5s;}
 .img_slide input[id="slide05"]:checked ~ .slidewrap li:nth-child(5) .right {right:30px;transition:all .35s ease .5s;}
 
-.list-group-item :hover {
-    background-color: aqua;
-}
+
 
 .chat-content {
     height: 450px;

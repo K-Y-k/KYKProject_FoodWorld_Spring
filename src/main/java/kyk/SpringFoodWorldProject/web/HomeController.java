@@ -1,5 +1,8 @@
 package kyk.SpringFoodWorldProject.web;
 
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
+import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.MemberSessionDto;
@@ -10,14 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,6 +27,7 @@ import javax.validation.Valid;
 public class HomeController {
 
     private final MemberServiceImpl memberService;
+    private final ChatService chatService;
 
 
     /**
@@ -34,16 +37,17 @@ public class HomeController {
     public String homeLoginCheck(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                  @ModelAttribute("loginForm") LoginForm form,
                                  Model model) {
-        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
-        if(loginMember == null) {
-            log.info("로그인 상태가 아님");
-            return "main";
-        }
 
-        log.info("로그인 성공한 상태 {}", loginMember);
-        // 세션이 유지되면 로그인 홈으로 이동
-        model.addAttribute("member", loginMember);
-        return "loginMain";
+        // 채팅방 컨트롤 처리
+        if (loginMember != null) {
+            List<ChatRoom> member1ChatRoom = chatService.findNotLeaveMessageRoom(loginMember.getId());
+
+            if (!member1ChatRoom.isEmpty()) {
+                model.addAttribute("member1ChatRoom", member1ChatRoom);
+            }
+        }
+        
+        return "main";
     }
 
 
@@ -78,6 +82,33 @@ public class HomeController {
 
         log.info("sessionId={}", session.getId());
         return "redirect:/";
+    }
+
+
+
+    /**
+     * 클릭한 채팅방 조회
+     */
+    @GetMapping("/room")
+    public String goChatRoom(@RequestParam String roomId,
+                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER) Member loginMember,
+                             Model model){
+        // 클릭한 방을 조회
+        ChatRoom targetChatRoom = chatService.findRoomByRoomId(roomId);
+        model.addAttribute("targetChatRoom", targetChatRoom);
+
+        // 클릭한 방의 메시지 가져오기
+        List<ChatMessage> chatMessage = targetChatRoom.getChatMessages();
+        model.addAttribute("chatMessage", chatMessage);
+
+        // 현재 회원의 전체 채팅방 리스트
+        List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
+        model.addAttribute("member1ChatRoom", member1ChatRoom);
+
+        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
+        model.addAttribute("localDateTime", LocalDateTime.now());
+
+        return "main";
     }
 
 }

@@ -1,3 +1,40 @@
+let selectedCategory;
+
+$("select.form-select").change(function () {
+    selectedCategory = $(this).val();
+    console.log("선택된 카테고리: ", selectedCategory)
+});
+
+function randomMenu() {  // 랜덤 메뉴 함수
+	$.ajax({
+        type: "GET",
+    	url: '/menu/api/randomMenu',
+    	dataType: "json",
+    	data: {selectedCategory},
+    	beforeSend: function() {
+    	},
+    	async: false,
+    	success: function(result) {
+    	    console.log("선택된 카테고리: ", selectedCategory)
+            console.log(JSON.stringify(result))
+    		let randomPick = result; // 단일 객체
+
+            $("#category").text("카테고리: "+randomPick.category);
+            $("#menuImg").attr("src", "/menuRecommendImageUpload/"+randomPick.storedFileName)
+            $("#franchises").text(randomPick.franchises);
+            $("#menuName").text(randomPick.menuName);
+    	},
+    	error: function (error) {
+            console.log("오류", error);
+         }
+    });
+}
+
+const random_btn = document.getElementById("random_btn"); // 버튼을 동작하기 위한 id를 가져온 변수 선언
+random_btn.addEventListener("click", randomMenu);         // 클릭 시 랜덤 메뉴 함수 작동
+
+
+
 var connectingElement = document.querySelector('.connecting');
 var chatContent = document.querySelector('#chatContent');
 var messageInput = document.querySelector('#message');
@@ -49,7 +86,6 @@ function onConnected() {
             })
         )
 
-    connectingElement.style.display='none';
     chatContent.scrollTop = chatContent.scrollHeight;
     messageInput.placeholder = "자유롭게 채팅을 입력해서 상대방에게 전송해보세요."
 }
@@ -118,13 +154,13 @@ function onMessageReceived(payload) {
         // 연결 끊기: 해당 클라이언트만 연결을 끊고 URL 변경
         if (chat.senderId == userId) {
             stompClient.disconnect(() => {
-                window.location.href = "http://localhost:8080/chat";
+                window.location.href = "/";
             });
         }
 
         // 마지막 회원까지 퇴장하여 채팅방이 삭제된 경우 마지막 큻라이언트 회원 이동 처리
         if (chat.message.equals('채팅방 삭제')) {
-            window.location.href = "http://localhost:8080/chat";
+            window.location.href = "/";
         }
 
     } else {                           // talk라면
