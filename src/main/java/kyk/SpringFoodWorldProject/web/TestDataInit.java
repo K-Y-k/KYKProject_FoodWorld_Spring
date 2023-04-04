@@ -51,13 +51,15 @@ public class TestDataInit {
 
         // 게시글 데이터 추가 20
         int boardCount = 1;
-        while (boardCount < 20) { // 자유게시판 글 10
-            boardRepository.save(new Board("샘플 제목" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기"));
+        while (boardCount < 20) { // 자유게시판 글 19
+            boardRepository.save(new Board("샘플 제목ddddddddddddddddddddddddddddddddddddd" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기"));
+
+            boardRepository.save(new Board("샘플 제목ddddddddddddddddddddddddddddddddddddd" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "추천게시판", "식당"));
             boardCount++;
         }
+
         // 식당추천게시판 글 1
         Board savedBoard = boardRepository.save(new Board("식당추천합니다.", "내용", "aaa", savedMember3, "추천게시판","식당"));
-
 
         // 먹스타그램 데이터 추가 10
         Board savedMuckstar1 = boardRepository.save(new Board("먹스타 샘플 제목1", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));

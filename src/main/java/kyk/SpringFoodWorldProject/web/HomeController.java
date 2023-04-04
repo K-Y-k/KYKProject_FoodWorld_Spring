@@ -1,5 +1,7 @@
 package kyk.SpringFoodWorldProject.web;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
@@ -10,6 +12,10 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +33,7 @@ import java.util.List;
 public class HomeController {
 
     private final MemberServiceImpl memberService;
+    private final BoardServiceImpl boardService;
     private final ChatService chatService;
 
 
@@ -36,7 +43,35 @@ public class HomeController {
     @GetMapping("/")
     public String homeLoginCheck(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                  @ModelAttribute("loginForm") LoginForm form,
+                                 @PageableDefault(page = 0, size = 7, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, 
                                  Model model) {
+
+        Page<Board> freeBoards = boardService.findPageListByBoardType(pageable, "자유게시판");
+        Page<Board> recommendBoards = boardService.findPageListByBoardType(pageable, "추천게시판");
+        Page<Board> muckstarBoards = boardService.findPageListByBoardType(pageable, "먹스타그램");
+
+        // 댓글 개수 가져오는 작업
+        for (Board freeBoard : freeBoards) {
+            Board findBoard = boardService.findById(freeBoard.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + freeBoard.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
+        for (Board recommendBoard : recommendBoards) {
+            Board findBoard = boardService.findById(recommendBoard.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + recommendBoard.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
+        for (Board muckstarBoard : muckstarBoards) {
+            Board findBoard = boardService.findById(muckstarBoard.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + muckstarBoard.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
+
+        model.addAttribute("freeBoards", freeBoards);
+        model.addAttribute("recommendBoards", recommendBoards);
+        model.addAttribute("muckstarBoards", muckstarBoards);
+        model.addAttribute("localDateTime", LocalDateTime.now());
+
 
         // 채팅방 컨트롤 처리
         if (loginMember != null) {

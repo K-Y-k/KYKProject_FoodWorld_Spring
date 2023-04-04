@@ -119,7 +119,8 @@
             <thead class="table-dark">
             <tr>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">번호</th>
-                <th class="col-md-6" style="text-align: center; margin: 0 auto;">제목</th>
+                <th class="col-md-5" style="text-align: center; margin: 0 auto;">제목</th>
+                <th class="col-md-1"></th>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">글쓴이</th>
                 <th class="col-md-2" style="text-align: center; margin: 0 auto;">날짜</th>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">조회수</th>
@@ -132,16 +133,18 @@
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
                     th:text="${board.id}"></td>
 
-                <td style="text-decoration-line: none;">
+                <td class="col-md-5" style="text-decoration-line: none; display: inline-block; width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                     <a th:if="${not#strings.equals(board.subType, '말머리 선택')}"
                        th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.subType}]|"
                        style="color: black; text-decoration-line: none;"></a>
 
                     <a th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|${board.title}|"
                        style="color: black; text-decoration-line: none;"></a>
+                </td>
 
-                    <a th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none;"
-                       th:href="@{|/boards/recommendBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></a>
+                <td class="col-md-1">
+                    <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none;"
+                          th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></span>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">

@@ -236,45 +236,136 @@
                 </div>
             </div>
 
-            <div style="border: solid 3px; border-color: rgb(202, 130, 22);
+            <div style="display:flex; border: solid 3px; border-color: rgb(202, 130, 22);
                         position: absolute; width: 730px; height: 300px; top: 39%;">
-                <!--자유게시판 식당게시판-->
-                <div>
-                    <table class="container2 mt-10"
-                           style="white-space: nowrap; margin-top: 1%; position: absolute; margin-left: 50px;">
-                        <h4 style="color: orangered; padding-top: 15px;">
-                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp자유게시판&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp식당추천게시판</h4>
-                    </table>
-                </div>
+                <!--자유게시판 인기글 목록-->
+                <table style="width: 360px; margin-top: 15px; margin-left: 5px;">
+                    <thead>
+                    <tr>
+                        <td colspan="4">
+                            <h4 style="color: orangered; text-align: center;">자유게시판 HOT 7</h4>
+                        </td>
+                    </tr>
 
-                <div style="position: absolute; top: 12%;">
-                    <a href="free_main.html"
-                       style="text-decoration: none; margin-left: 300px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">더보기>></a>
-                    <a href="store_recommend.html"
-                       style="text-decoration: none; margin-left: 300px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">더보기>></a>
-                </div>
+                    <tr>
+                        <td colspan="4">
+                            <a href="/boards/freeBoard"
+                               style="float: right; text-decoration: none; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">
+                                더보기>>
+                            </a>
+                        </td>
+                    </tr>
 
-                <div>
-                    <table class="container3 mt-10"
-                           style="white-space: nowrap; margin-top: 1%; position: absolute; margin-left: 420px;">
-                    </table>
-                </div>
+                    <tr>
+                        <th class="col-md-5" style="text-align: center; margin: 0 auto;">제목</th>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-3" style="text-align: center; margin: 0 auto;">조회수</th>
+                        <th class="col-md-2" style="text-align: center; margin: 0 auto;">좋아요</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="freeBoard : ${freeBoards}">
+                        <td class="col-md-5" style="text-align: center; margin: 0 auto; display: inline-block; width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <a th:href="@{|/boards/freeBoard/${freeBoard.id}|}" th:text="|${freeBoard.title}|"
+                                   style="color: black; text-decoration-line: none;"></a>
+                        </td>
+                        <td class="col-md-1">
+                            <span th:if="${freeBoard.commentCount != 0}" style="color: red;" th:text="|[${freeBoard.commentCount}]|"></span>
+                        </td>
+                        <td class="col-md-3" style="text-align: center; margin: 0 auto;" th:text="${freeBoard.count}"></td>
+                        <td class="col-md-2" style="text-align: center; margin: 0 auto;;" th:text="${freeBoard.likeCount}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <!--추천게시판 인기글 목록-->
+                <table style="width: 360px; margin-top: 15px;">
+                    <thead>
+                    <tr>
+                        <td colspan="4">
+                            <h4 style="color: orangered; text-align: center;">추천게시판 HOT 7</h4>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            <a href="/boards/recommendBoard"
+                               style="float: right; text-decoration: none; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">
+                                더보기>>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="col-md-5" style="text-align: center; margin: 0 auto;">제목</th>
+                        <th class="col-md-1" style="text-align: center; margin: 0 auto;"></th>
+                        <th class="col-md-3" style="text-align: center; margin: 0 auto;">조회수</th>
+                        <th class="col-md-2" style="text-align: center; margin: 0 auto;">좋아요</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="recommendBoard : ${recommendBoards}">
+                        <td class="col-md-5" style="text-align: center; margin: 0 auto; display: inline-block; width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <a th:href="@{|/boards/recommendBoard/${recommendBoard.id}|}" th:text="|${recommendBoard.title}|"
+                               style="color: black; text-decoration-line: none;"></a>
+                        </td>
+                        <td class="col-md-1">
+                            <span th:if="${recommendBoard.commentCount != 0}" style="color: red;" th:text="|[${recommendBoard.commentCount}]|"></span>
+                        </td>
+                        <td class="col-md-3" style="text-align: center; margin: 0 auto;" th:text="${recommendBoard.count}"></td>
+                        <td class="col-md-2" style="text-align: center; margin: 0 auto;;" th:text="${recommendBoard.likeCount}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <br>
 
             <div style="border: solid 3px; border-color: rgb(47, 9, 136);
-                    position: absolute; width: 730px; height: 300px; top: 73%;">
-                <!--먹스타그램-->
-                <span style="font-family: 'Nanum Gothic'; font-style: normal; font-weight: 550; white-space: nowrap; padding: 10px; font-size: 20px; color: rgb(47, 9, 136);">먹스타그램</span>
-                <a href="/boards/muckstarBoard" style="text-decoration: none;">
-                    <span style="margin-left: 600px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;"> 더보기>></span></a>
-                <table class="container1 mt-10"
-                       style="white-space: nowrap; margin-top: 1%; position: absolute;"></table>
+                        position: absolute; width: 730px; height: 300px; top: 73%;">
+                <!--먹스타그램 인기글 목록-->
+                <table style="width: 730px; margin-top: 15px;">
+                    <thead>
+                    <tr>
+                        <h4 style="font-family: 'Nanum Gothic'; font-style: normal; font-weight: 550; white-space: nowrap; font-size: 20px; color: rgb(47, 9, 136);">
+                            먹스타그램 HOT 5
+                        </h4>
+                    </tr>
+
+                    <tr>
+                        <a href="/boards/muckstarBoard" style="float: right; text-decoration: none; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">
+                            더보기>>
+                        </a>
+                    </tr>
+                    </thead>
+
+                    <tbody style="">
+                    <tr style="">
+                        <td th:each="muckstarBoard : ${muckstarBoards}" style="margin-left: 10px; width: 180px; height: 200px;">
+                            <div>
+                                <img th:src="@{|/imageFileUpload/${muckstarBoard.boardFiles[0].storedFileName}|}"
+                                     width="180px;" height="150px;">
+                            </div>
+
+                            <div class="input-group" style="height: 50px;">
+                                <button class="btn btnEvent" id="like_btn" style="width: 30px; height: 40px;" type="button">
+                                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 30px; height: 40px;">
+                                </button>
+                                <span class="like" style="font-weight: 500; font-size: 30px; margin-left: 20px;" th:text="${muckstarBoard.likeCount}"></span>
+
+                                <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 30px; height: 40px; margin-left: 10px; margin-top: 5px;">
+                                <span class="comment" style ="font-weight: 500; font-size: 30px; margin-left: 10px;" th:text="${muckstarBoard.commentCount}"></span>
+
+                                <span style="margin-left: 80px;" th:text="${#temporals.format(muckstarBoard.createdDate, 'yyyy-MM-dd')}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
-
     </aside>
 
     <footer style="float : right; position: relative; width: 500px; height: 110vh; margin-right: 90px;">
@@ -282,7 +373,8 @@
         <div class="card">
             <h3 id="top_padding"
                 style="margin-top: 30px; margin-left: 10px; font-family: 'Nanum Gothic'; font-style: normal; font-weight: 700;">
-                음식 메뉴 추천</h3>
+                음식 메뉴 추천
+            </h3>
 
             <br>
 
@@ -405,7 +497,7 @@
                             </div>
                         </ul>
 
-
+                        <!--채팅 전송-->
                         <div class="input-group">
                             <input class="form-control chat-input" id="message" placeholder="채팅하고 싶은 채팅방을 클릭하고 이용해주세요." onkeydown="handleKeyDown(event)">
                             <button class="btn btn-secondary" type="submit" onclick="sendMessage();">전송</button>
