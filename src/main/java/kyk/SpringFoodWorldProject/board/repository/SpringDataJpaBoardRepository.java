@@ -98,6 +98,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.boardsTotalCount(memberId);
     }
 
+    @Override
+    public List<Board> popularBoardList(String boardType) {
+        return boardRepository.popularBoardList(boardType);
+    }
+
     public void clear() {
         boardRepository.deleteAll();
     }

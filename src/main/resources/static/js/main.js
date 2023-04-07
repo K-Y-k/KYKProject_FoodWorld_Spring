@@ -168,8 +168,8 @@ function onMessageReceived(payload) {
         let nowTime = createTime(date);
 
         if (chat.senderId == userId){ // 본인이 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
-                                 <table style="float: right;">
+            let talkMessage = `<li style="width: 280px; margin-left: 70px; margin-top: 3%; list-style-type: none; white-space: normal;">
+                                 <table>
                                     <tr>
                                         <td style="vertical-align: bottom;">
                                             <span style="font-size: 15px; padding: 0px 5px 0px 5px;">`
@@ -177,8 +177,8 @@ function onMessageReceived(payload) {
                                             `</span>
                                          </td>
 
-                                         <td>
-                                            <span style="background-color: lightyellow; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;">`
+                                         <td style="background-color: lightyellow; padding: 5px 10px 5px 10px; border-radius: 1.0rem;">
+                                            <span style="font-size: 15px;">`
                                                 + chat.message +
                                             `</span>
                                         </td>
@@ -188,14 +188,9 @@ function onMessageReceived(payload) {
 
             $("#chatContent").append(talkMessage);
         } else { // 상대가 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
+            let talkMessage = `<li style="width: 280px; float: left; margin-top: 3%; list-style-type: none; white-space: normal;">
                                     <table style="float: left;">
                                         <tr>
-                                            <td>
-                                                <img src="/profileImageUpload/${chat.senderProfile}"
-                                                     class="rounded-circle" style="width: 5vw; height: 8vh;"/>
-                                            </td>
-
                                             <td>
                                                 <table>
                                                     <tr>`
@@ -203,14 +198,14 @@ function onMessageReceived(payload) {
                                                     `</tr>
 
                                                     <tr>
-                                                        <td>
-                                                            <span style="background-color: violet; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;">`
+                                                        <td style="background-color: violet; padding: 5px 10px 5px 10px; border-radius: 1.0rem;">
+                                                            <span style="font-size: 15px;">`
                                                                 + chat.message +
                                                             `</span>
                                                         </td>
 
                                                         <td style="vertical-align: bottom;">
-                                                             <span style="font-size: 15px; margin-right: 30px; padding: 0px 5px 0px 5px;">`
+                                                             <span style="font-size: 15px; padding: 0px 5px 0px 5px;">`
                                                                 + nowTime +
                                                              `</span>
                                                         </td>

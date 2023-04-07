@@ -1,23 +1,20 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.entity.QBoard;
-import kyk.SpringFoodWorldProject.board.domain.entity.QBoardFile;
-import kyk.SpringFoodWorldProject.member.domain.entity.QMember;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
-import static com.querydsl.core.types.ExpressionUtils.isNotNull;
-import static com.querydsl.core.types.ExpressionUtils.isNull;
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoardFile.boardFile;
 import static kyk.SpringFoodWorldProject.member.domain.entity.QMember.member;
@@ -115,6 +112,37 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         }
 
         return new SliceImpl<>(results, pageable, hasNext);
+    }
+
+
+
+    @Override
+    public List<Board> popularBoardList(String boardType) {
+        int limit = 7;
+        if (boardType.equals("먹스타그램")) {
+            limit = 4;
+        }
+
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startToday = today.toLocalDate().atStartOfDay();
+        LocalDateTime endToday = today.toLocalDate().atTime(23, 59, 59);
+
+        log.info("오늘의 시작 시간 = {}", today.toLocalDate().atStartOfDay());
+        log.info("오늘의 마지막 시간 = {}", today.toLocalDate().atTime(23, 59, 59));
+
+
+        return queryFactory.selectFrom(board)
+                .leftJoin(board.member, member)
+                .leftJoin(board.boardFiles, boardFile)
+                .where(
+                        board.boardType.eq(boardType),
+                        board.createdDate.between(startToday, endToday)
+                )
+                .orderBy(board.count.doubleValue().multiply(0.7).add(board.likeCount.doubleValue().multiply(0.3)).desc(),
+                        board.createdDate.desc(),
+                        board.id.desc())
+                .limit(limit)
+                .fetch();
     }
 
 }

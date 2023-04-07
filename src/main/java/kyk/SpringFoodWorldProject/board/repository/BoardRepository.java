@@ -73,4 +73,6 @@ public interface BoardRepository {
     int boardsTotalCount(Long memberId);
 
 
+    List<Board> popularBoardList(String boardType);
+
 }

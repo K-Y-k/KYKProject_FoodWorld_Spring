@@ -352,5 +352,9 @@ public class BoardServiceImpl implements BoardService {
         return findBoard.getId();
     }
 
+    @Override
+    public List<Board> popularBoardList(String boardType) {
+        return boardRepository.popularBoardList(boardType);
+    }
 
 }

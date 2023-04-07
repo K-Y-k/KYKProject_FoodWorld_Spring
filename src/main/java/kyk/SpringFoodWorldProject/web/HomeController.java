@@ -43,37 +43,23 @@ public class HomeController {
     @GetMapping("/")
     public String homeLoginCheck(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                  @ModelAttribute("loginForm") LoginForm form,
-                                 @PageableDefault(page = 0, size = 7, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, 
                                  Model model) {
 
-        Page<Board> freeBoards = boardService.findPageListByBoardType(pageable, "자유게시판");
-        Page<Board> recommendBoards = boardService.findPageListByBoardType(pageable, "추천게시판");
-        Page<Board> muckstarBoards = boardService.findPageListByBoardType(pageable, "먹스타그램");
+        List<Board> freeBoards = boardService.popularBoardList("자유게시판");
+        List<Board> recommendBoards = boardService.popularBoardList("추천게시판");
+        List<Board> muckstarBoards = boardService.popularBoardList("먹스타그램");
 
         // 댓글 개수 가져오는 작업
-        for (Board freeBoard : freeBoards) {
-            Board findBoard = boardService.findById(freeBoard.getId()).orElseThrow(() ->
-                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + freeBoard.getId()));
-            boardService.updateCommentCount(findBoard.getId());
-        }
-        for (Board recommendBoard : recommendBoards) {
-            Board findBoard = boardService.findById(recommendBoard.getId()).orElseThrow(() ->
-                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + recommendBoard.getId()));
-            boardService.updateCommentCount(findBoard.getId());
-        }
-        for (Board muckstarBoard : muckstarBoards) {
-            Board findBoard = boardService.findById(muckstarBoard.getId()).orElseThrow(() ->
-                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + muckstarBoard.getId()));
-            boardService.updateCommentCount(findBoard.getId());
-        }
+        findCommentCount(freeBoards);
+        findCommentCount(recommendBoards);
+        findCommentCount(muckstarBoards);
 
         model.addAttribute("freeBoards", freeBoards);
         model.addAttribute("recommendBoards", recommendBoards);
         model.addAttribute("muckstarBoards", muckstarBoards);
-        model.addAttribute("localDateTime", LocalDateTime.now());
 
 
-        // 채팅방 컨트롤 처리
+        // 채팅방 목록 처리
         if (loginMember != null) {
             List<ChatRoom> member1ChatRoom = chatService.findNotLeaveMessageRoom(loginMember.getId());
 
@@ -143,7 +129,31 @@ public class HomeController {
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
 
+
+        // 인기글 가져오기
+        List<Board> freeBoards = boardService.popularBoardList("자유게시판");
+        List<Board> recommendBoards = boardService.popularBoardList("추천게시판");
+        List<Board> muckstarBoards = boardService.popularBoardList("먹스타그램");
+
+        // 댓글 개수 가져오는 작업
+        findCommentCount(freeBoards);
+        findCommentCount(recommendBoards);
+        findCommentCount(muckstarBoards);
+
+        model.addAttribute("freeBoards", freeBoards);
+        model.addAttribute("recommendBoards", recommendBoards);
+        model.addAttribute("muckstarBoards", muckstarBoards);
+
         return "main";
+    }
+
+
+    private void findCommentCount(List<Board> baordList) {
+        for (Board board : baordList) {
+            Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + board.getId()));
+            boardService.updateCommentCount(findBoard.getId());
+        }
     }
 
 }

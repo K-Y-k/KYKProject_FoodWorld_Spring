@@ -92,6 +92,9 @@ public interface BoardService {
      * 댓글 개수 최신화
      */
     Long updateCommentCount(Long boardId);
+
+
+    List<Board> popularBoardList(String boardType);
 }
 
 

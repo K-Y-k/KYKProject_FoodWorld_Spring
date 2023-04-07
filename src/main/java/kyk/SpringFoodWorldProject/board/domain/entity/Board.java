@@ -33,7 +33,7 @@ public class Board extends BaseTimeEntity{
     private String boardType;
     private String subType;
 
-    @Column(insertable = false, updatable = false, columnDefinition = "integer default 0", nullable = false)
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private int count;
 
     @Column(columnDefinition = "integer default 0", nullable = false)
@@ -70,6 +70,16 @@ public class Board extends BaseTimeEntity{
         this.member = member;
         this.boardType = boardType;
         this.subType = subType;
+    }
+    public Board(String title, String content, String writer, Member member, String boardType, String subType, int count, int likeCount) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.member = member;
+        this.boardType = boardType;
+        this.subType = subType;
+        this.count = count;
+        this.likeCount = likeCount;
     }
 
 

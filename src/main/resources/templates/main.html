@@ -345,20 +345,29 @@
                     <tr style="">
                         <td th:each="muckstarBoard : ${muckstarBoards}" style="margin-left: 10px; width: 180px; height: 200px;">
                             <div>
-                                <img th:src="@{|/imageFileUpload/${muckstarBoard.boardFiles[0].storedFileName}|}"
-                                     width="180px;" height="150px;">
+                                <a th:href="@{|/boards/muckstarBoard/${muckstarBoard.id}|}">
+                                    <img th:src="@{|/imageFileUpload/${muckstarBoard.boardFiles[0].storedFileName}|}"
+                                         width="175px;" height="150px;">
+                                </a>
                             </div>
 
                             <div class="input-group" style="height: 50px;">
-                                <button class="btn btnEvent" id="like_btn" style="width: 30px; height: 40px;" type="button">
-                                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 30px; height: 40px;">
-                                </button>
-                                <span class="like" style="font-weight: 500; font-size: 30px; margin-left: 20px;" th:text="${muckstarBoard.likeCount}"></span>
+                                <div>
+                                    <button class="btn btnEvent" id="like_btn" style="width: 30px; height: 40px; margin-bottom: 10px;"
+                                            type="button">
+                                        <img src="/image/muckstargram_img/favorite_icon.PNG"
+                                             style="width: 30px; height: 30px;">
+                                    </button>
+                                    <span class="like" style="font-weight: 500; font-size: 25px; margin-left: 20px; margin-bottom: 10px;"
+                                          th:text="${muckstarBoard.likeCount}"></span>
+                                </div>
 
-                                <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 30px; height: 40px; margin-left: 10px; margin-top: 5px;">
-                                <span class="comment" style ="font-weight: 500; font-size: 30px; margin-left: 10px;" th:text="${muckstarBoard.commentCount}"></span>
-
-                                <span style="margin-left: 80px;" th:text="${#temporals.format(muckstarBoard.createdDate, 'yyyy-MM-dd')}"></span>
+                                <div>
+                                    <img src="/image/muckstargram_img/comment_icon.PNG"
+                                         style="width: 30px; height: 33px; margin-left: 12px;">
+                                    <span class="comment" style="font-weight: 500; font-size: 25px; margin-left: 10px;"
+                                          th:text="${muckstarBoard.commentCount}"></span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -437,13 +446,13 @@
                         </div>
 
                         <!--채팅 기록-->
-                        <ul class="list-group chat-content" id="chatContent" style="height: 230px; overflow-y: scroll; padding: 10px;">
+                        <ul class="list-group chat-content" id="chatContent" style="width: 350px; height: 230px; overflow-y: scroll; padding: 10px;">
                             <!--DB에 저장된 채팅 메시지-->
                             <div th:each="chatMessage : ${chatMessage}">
                                 <!--현재 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
-                                    style="list-style-type: none; margin-top: 3%;">
-                                    <table style="float: right;">
+                                    style="width: 280px; float: right; margin-top: 3%; list-style-type: none; white-space: normal;">
+                                    <table>
                                         <tr>
                                             <td style="vertical-align: bottom;">
                                                 <span style="font-size: 15px; padding: 0px 5px 0px 5px;">
@@ -454,8 +463,8 @@
                                                 </span>
                                             </td>
 
-                                            <td>
-                                                <span style="background-color: lightyellow; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                                            <td style="background-color: lightyellow; border-radius: 1.0rem; padding: 5px 10px 5px 10px;">
+                                                <span style="font-size: 15px;"
                                                       th:text="${chatMessage.content}">
                                                 </span>
                                             </td>
@@ -465,8 +474,8 @@
 
                                 <!--상대방 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId != session.loginMember.id}"
-                                    style="list-style-type: none; margin-top: 3%;">
-                                    <table style="float: left;">
+                                    style="width: 280px; float: left; list-style-type: none; margin-top: 3%; white-space: normal;">
+                                    <table>
                                         <tr>
                                             <td>
                                                 <table>
@@ -474,14 +483,14 @@
                                                     </tr>
 
                                                     <tr>
-                                                        <td>
-                                                            <span style="background-color: violet; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                                                        <td style="background-color: violet; border-radius: 1.0rem; padding: 5px 10px 5px 10px;">
+                                                            <span style="font-size: 15px;"
                                                                   th:text="${chatMessage.content}">
                                                             </span>
                                                         </td>
 
                                                         <td style="vertical-align: bottom;">
-                                                            <span style="font-size: 15px; margin-right: 30px; padding: 0px 5px 0px 5px;">
+                                                            <span style="font-size: 15px; padding: 0px 5px 0px 5px;">
                                                                 <th:block th:if="${#temporals.day(chatMessage.createdDate) == #temporals.day(localDateTime)}"
                                                                           th:text="${#temporals.format(chatMessage.createdDate, 'HH:mm')}"></th:block>
                                                                 <th:block th:if="${#temporals.day(chatMessage.createdDate) != #temporals.day(localDateTime)}"

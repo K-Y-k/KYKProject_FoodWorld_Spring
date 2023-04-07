@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 
 @Profile("local")
 @Controller
@@ -48,48 +49,65 @@ public class TestDataInit {
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
 
 
+        Random random = new Random();
+        int lowerBound = 50;
+        int upperBound = 1000;
 
-        // 게시글 데이터 추가 20
+        int lowerBound2 = 100;
+        int upperBound2 = 10000;
+
+
+        // 게시글 데이터 추가
+        // 자유게시판 글 19
         int boardCount = 1;
-        while (boardCount < 20) { // 자유게시판 글 19
-            boardRepository.save(new Board("샘플 제목ddddddddddddddddddddddddddddddddddddd" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기"));
+        while (boardCount < 20) {
+            int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
+            int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("샘플 제목ddddddddddddddddddddddddddddddddddddd" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "추천게시판", "식당"));
+            boardRepository.save(new Board("샘플 제목" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", randomCount, randomLikeCount));
             boardCount++;
         }
 
-        // 식당추천게시판 글 1
+        // 식당추천게시판 글 20
+        int boardCount2 = 1;
+        while (boardCount2 < 20) {
+            int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
+            int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
+
+            boardRepository.save(new Board("추천 샘플" + (boardCount2+2), "샘플 내용입니다." + boardCount2, "ddd", savedMember2, "추천게시판", "식당", randomCount, randomLikeCount));
+            boardCount2++;
+        }
         Board savedBoard = boardRepository.save(new Board("식당추천합니다.", "내용", "aaa", savedMember3, "추천게시판","식당"));
 
-        // 먹스타그램 데이터 추가 10
-        Board savedMuckstar1 = boardRepository.save(new Board("먹스타 샘플 제목1", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        // 먹스타그램 글 10
+        Board savedMuckstar1 = boardRepository.save(new Board("먹스타 샘플 제목1", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar1.jpg", savedMuckstar1));
 
-        Board savedMuckstar2 = boardRepository.save(new Board("먹스타 샘플 제목2", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar2 = boardRepository.save(new Board("먹스타 샘플 제목2", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar2.jpg", savedMuckstar2));
 
-        Board savedMuckstar3 = boardRepository.save(new Board("먹스타 샘플 제목3", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar3 = boardRepository.save(new Board("먹스타 샘플 제목3", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar3.jpg", savedMuckstar3));
 
-        Board savedMuckstar4 = boardRepository.save(new Board("먹스타 샘플 제목4", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar4 = boardRepository.save(new Board("먹스타 샘플 제목4", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar4.jpg", savedMuckstar4));
 
-        Board savedMuckstar5 = boardRepository.save(new Board("먹스타 샘플 제목5", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar5 = boardRepository.save(new Board("먹스타 샘플 제목5", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar5.jpg", savedMuckstar5));
 
-        Board savedMuckstar6 = boardRepository.save(new Board("먹스타 샘플 제목6", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar6 = boardRepository.save(new Board("먹스타 샘플 제목6", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar6.jpg", savedMuckstar6));
 
-        Board savedMuckstar7 = boardRepository.save(new Board("먹스타 샘플 제목7", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar7 = boardRepository.save(new Board("먹스타 샘플 제목7", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar7.jpg", savedMuckstar7));
 
-        Board savedMuckstar8 = boardRepository.save(new Board("먹스타 샘플 제목8", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar8 = boardRepository.save(new Board("먹스타 샘플 제목8", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar8.jpg", savedMuckstar8));
 
-        Board savedMuckstar9 = boardRepository.save(new Board("먹스타 샘플 제목9", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar9 = boardRepository.save(new Board("먹스타 샘플 제목9", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar9.jpg", savedMuckstar9));
 
-        Board savedMuckstar10 = boardRepository.save(new Board("먹스타 샘플 제목10", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택"));
+        Board savedMuckstar10 = boardRepository.save(new Board("먹스타 샘플 제목10", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar10.jpg", savedMuckstar10));
 
 
