@@ -64,7 +64,7 @@ public class TestDataInit {
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
             int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("샘플 제목" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", randomCount, randomLikeCount));
+            boardRepository.save(new Board("샘플 제목ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", randomCount, randomLikeCount));
             boardCount++;
         }
 
@@ -77,7 +77,7 @@ public class TestDataInit {
             boardRepository.save(new Board("추천 샘플" + (boardCount2+2), "샘플 내용입니다." + boardCount2, "ddd", savedMember2, "추천게시판", "식당", randomCount, randomLikeCount));
             boardCount2++;
         }
-        Board savedBoard = boardRepository.save(new Board("식당추천합니다.", "내용", "aaa", savedMember3, "추천게시판","식당"));
+        Board savedBoard = boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "추천게시판","식당"));
 
         // 먹스타그램 글 10
         Board savedMuckstar1 = boardRepository.save(new Board("먹스타 샘플 제목1", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));

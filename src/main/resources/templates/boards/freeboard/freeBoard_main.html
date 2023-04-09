@@ -115,12 +115,11 @@
         </div>
 
         <!--게시판 테이블-->
-        <table class="table" style="position: absolute; top: 10%; width: 50vw; height: 40vh; left: 25%;">
+        <table class="table" style="position: absolute; top: 10%; width: 950px; height: 40vh; margin-left: 430px;">
             <thead class="table-dark">
             <tr>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">번호</th>
-                <th class="col-md-5" style="text-align: center; margin: 0 auto;">제목</th>
-                <th class="col-md-1"></th>
+                <th class="col-md-6" style="text-align: center; margin: 0 auto;">제목</th>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">글쓴이</th>
                 <th class="col-md-2" style="text-align: center; margin: 0 auto;">날짜</th>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">조회수</th>
@@ -133,17 +132,15 @@
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
                     th:text="${board.id}"></td>
 
-                <td class="col-md-5" style="text-decoration-line: none; display: inline-block; width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <td class="col-md-6" style="text-decoration-line: none; width: 400px;">
                     <a th:if="${not#strings.equals(board.subType, '말머리 선택')}"
                        th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.subType}]|"
-                       style="color: black; text-decoration-line: none;"></a>
+                       style="color: black; text-decoration-line: none; display: inline-block; overflow: hidden;"></a>
 
                     <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|${board.title}|"
-                       style="color: black; text-decoration-line: none;"></a>
-                </td>
+                       style="color: black; text-decoration-line: none; display: inline-block; width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
 
-                <td class="col-md-1">
-                    <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none;"
+                    <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none; display: inline-block; overflow: hidden;"
                           th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></span>
                 </td>
 
@@ -173,7 +170,7 @@
         </table>
 
         <!--페이지-->
-        <nav aria-label="Page navigation example" style="position: absolute; top: 75%;">
+        <nav aria-label="Page navigation example" style="position: absolute; top: 80%;">
             <ul class="pagination justify-content-center">
               <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
                 <a class="page-link" th:href="@{/boards/freeBoard(page=${boards.pageable.pageNumber - 1})}">이전</a>
@@ -225,8 +222,8 @@
     </div>
 
     <!--아래 메뉴 추천 링크 사진-->
-    <div style="position: absolute; top: 85%; left: 35%;">
-        <a href="menu_recommend.html">
+    <div style="position: absolute; top: 90%; left: 35%;">
+        <a href="/menu">
             <img src="/image/food/circ.png" width="80%;" height="30%;">
         </a>
     </div>

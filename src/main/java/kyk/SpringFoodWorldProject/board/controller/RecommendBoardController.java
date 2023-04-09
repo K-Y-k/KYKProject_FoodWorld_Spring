@@ -51,10 +51,16 @@ public class RecommendBoardController {
      */
     @GetMapping("/recommendBoard")
     public String recommendBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                             Model model,
-                             BoardSearchCond boardSearchDto) {
+                                  Model model,
+                                  BoardSearchCond boardSearchDto,
+                                  String selectedCategory) {
         Page<Board> boards;
         String boardType = "추천게시판";
+        log.info("선택된 카테고리 = {}", selectedCategory);
+        
+        if (selectedCategory == null) {
+            selectedCategory = "말머리 선택";
+        }
 
         String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
