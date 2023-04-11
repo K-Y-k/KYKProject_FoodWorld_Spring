@@ -8,13 +8,19 @@ window.onload = function() {
     var category = sessionStorage.getItem('category');
     var areaAndMenu = sessionStorage.getItem('areaAndMenu');
 
-    if (category === '식당') {
+    if (category === '식당' && areaAndMenu === '') {
         categoryChoice.value = '식당';
         restaurantArea.style.display = 'block';
-
-    } else if (category === '메뉴') {
+    }
+    else if (category === '메뉴') {
        categoryChoice.value = '메뉴';
        menuChoice.style.display = 'block';
+       menuChoice.value = areaAndMenu;
+    }
+    else if (category === '식당' && areaAndMenu != '') {
+        categoryChoice.value = '식당';
+        restaurantArea.style.display = 'block';
+        restaurantArea.value = areaAndMenu;
     }
 }
 
@@ -22,6 +28,7 @@ window.onload = function() {
 function categoryHandleChange() {
     var category = categoryChoice.value;
     sessionStorage.setItem('category', category);
+    sessionStorage.setItem('areaAndMenu', '');
     restaurantArea.value = '';
     menuChoice.value = '';
 
@@ -42,7 +49,7 @@ function categoryHandleChange() {
 // 지역 선택 변경 시
 function areaHandleChange() {
     var area = restaurantArea.value;
-    sessionStorage.setItem('areaAndMenu', areaAndMenu);
+    sessionStorage.setItem('areaAndMenu', area);
     menuChoice.value = '';
     form.submit();
 }
@@ -50,7 +57,7 @@ function areaHandleChange() {
 // 메뉴 선택 변경 시
 function menuHandleChange() {
     var menu = menuChoice.value;
-    sessionStorage.setItem('areaAndMenu', areaAndMenu);
+    sessionStorage.setItem('areaAndMenu', menu);
     restaurantArea.value = '';
     form.submit();
 }
