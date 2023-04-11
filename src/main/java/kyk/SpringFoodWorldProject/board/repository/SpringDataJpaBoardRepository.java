@@ -103,6 +103,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
         return boardRepository.popularBoardList(boardType);
     }
 
+    @Override
+    public Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable) {
+        return boardRepository.categoryBoardList(boardType, selectedCategory, pageable);
+    }
+
     public void clear() {
         boardRepository.deleteAll();
     }

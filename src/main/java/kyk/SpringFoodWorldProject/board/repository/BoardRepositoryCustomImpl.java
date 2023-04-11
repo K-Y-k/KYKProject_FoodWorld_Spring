@@ -1,14 +1,13 @@
 package kyk.SpringFoodWorldProject.board.repository;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -144,5 +143,26 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 .limit(limit)
                 .fetch();
     }
+
+    @Override
+    public Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable) {
+        QueryResults<Board> results = queryFactory.selectFrom(board)
+                .leftJoin(board.member, member)
+                .leftJoin(board.boardFiles, boardFile)
+                .where(
+                        board.boardType.eq(boardType),
+                        board.subType.eq(selectedCategory)
+                )
+                .orderBy(board.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<Board> content = results.getResults();     // .getResults()는 조회한 데이터를 가져옴
+        long total = results.getTotal();                 // 총 개수
+
+        return new PageImpl<>(content, pageable, total); // PageImpl<>로 반환해야한다.
+    }
+
 
 }

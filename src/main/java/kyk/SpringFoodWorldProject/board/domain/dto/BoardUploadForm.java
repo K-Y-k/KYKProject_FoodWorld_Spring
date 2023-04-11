@@ -30,6 +30,8 @@ public class BoardUploadForm {
     @NotEmpty(message = "게시판을 선택해주세요!")
     private String boardType;
     private String subType;
+    private String area;
+    private String menuName;
 
     private List<MultipartFile> imageFiles;
     private List<MultipartFile> attachFiles;
@@ -46,6 +48,8 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
+                .area(area)
+                .menuName(menuName)
                 .fileAttached(0)
                 .build();
     }
@@ -57,6 +61,8 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
+                .area(area)
+                .menuName(menuName)
                 .fileAttached(1)
                 .build();
     }
@@ -66,12 +72,4 @@ public class BoardUploadForm {
         this.boardType = boardType;
     }
 
-    public BoardUploadForm(Long id, String title, String content, String boardType, String subType, int fileAttached) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.boardType = boardType;
-        this.subType = subType;
-        this.fileAttached = fileAttached;
-    }
 }

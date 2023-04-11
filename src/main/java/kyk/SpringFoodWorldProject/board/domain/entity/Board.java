@@ -32,6 +32,8 @@ public class Board extends BaseTimeEntity{
 
     private String boardType;
     private String subType;
+    private String area;
+    private String menuName;
 
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int count;

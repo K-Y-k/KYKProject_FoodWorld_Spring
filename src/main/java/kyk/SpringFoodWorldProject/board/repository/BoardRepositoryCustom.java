@@ -2,6 +2,7 @@ package kyk.SpringFoodWorldProject.board.repository;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -17,4 +18,6 @@ public interface BoardRepositoryCustom {
     Long findFirstCursorBoardIdInMember(Long memberId, String boardType);
 
     List<Board> popularBoardList(String boardType);
+
+    Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable);
 }

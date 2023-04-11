@@ -166,6 +166,17 @@
           <br>
           <br>
 
+          <div th:if="${board.area != null}">
+              <h4 class="content" th:text="|식당 주소: ${board.area}|" style="margin-left: 2%;"></h4>
+          </div>
+
+          <div th:if="${board.menuName != null}">
+              <h4 class="content" th:text="|메뉴 카테고리: ${board.menuName}|" style="margin-left: 2%;"></h4>
+          </div>
+
+          <br>
+          <br>
+
           <h4 class="content" th:text="${board.content}" style="margin-left: 2%;"></h4>
 
           <br>

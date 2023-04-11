@@ -357,4 +357,10 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.popularBoardList(boardType);
     }
 
+
+    @Override
+    public Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable) {
+        return boardRepository.categoryBoardList(boardType, selectedCategory, pageable);
+    }
+
 }

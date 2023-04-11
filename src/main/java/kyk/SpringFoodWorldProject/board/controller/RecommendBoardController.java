@@ -53,15 +53,87 @@ public class RecommendBoardController {
     public String recommendBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                   Model model,
                                   BoardSearchCond boardSearchDto,
-                                  String selectedCategory) {
-        Page<Board> boards;
+                                  String selectedCategory, String selectedArea, String selectedMenu) {
         String boardType = "추천게시판";
         log.info("선택된 카테고리 = {}", selectedCategory);
-        
-        if (selectedCategory == null) {
-            selectedCategory = "말머리 선택";
+        log.info("선택된 지역 = {}", selectedArea);
+        log.info("선택된 메뉴 = {}", selectedMenu);
+
+
+        if (selectedCategory == null || selectedCategory.isBlank()) {
+            pagingAll(pageable, model, boardSearchDto, boardType);
+        }
+        else if (selectedCategory.equals("식당")) {
+            Page<Board> boards = boardService.categoryBoardList(boardType, selectedCategory, pageable);
+
+            for (Board board : boards) {
+                log.info("게시글 : {}", board.getContent());
+            }
+
+            for (Board board : boards) {
+                Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
+                        new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + board.getId()));
+                boardService.updateCommentCount(findBoard.getId());
+            }
+
+            int nowPage = pageable.getPageNumber() + 1;
+
+            int startPage = Math.max(1, nowPage - 2);
+            int endPage = Math.min(nowPage + 2, boards.getTotalPages());
+
+
+            model.addAttribute("boards", boards);
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+
+            model.addAttribute("localDateTime", LocalDateTime.now());
+
+            model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+            model.addAttribute("next", pageable.next().getPageNumber());
+
+            model.addAttribute("hasPrev", boards.hasPrevious());
+            model.addAttribute("hasNext", boards.hasNext());
+        }
+        else if (selectedCategory.equals("메뉴")) {
+            Page<Board> boards = boardService.categoryBoardList(boardType, selectedCategory, pageable);
+            for (Board board : boards) {
+                log.info("게시글 : {}", board.getContent());
+            }
+
+            for (Board board : boards) {
+                Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
+                        new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + board.getId()));
+                boardService.updateCommentCount(findBoard.getId());
+            }
+
+            int nowPage = pageable.getPageNumber() + 1;
+
+            int startPage = Math.max(1, nowPage - 2);
+            int endPage = Math.min(nowPage + 2, boards.getTotalPages());
+
+
+            model.addAttribute("boards", boards);
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+
+            model.addAttribute("localDateTime", LocalDateTime.now());
+
+            model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+            model.addAttribute("next", pageable.next().getPageNumber());
+
+            model.addAttribute("hasPrev", boards.hasPrevious());
+            model.addAttribute("hasNext", boards.hasNext());
+
         }
 
+
+        return "boards/recommendboard/recommendBoard_main";
+    }
+
+    private void pagingAll(Pageable pageable, Model model, BoardSearchCond boardSearchDto, String boardType) {
+        Page<Board> boards;
         String writerSearchKeyword = boardSearchDto.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchDto.getTitleSearchKeyword();
 
@@ -105,8 +177,6 @@ public class RecommendBoardController {
         // 이전, 다음 페이지의 존재 여부
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
-
-        return "boards/recommendboard/recommendBoard_main";
     }
 
 

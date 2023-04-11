@@ -99,7 +99,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
 
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어도 됨
@@ -244,7 +244,8 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -282,7 +283,8 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
@@ -316,7 +318,8 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when1 : 해당 게시글에 좋아요를 누른적이 없었던 회원일 때
@@ -359,7 +362,8 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         CommentUploadDto commentDto = new CommentUploadDto(1L, "안녕하세요 댓글");
@@ -395,7 +399,8 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         CommentUploadDto commentDto = new CommentUploadDto(1L, "안녕하세요 댓글");
@@ -427,8 +432,8 @@ class BoardServiceImplTest {
 
 
             // then
-            assertThat(first).isEqualTo(9);
-            assertThat(last).isEqualTo(7);
+            assertThat(first).isEqualTo(10);
+            assertThat(last).isEqualTo(8);
         } catch (IndexOutOfBoundsException e) {
             fail("IndexOutOfBoundsException 오류 발생");
         }
@@ -440,7 +445,7 @@ class BoardServiceImplTest {
         // given
         Slice<Board> getLastPage = boardRepository.searchBySlice("", 10L, true,
                 new BoardSearchCond(),
-                PageRequest.ofSize(9), "자유게시판");
+                PageRequest.ofSize(10), "자유게시판");
 
         Slice<Board> getMiddlePage = boardRepository.searchBySlice("", 10L, true,
                 new BoardSearchCond(),
@@ -453,5 +458,32 @@ class BoardServiceImplTest {
         // then
         assertThat(isLastPage).isTrue();
         assertThat(isNotLastPage).isFalse();
+    }
+
+
+    @Test
+    @DisplayName("카테고리가 선택된 페이지 리스트")
+    void categoryPageList() {
+        // given
+        Member savedMember4 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        int boardCount = 1;
+        while (boardCount < 20) {
+            boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember4, "추천게시판", "식당"));
+            boardCount++;
+        }
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        String boardType = "추천게시판";
+        String selectedCategory = "식당";
+
+
+        // when
+        Page<Board> result = boardRepository.categoryBoardList(boardType, selectedCategory, pageable);
+
+        // then
+        Assertions.assertEquals(result.getSize(), 10, "한 페이지당 게시글의 개수");
+        Assertions.assertEquals(result.getTotalPages(), 2, "총 페이지 개수");
+        Assertions.assertEquals(result.getTotalElements(), 20, "페이지 객체에 담긴 모든 게시글 개수");
+        System.out.println("NEXT: " + result.nextPageable());
     }
 }
