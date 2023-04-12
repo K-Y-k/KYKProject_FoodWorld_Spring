@@ -96,7 +96,7 @@ public interface BoardService {
 
     List<Board> popularBoardList(String boardType);
 
-    Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable);
+    Page<Board> categoryBoardList(String boardType, BoardSearchCond boardSearchDto, Pageable pageable);
 }
 
 

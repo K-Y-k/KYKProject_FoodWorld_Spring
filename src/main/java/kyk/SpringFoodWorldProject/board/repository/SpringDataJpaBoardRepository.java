@@ -104,8 +104,8 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable) {
-        return boardRepository.categoryBoardList(boardType, selectedCategory, pageable);
+    public Page<Board> categoryBoardList(String boardType, BoardSearchCond boardSearchDto, Pageable pageable) {
+        return boardRepository.categoryBoardList(boardType, boardSearchDto, pageable);
     }
 
     public void clear() {

@@ -10,5 +10,7 @@ import lombok.Setter;
 public class BoardSearchCond {
     private String writerSearchKeyword;
     private String titleSearchKeyword;
-
+    private String selectedCategory;
+    private String selectedArea;
+    private String selectedMenu;
 }

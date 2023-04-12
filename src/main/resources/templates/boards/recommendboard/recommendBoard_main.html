@@ -98,11 +98,11 @@
             <form th:action="@{/boards/recommendBoard}" method="get">
                 <div class="row" style="">
                     <div class="col-md-1" style="width: 6vw;">
-                        <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
+                        <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이" th:value="${writerSearchKeyword}"/>
                     </div>
 
                     <div class="col-md-2" style="width: 12vw;">
-                        <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목"/>
+                        <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목" th:value="*{titleSearchKeyword}"/>
                     </div>
 
                     <div class="col-md-1" style="width: 5vw;">
@@ -179,44 +179,24 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/boards/recommendBoard(page=${boards.pageable.pageNumber - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
+                       th:href="@{/boards/recommendBoard(page=${boards.pageable.pageNumber - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword}, selectedCategory=${param.selectedCategory}, selectedArea=${param.selectedArea}, selectedMenu=${param.selectedMenu})}">이전</a>
                 </li>
 
                 <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
                     <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/boards/recommendBoard(page = ${page - 1})}"
-                       th:text="${page}"></a>
-                    <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/boards/recommendBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                       th:text="${page}"></a>
-                    <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/boards/recommendBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                       th:text="${page}"></a>
-                    <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/boards/recommendBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
+                       th:if="${page != nowPage} and ${page != 0}"
+                       th:href="@{/boards/recommendBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword}, selectedCategory=${param.selectedCategory}, selectedArea=${param.selectedArea}, selectedMenu=${param.selectedMenu})}"
                        th:text="${page}"></a>
 
                     <strong class="page-link"
-                            th:if="${page == nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                            th:text="${page}" style="color: red;"></strong>
-                    <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.titleSearchKeyword)} and ${#strings.isEmpty(param.writerSearchKeyword)}"
-                            th:text="${page}" style="color: red;"></strong>
-                    <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                            th:text="${page}" style="color: red;"></strong>
-                    <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
+                            th:if="${page == nowPage}"
                             th:text="${page}" style="color: red;"></strong>
                 </li>
 
 
                 <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/boards/recommendBoard(page=${boards.pageable.pageNumber + 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
+                    <a class="page-link"
+                       th:href="@{/boards/recommendBoard(page=${boards.pageable.pageNumber + 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword}, selectedCategory=${param.selectedCategory}, selectedArea=${param.selectedArea}, selectedMenu=${param.selectedMenu})}">다음</a>
                 </li>
             </ul>
         </nav>

@@ -27,11 +27,11 @@ public class RecommendBoardApiController {
 
     @GetMapping("/api/recommendBoard")
     public ResponseEntity<?> pageList(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                      String selectedCategory, String selectedArea, String selectedMenu) {
+                                      BoardSearchCond boardSearchDto) {
 
         String boardType = "추천게시판";
 
-        Page<Board> boards = boardService.categoryBoardList(boardType, selectedCategory, pageable);
+        Page<Board> boards = boardService.categoryBoardList(boardType, boardSearchDto, pageable);
 
         for (Board board : boards) {
             Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->

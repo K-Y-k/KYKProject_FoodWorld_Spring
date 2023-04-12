@@ -145,13 +145,18 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     }
 
     @Override
-    public Page<Board> categoryBoardList(String boardType, String selectedCategory, Pageable pageable) {
+    public Page<Board> categoryBoardList(String boardType, BoardSearchCond boardSearchDto, Pageable pageable) {
         QueryResults<Board> results = queryFactory.selectFrom(board)
                 .leftJoin(board.member, member)
                 .leftJoin(board.boardFiles, boardFile)
                 .where(
                         board.boardType.eq(boardType),
-                        board.subType.eq(selectedCategory)
+                        boardWriterEq(boardSearchDto.getWriterSearchKeyword()),
+                        boardTitleEq(boardSearchDto.getTitleSearchKeyword()),
+
+                        boardSubTypeEq(boardSearchDto.getSelectedCategory()),
+                        boardAreaEq(boardSearchDto.getSelectedArea()),
+                        boardMenuNameEq(boardSearchDto.getSelectedMenu())
                 )
                 .orderBy(board.id.desc())
                 .offset(pageable.getOffset())
@@ -164,5 +169,20 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return new PageImpl<>(content, pageable, total); // PageImpl<>로 반환해야한다.
     }
 
+    private BooleanExpression boardSubTypeEq(String selectedCategory) {
+        return hasText(selectedCategory) ? board.subType.eq(selectedCategory) : null;
+    }
+    private BooleanExpression boardAreaEq(String selectedArea) {
+        return hasText(selectedArea) ? board.area.like("%" + selectedArea + "%"): null;
+    }
+    private BooleanExpression boardMenuNameEq(String selectedMenu) {
+        return hasText(selectedMenu) ? board.menuName.eq(selectedMenu) : null;
+    }
+    private BooleanExpression boardWriterEq(String searchWriterKeyword) {
+        return hasText(searchWriterKeyword) ? board.writer.like("%" + searchWriterKeyword + "%") : null;
+    }
+    private BooleanExpression boardTitleEq(String searchTitleKeyword) {
+        return hasText(searchTitleKeyword) ? board.title.like("%" + searchTitleKeyword + "%")  : null;
+    }
 
 }

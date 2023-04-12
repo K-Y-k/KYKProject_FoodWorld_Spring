@@ -29,8 +29,8 @@ function categoryHandleChange() {
     var category = categoryChoice.value;
     sessionStorage.setItem('category', category);
     sessionStorage.setItem('areaAndMenu', '');
-    restaurantArea.value = '';
-    menuChoice.value = '';
+    restaurantArea.value = null;
+    menuChoice.value = null;
 
     if (category === '식당') {
         restaurantArea.style.display = 'block';
@@ -50,7 +50,7 @@ function categoryHandleChange() {
 function areaHandleChange() {
     var area = restaurantArea.value;
     sessionStorage.setItem('areaAndMenu', area);
-    menuChoice.value = '';
+    menuChoice.value = null;
     form.submit();
 }
 
@@ -58,7 +58,7 @@ function areaHandleChange() {
 function menuHandleChange() {
     var menu = menuChoice.value;
     sessionStorage.setItem('areaAndMenu', menu);
-    restaurantArea.value = '';
+    restaurantArea.value = null;
     form.submit();
 }
 

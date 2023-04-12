@@ -73,13 +73,15 @@ public class Board extends BaseTimeEntity{
         this.boardType = boardType;
         this.subType = subType;
     }
-    public Board(String title, String content, String writer, Member member, String boardType, String subType, int count, int likeCount) {
+    public Board(String title, String content, String writer, Member member, String boardType, String subType, String area, String menuName, int count, int likeCount) {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.member = member;
         this.boardType = boardType;
         this.subType = subType;
+        this.area = area;
+        this.menuName = menuName;
         this.count = count;
         this.likeCount = likeCount;
     }
