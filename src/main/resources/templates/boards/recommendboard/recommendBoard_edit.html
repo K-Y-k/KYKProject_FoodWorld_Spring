@@ -6,7 +6,7 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
-  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_upload_style.css" th:href="@{/board_upload_style.css}">
+  <link rel="stylesheet" type="text/css" href="../css/boards/board/board_upload_style.css" th:href="@{/css/boards/board/board_upload_style.css}">
 </head>
 
 <body>
@@ -100,10 +100,12 @@
       </div>
 
       <div class="field-error" style="color: red;" th:errors="*{title}"></div>
-      <input type="text" id="title" class="form-control mt-3" name="title" th:field="*{title}">
+      <input type="text" id="title" class="form-control mt-3" name="title" th:field="*{title}"
+             th:errorclass="field-error">
 
       <div class="field-error" style="color: red;" th:errors="*{content}"></div>
-      <textarea class="form-control mt-2" id="content" name="content" th:field="*{content}" rows="20"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
+      <textarea class="form-control mt-2" id="content" name="content" th:field="*{content}" rows="20"
+                th:errorclass="field-error"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
 
       <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
         <button class="btn btn-danger mt-3"

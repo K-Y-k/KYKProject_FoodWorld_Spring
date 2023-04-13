@@ -15,6 +15,8 @@ import javax.validation.constraints.Size;
 public class MuckstarUpdateForm {
     private Long id;
 
+    private String title;
+
     @NotBlank(message = "내용을 입력해주세요")
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;

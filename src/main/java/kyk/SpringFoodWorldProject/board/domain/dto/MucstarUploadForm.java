@@ -29,16 +29,7 @@ public class MucstarUploadForm {
     private List<String> originalFileName;
     private List<String> storedFileName;
 
-    public Board toSaveEntity(Member member, BoardUploadForm boardDto) {
-        return Board.builder()
-                .content(content)
-                .writer(member.getName())
-                .member(member)
-                .boardType(boardType)
-                .subType(subType)
-                .fileAttached(0)
-                .build();
-    }
+
     public Board toSaveFileEntity(Member member, MucstarUploadForm boardDto) {
         return Board.builder()
                 .content(content)
@@ -50,15 +41,4 @@ public class MucstarUploadForm {
                 .build();
     }
 
-
-    public MucstarUploadForm(String boardType) {
-        this.boardType = boardType;
-    }
-
-    public MucstarUploadForm(Long id, String title, String content, String boardType, String subType) {
-        this.id = id;
-        this.content = content;
-        this.boardType = boardType;
-        this.subType = subType;
-    }
 }

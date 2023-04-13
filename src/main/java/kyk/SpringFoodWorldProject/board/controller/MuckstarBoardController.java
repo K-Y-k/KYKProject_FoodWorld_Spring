@@ -1,9 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.*;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
@@ -289,8 +286,14 @@ public class MuckstarBoardController {
      */
     @PostMapping("/muckstarBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam) {
-        boardService.updateBoard(boardId, updateParam);
+                       @Valid @ModelAttribute("updateForm") MuckstarUpdateForm updateParam, BindingResult bindingResult,
+                       Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("boardId", boardId);
+            return "boards/muckstarBoard/muckstarBoard_edit";
+        }
+
+        boardService.muckstartUpdateBoard(boardId, updateParam);
         return "redirect:/boards/muckstarBoard/{boardId}";
     }
 

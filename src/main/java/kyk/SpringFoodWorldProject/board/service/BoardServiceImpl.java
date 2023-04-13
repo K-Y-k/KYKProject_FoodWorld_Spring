@@ -1,9 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.*;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
@@ -207,6 +204,20 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+
+        log.info("서브 타입 = {}", findBoard.getSubType());
+
+        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
+
+
+        log.info("수정완료");
+        return findBoard.getId();
+    }
+
+    @Override
+    public Long muckstartUpdateBoard(Long boardId, MuckstarUpdateForm updateParam) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 

@@ -27,7 +27,6 @@ public class BoardUploadForm {
     @Size(max = 500, message = "최대 500글자입니다.")
     private String content;
 
-    @NotEmpty(message = "게시판을 선택해주세요!")
     private String boardType;
     private String subType;
     private String area;

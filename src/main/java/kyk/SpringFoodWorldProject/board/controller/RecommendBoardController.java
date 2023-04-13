@@ -267,7 +267,13 @@ public class RecommendBoardController {
      */
     @PostMapping("/recommendBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @ModelAttribute("updateForm") BoardUpdateForm updateParam) {
+                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam, BindingResult bindingResult,
+                       Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("boardId", boardId);
+            return "boards/recommendBoard/recommendBoard_edit";
+        }
+
         boardService.updateBoard(boardId, updateParam);
         return "redirect:/boards/recommendBoard/{boardId}";
     }

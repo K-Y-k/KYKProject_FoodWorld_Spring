@@ -336,7 +336,13 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam) {
+                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam, BindingResult bindingResult,
+                       Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("boardId", boardId);
+            return "boards/freeboard/freeBoard_edit";
+        }
+
         boardService.updateBoard(boardId, updateParam);
         return "redirect:/boards/freeBoard/{boardId}";
     }

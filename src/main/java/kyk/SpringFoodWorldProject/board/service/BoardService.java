@@ -1,10 +1,7 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.*;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,6 +26,7 @@ public interface BoardService {
      * 글 수정
      */
     Long updateBoard(Long boardId, BoardUpdateForm boardUpdateDto);
+    Long muckstartUpdateBoard(Long boardId, MuckstarUpdateForm updateParam);
 
     /**
      * 글 id로 조회

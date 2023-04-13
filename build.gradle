@@ -19,14 +19,15 @@ repositories {
 }
 
 dependencies {
-	// JPA 추가
+	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// 타임리프 추가
+	// 타임리프
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-	// 검증기 추가
+	// 검증기
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// 웹
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	// 웹 소켓
@@ -38,7 +39,7 @@ dependencies {
 	// gson
 	implementation 'com.google.code.gson:gson:2.9.0'
 
-	// QueryDSL 추가
+	// QueryDSL
 	implementation "com.querydsl:querydsl-jpa"
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api" // java.lang.NoClassDefFoundError (javax.annotation.Generated) 대응 코드
@@ -59,14 +60,13 @@ dependencies {
 	// h2 데이터베이스
 	runtimeOnly 'com.h2database:h2'
 	
-	// oracle 데이터베이스
+	// Oracle 데이터베이스
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 
 	// oracle cloud에서 전자지갑으로 접속할 때의 필요한 설정
-	implementation 'com.oracle.database.security:oraclepki'
-	implementation 'com.oracle.database.security:osdt_core'
-	implementation 'com.oracle.database.security:osdt_cert'
-
+//	implementation 'com.oracle.database.security:oraclepki'
+//	implementation 'com.oracle.database.security:osdt_core'
+//	implementation 'com.oracle.database.security:osdt_cert'
 }
 
 tasks.named('test') {
