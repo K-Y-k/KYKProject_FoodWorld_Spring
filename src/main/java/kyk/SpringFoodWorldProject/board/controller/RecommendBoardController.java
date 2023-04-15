@@ -47,7 +47,7 @@ public class RecommendBoardController {
     private String attachFileLocation;
 
     /**
-     * 글 모두 조회 폼
+     * 페이징된 글 조회 폼
      */
     @GetMapping("/recommendBoard")
     public String recommendBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -93,6 +93,7 @@ public class RecommendBoardController {
         int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
 
 
+        // 페이징된 게시글 모델과 시작/현재/끝페이지 모델
         model.addAttribute("boards", boards);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
@@ -109,6 +110,7 @@ public class RecommendBoardController {
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
 
+        // 검색된 파라미터 모델
         model.addAttribute("writerSearchKeyword", boardSearchDto.getWriterSearchKeyword());
         model.addAttribute("titleSearchKeyword", boardSearchDto.getTitleSearchKeyword());
     }

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface JPABoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
     /**
-     * 키워드 검색에 따른 검색
+     * 키워드 검색에 따른 페이징
      */
     Page<Board> findPageListByBoardType(Pageable pageable, String boardType);
     Page<Board> findByTitleContainingAndBoardTypeContaining(String titleSearchKeyword, Pageable pageable, String boardType);

@@ -54,7 +54,7 @@ public class FreeBoardController {
     private String attachFileLocation;
 
     /**
-     * 글 모두 조회 폼
+     * 페이징된 글 조회 폼
      */
     @GetMapping("/freeBoard")
     public String freeBoards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -91,11 +91,11 @@ public class FreeBoardController {
         int startPage = Math.max(1, nowPage - 2);                    // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
         int endPage = Math.min(nowPage + 2, boards.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
 
+        // 페이징된 게시글 모델과 시작/현재/끝페이지 모델
         model.addAttribute("boards", boards);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
         model.addAttribute("localDateTime", LocalDateTime.now());
@@ -107,6 +107,10 @@ public class FreeBoardController {
         // 이전, 다음 페이지의 존재 여부
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
+
+        // 검색된 파라미터 모델
+        model.addAttribute("writerSearchKeyword", boardSearchCond.getWriterSearchKeyword());
+        model.addAttribute("titleSearchKeyword", boardSearchCond.getTitleSearchKeyword());
 
         return "boards/freeboard/freeBoard_main";
     }

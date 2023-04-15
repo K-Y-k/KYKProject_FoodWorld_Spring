@@ -64,7 +64,7 @@ public class TestDataInit {
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
             int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("샘플 제목ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
+            boardRepository.save(new Board("샘플 제목" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
             boardCount++;
         }
 
