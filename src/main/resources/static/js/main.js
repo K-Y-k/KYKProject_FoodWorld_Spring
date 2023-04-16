@@ -172,7 +172,7 @@ function onMessageReceived(payload) {
         let nowTime = createTime(date);
 
         if (chat.senderId == userId){ // 본인이 보낸 것이면
-            let talkMessage = `<li style="width: 280px; margin-left: 70px; margin-top: 3%; list-style-type: none; white-space: normal;">
+            let talkMessage = `<li style="margin-left: 40px; width: 280px; margin-top: 3%; list-style-type: none;">
                                  <table>
                                     <tr>
                                         <td style="vertical-align: bottom;">
@@ -181,8 +181,8 @@ function onMessageReceived(payload) {
                                             `</span>
                                          </td>
 
-                                         <td style="background-color: lightyellow; padding: 5px 10px 5px 10px; border-radius: 1.0rem;">
-                                            <span style="font-size: 15px;">`
+                                         <td style="background-color: lightyellow; padding: 5px 5px 5px 10px; border-radius: 1.0rem;">
+                                            <span style="font-size: 15px; word-break: break-all;">`
                                                 + chat.message +
                                             `</span>
                                         </td>
@@ -192,8 +192,8 @@ function onMessageReceived(payload) {
 
             $("#chatContent").append(talkMessage);
         } else { // 상대가 보낸 것이면
-            let talkMessage = `<li style="width: 280px; float: left; margin-top: 3%; list-style-type: none; white-space: normal;">
-                                    <table style="float: left;">
+            let talkMessage = `<li style="width: 280px; float: left; list-style-type: none; margin-top: 3%; white-space: normal;">
+                                    <table>
                                         <tr>
                                             <td>
                                                 <table>
@@ -202,8 +202,8 @@ function onMessageReceived(payload) {
                                                     `</tr>
 
                                                     <tr>
-                                                        <td style="background-color: violet; padding: 5px 10px 5px 10px; border-radius: 1.0rem;">
-                                                            <span style="font-size: 15px;">`
+                                                        <td style="background-color: violet; padding: 5px 5px 5px 10px; border-radius: 1.0rem;">
+                                                            <span style="font-size: 15px; word-break: break-all;">`
                                                                 + chat.message +
                                                             `</span>
                                                         </td>

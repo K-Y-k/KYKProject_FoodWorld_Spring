@@ -451,7 +451,7 @@
                             <div th:each="chatMessage : ${chatMessage}">
                                 <!--현재 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
-                                    style="width: 280px; float: right; margin-top: 3%; list-style-type: none; white-space: normal;">
+                                    style="margin-left: 40px; width: 280px; margin-top: 3%; list-style-type: none;">
                                     <table>
                                         <tr>
                                             <td style="vertical-align: bottom;">
@@ -463,8 +463,8 @@
                                                 </span>
                                             </td>
 
-                                            <td style="background-color: lightyellow; border-radius: 1.0rem; padding: 5px 10px 5px 10px;">
-                                                <span style="font-size: 15px;"
+                                            <td style="background-color: lightyellow; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                                                <span style="font-size: 15px; word-break: break-all;"
                                                       th:text="${chatMessage.content}">
                                                 </span>
                                             </td>
@@ -474,7 +474,7 @@
 
                                 <!--상대방 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId != session.loginMember.id}"
-                                    style="width: 280px; float: left; list-style-type: none; margin-top: 3%; white-space: normal;">
+                                    style="width: 280px; float: left; list-style-type: none; margin-top: 3%;">
                                     <table>
                                         <tr>
                                             <td>
@@ -483,8 +483,8 @@
                                                     </tr>
 
                                                     <tr>
-                                                        <td style="background-color: violet; border-radius: 1.0rem; padding: 5px 10px 5px 10px;">
-                                                            <span style="font-size: 15px;"
+                                                        <td style="background-color: violet; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                                                            <span style="font-size: 15px; word-break: break-all;"
                                                                   th:text="${chatMessage.content}">
                                                             </span>
                                                         </td>

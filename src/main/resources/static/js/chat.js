@@ -136,7 +136,7 @@ function onMessageReceived(payload) {
         let nowTime = createTime(date);
 
         if (chat.senderId == userId){ // 본인이 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
+            let talkMessage = `<li style="margin-left: 90px; width: 580px; list-style-type: none; margin-top: 3%;">
                                  <table style="float: right;">
                                     <tr>
                                         <td style="vertical-align: bottom;">
@@ -145,8 +145,8 @@ function onMessageReceived(payload) {
                                             `</span>
                                          </td>
 
-                                         <td>
-                                            <span style="background-color: lightyellow; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;">`
+                                         <td style="background-color: lightyellow; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                                            <span style="font-size: 25px; word-break: break-all;">`
                                                 + chat.message +
                                             `</span>
                                         </td>
@@ -156,7 +156,7 @@ function onMessageReceived(payload) {
 
             $("#chatContent").append(talkMessage);
         } else { // 상대가 보낸 것이면
-            let talkMessage = `<li style="list-style-type: none; margin-top: 3%;">
+            let talkMessage = `<li style="width: 600px; float: left; list-style-type: none; margin-top: 3%;">
                                     <table style="float: left;">
                                         <tr>
                                             <td>
@@ -171,8 +171,8 @@ function onMessageReceived(payload) {
                                                     `</tr>
 
                                                     <tr>
-                                                        <td>
-                                                            <span style="background-color: violet; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;">`
+                                                        <td style="background-color: violet; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                                                            <span style="font-size: 25px; word-break: break-all;">`
                                                                 + chat.message +
                                                             `</span>
                                                         </td>

@@ -140,8 +140,8 @@
             <div th:each="chatMessage : ${chatMessage}">
               <!--현재 회원이 보낸 것이면-->
               <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
-                  style="list-style-type: none; margin-top: 3%;">
-                <table style="float: right;">
+                  style="margin-left: 90px; width: 580px; list-style-type: none; margin-top: 3%;">
+                <table>
                   <tr>
                     <td style="vertical-align: bottom;">
                       <span style="font-size: 15px; padding: 0px 5px 0px 5px;">
@@ -152,8 +152,8 @@
                       </span>
                     </td>
 
-                    <td>
-                      <span style="background-color: lightyellow; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                    <td style="background-color: lightyellow; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                      <span style="font-size: 25px; word-break: break-all;"
                             th:text="${chatMessage.content}">
                       </span>
                     </td>
@@ -163,8 +163,8 @@
 
               <!--상대방 회원이 보낸 것이면-->
               <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId != session.loginMember.id}"
-                  style="list-style-type: none; margin-top: 3%;">
-                <table style="float: left;">
+                  style="width: 600px; float: left; list-style-type: none; margin-top: 3%;">
+                <table>
                   <tr>
                     <td>
                       <img th:src="@{|/profileImageUpload/${chatMessage.senderProfile}|}"
@@ -177,8 +177,8 @@
                         </tr>
 
                         <tr>
-                          <td>
-                            <span style="background-color: violet; padding: 5px 10px 5px 10px; font-size: 25px; border-radius: 1.0rem;"
+                          <td style="background-color: violet; border-radius: 1.0rem; padding: 5px 5px 5px 10px;">
+                            <span style="font-size: 25px; word-break: break-all;"
                                   th:text="${chatMessage.content}">
                             </span>
                           </td>

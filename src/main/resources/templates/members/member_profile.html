@@ -109,10 +109,10 @@
     </section>
 
     <aside style="position: relative; width: 700px; margin-left: 250px; margin-top: 30px;">
-        <div style="border: solid 3px; border-color: rgb(202, 130, 22); height: 250px;">
+        <div style="border: solid 3px; border-color: rgb(202, 130, 22);">
             <!--프로필 정보 단-->
             <table class="container2 mt-10"
-                   style="white-space: nowrap; margin-top: 1%; position: absolute; margin-left: 50px;">
+                   style="white-space: nowrap; margin-top: 5px; position: absolute; margin-left: 50px;">
                 <tr>
                     <h4 style="color: orangered; padding-top: 3%; margin-left: 45%;">Profile</h4>
                 </tr>
@@ -125,7 +125,7 @@
                                     <img th:if="${profileFile != null}"
                                          th:src="@{|/profileImageUpload/${profileFile.storedFileName}|}"
                                          class="rounded-circle"
-                                         style="width: 5vw; height: 8vh;">
+                                         style="width: 70px; height: 70px;">
                                 </td>
                             </tr>
 
@@ -139,26 +139,26 @@
                         <table>
                             <tr style="text-align: center;">
                                 <td>
-                                    <th:block style="text-align: center; width: 7vw;" th:text="${boardsTotalCount}"></th:block>
+                                    <th:block style="width: 150px;" th:text="${boardsTotalCount}"></th:block>
                                 </td>
 
                                 <td>
-                                    <th:block style="text-align: center; width: 7vw;" th:text="${followCount}"></th:block>
+                                    <th:block style="width: 150px;" th:text="${followCount}"></th:block>
                                 </td>
 
                                 <td>
-                                    <th:block style="text-align: center; width: 7vw;" th:text="${followingCount}"></th:block>
+                                    <th:block style="width: 150px;" th:text="${followingCount}"></th:block>
                                 </td>
                             </tr>
 
-                            <tr>
-                                <td class="col-md-4" style="text-align: center; width: 7vw;">
+                            <tr style="text-align: center;">
+                                <td class="col-md-4" style="width: 150px;">
                                     게시글
                                 </td>
-                                <td class="col-md-4" style="text-align: center; width: 7vw;">
+                                <td class="col-md-4" style="width: 150px;">
                                     팔로워
                                 </td>
-                                <td class="col-md-4" style="text-align: center; width: 7vw;">
+                                <td class="col-md-4" style="width: 150px;">
                                     팔로잉
                                 </td>
                             </tr>
@@ -166,42 +166,42 @@
                     </td>
                 </tr>
 
-                <tr style="position: relative; width: 700px; white-space: normal;">
-                    <td><th:block th:text="${member.introduce}"></th:block></td>
-                <tr>
-
-                <tr>
-                    <td style="padding-top: 5%;">
-                        <button type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px; margin-left: 70%;" id="follow"
-                                th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow == null}"
-                                th:onclick="clicked()">팔로우
-                        </button>
-
-                        <button type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px; margin-left: 70%;" id="unfollow"
-                                th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow != null}"
-                                th:onclick="clicked()">언팔로우
-                        </button>
-                    </td>
-
-                    <td style="padding-top: 5%;">
-                        <button type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px; margin-left: 60%;" id="chat"
-                                th:if="${session.loginMember != null and session.loginMember.id != member.id}"
-                                th:onclick="|location.href='@{/chat/matchingRoom/{memberId}(memberId=${member.id})}'|">채팅하기
-                        </button>
-                    </td>
-
-                    <td style="padding-top: 5%;">
-                        <button type="submit" class="btn btn-primary"
-                                style="height: 35px;" id="profile-update"
-                                th:if="${session.loginMember != null and session.loginMember.id == member.id}"
-                                th:onclick="|location.href='@{/members/profile/{memberId}/edit(memberId=${session.loginMember.id})}'|">프로필 수정
-                        </button>
-                    </td>
-                </tr>
             </table>
+
+            <div style="margin-top: 120px; margin-left: 50px; width: 600px; white-space: normal;">
+                <th:block th:text="${member.introduce}"></th:block>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary"
+                        style="width: 100px; height: 35px; margin-left: 150px;" id="follow"
+                        th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow == null}"
+                        th:onclick="clicked()">팔로우
+                </button>
+
+                <button type="submit" class="btn btn-primary"
+                        style="width: 100px; height: 35px; margin-left: 150px;" id="unfollow"
+                        th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow != null}"
+                        th:onclick="clicked()">언팔로우
+                </button>
+
+                <button type="submit" class="btn btn-primary"
+                        style="width: 100px; height: 35px; margin-left: 150px;" id="chat"
+                        th:if="${session.loginMember != null and session.loginMember.id != member.id}"
+                        th:onclick="|location.href='@{/chat/matchingRoom/{memberId}(memberId=${member.id})}'|">채팅하기
+                </button>
+
+                <div style="margin-left: 550px;"
+                     th:if="${session.loginMember != null and session.loginMember.id == member.id}">
+                    <button type="submit" class="btn btn-primary"
+                            style="width: 120px; height: 35px;" id="profile-update"
+                            th:onclick="|location.href='@{/members/profile/{memberId}/edit(memberId=${session.loginMember.id})}'|">
+                        프로필 수정
+                    </button>
+                </div>
+
+                <div style="margin-top: 10px;"></div>
+            </div>
         </div>
 
         <br>
