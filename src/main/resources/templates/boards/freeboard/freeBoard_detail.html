@@ -98,7 +98,7 @@
                   </a>
 
                   <a class="dropdown-item"
-                     th:href="@{/boards/freeBoard/{boardId}/delete(boardId=${board.id})}">
+                     id="board_delete-link" href="#" th:attr="data-board-id=${board.id}">
                       삭제
                   </a>
               </div>
@@ -235,8 +235,8 @@
                                                       수정
                                                   </a>
 
-                                                  <a class="dropdown-item"
-                                                     th:href="@{/boards/comments/{boardId}/{commentId}/delete(boardId=${board.id}, commentId=${comment.id})}">
+                                                  <a class="dropdown-item" id="comment_delete-link" href="#"
+                                                     th:attr="data-board-id=${board.id}, data-comment-id=${comment.id}">
                                                       삭제
                                                   </a>
                                               </div>
@@ -290,6 +290,43 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous">
 </script>
+
+<script>
+    var boardDeleteLink = document.getElementById('board_delete-link');
+    var commentDeleteLink = document.getElementById('comment_delete-link');
+    var confirmMessage = `삭제하시겠습니까?`;
+
+
+    if (boardDeleteLink) {
+        boardDeleteLink.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var boardId = this.getAttribute('data-board-id');
+
+            if (confirm(confirmMessage)) {
+                var deleteUrl = `/boards/freeBoard/${boardId}/delete`;
+                location.href = deleteUrl;
+            }
+        });
+    }
+
+
+    if (commentDeleteLink) {
+        commentDeleteLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            var confirmMessage = `삭제하시겠습니까?`;
+
+            var boardId = this.getAttribute('data-board-id');
+            var commentId = this.getAttribute('data-comment-id');
+
+            if (confirm(confirmMessage)) {
+                var deleteUrl = `/boards/freeBoard/comments/${boardId}/${commentId}/delete`;
+                location.href = deleteUrl;
+            }
+        });
+    }
+</script>
+
 <script src="/js/comment.js"></script>
 
 </body>

@@ -214,7 +214,7 @@ public class FreeBoardController {
     /**
      * 댓글 수정
      */
-    @PostMapping("/comments/{boardId}/{commentId}/edit")
+    @PostMapping("/freeBoard/comments/{boardId}/{commentId}/edit")
     public String commentUpdate(@PathVariable Long boardId, @PathVariable Long commentId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
@@ -238,7 +238,7 @@ public class FreeBoardController {
     /**
      * 댓글 삭제
      */
-    @GetMapping("/comments/{boardId}/{commentId}/delete")
+    @GetMapping("/freeBoard/comments/{boardId}/{commentId}/delete")
     public String commentDelete(@PathVariable Long boardId, @PathVariable Long commentId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 RedirectAttributes redirectAttributes,

@@ -56,16 +56,20 @@ function onConnected() {
 
 // 회원 퇴장시
 function onLeave() {
-    stompClient.send("/pub/chat/leaveUser",
-            {},
-            JSON.stringify({
-                "roomId": roomId,
-                sender: username,
-                senderId: userId,
-                receiverId: receiverId,
-                type: 'LEAVE'
-            })
+    var confirmMessage = `퇴장하시겠습니까?`;
+
+    if (confirm(confirmMessage)) {
+        stompClient.send("/pub/chat/leaveUser",
+                {},
+                JSON.stringify({
+                    "roomId": roomId,
+                    sender: username,
+                    senderId: userId,
+                    receiverId: receiverId,
+                    type: 'LEAVE'
+                })
         )
+    }
 }
 
 // 에러 발생시

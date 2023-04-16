@@ -150,8 +150,8 @@
 											수정
 										</a>
 
-										<a class="dropdown-item"
-										   th:href="@{/menu/{menuRecommendId}/delete(menuRecommendId=${menuRecommend.id})}">
+										<a class="dropdown-item" id="menuRecommend_delete-link" href="#"
+										   th:attr="data-menuRecommend-id=${menuRecommend.id}">
 											삭제
 										</a>
 									</div>
@@ -285,6 +285,24 @@
 		crossorigin="anonymous">
 </script>
 
+<script>
+    var menuRecommendDeleteLink = document.getElementById('menuRecommend_delete-link');
+    var confirmMessage = `삭제하시겠습니까?`;
+
+
+    if (menuRecommendDeleteLink) {
+        menuRecommendDeleteLink.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var menuRecommendId = this.getAttribute('data-menuRecommend-id');
+
+            if (confirm(confirmMessage)) {
+                var deleteUrl = `/menu/${menuRecommendId}/delete`;
+                location.href = deleteUrl;
+            }
+        });
+    }
+</script>
 
 <script src="/js/menu.js"></script>
 
