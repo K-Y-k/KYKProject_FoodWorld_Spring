@@ -5,6 +5,7 @@ import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
+import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.dto.LoginForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.MemberSessionDto;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +36,7 @@ public class HomeController {
 
     private final MemberServiceImpl memberService;
     private final BoardServiceImpl boardService;
+    private final LikeServiceImpl likeService;
     private final ChatService chatService;
 
 
@@ -105,6 +108,27 @@ public class HomeController {
         return "redirect:/";
     }
 
+
+    /**
+     * 글 좋아요 업데이트 기능
+     */
+    @GetMapping ("/{boardId}/like")
+    public String likeUpdate(@PathVariable Long boardId,
+                             @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                             Model model) {
+        if(loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "회원만 좋아요를 누를 수 있습니다. 로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        }
+
+        int likeCount = likeService.saveLike(loginMember.getId(), boardId);
+        boardService.updateLikeCount(boardId, likeCount);
+
+        return "redirect:/";
+    }
 
 
     /**

@@ -92,11 +92,13 @@ function getStoryItem(board) {
                                     </a>
 
                                     <div class="input-group" style="margin-left: 5%;">
-                                        <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;" type="button">
+                                        <button class="btn btnEvent" style="width: 3vw; height: 3vh;"
+                                                id="${board.id}"
+                                                onclick="likeUpdate(this);" type="button">
                                             <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
                                         </button>
 
-                                        <span class="like" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
+                                        <span class="like" id="likeCount${board.id}" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
 
                                         <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
                                         <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
@@ -118,6 +120,40 @@ function getStoryItem(board) {
 
 	return item;
 }
+
+
+function likeUpdate(boardId) {
+    var boardId = boardId.id;
+    var likeCount = document.getElementById('likeCount' + boardId);
+
+    console.log("board=", boardId)
+    console.log("userId=", userId)
+
+    if (userId === 'GuestId'){
+        var confirmMessage = `회원만 좋아요를 누를 수 있습니다. 로그인 먼저 해주세요!`;
+        if (confirmMessage(confirmMessage)) {
+            var loginUrl = `/members/login`;
+            location.href = loginUrl;
+        }
+    }
+	else {
+        $.ajax({
+            type: "GET",
+            url: '/boards/api/muckstarBoard/' + boardId + '/like',
+            dataType: "json",
+            data: {userId: userId},
+            async: false,
+            success: function(result) {
+                console.log(JSON.stringify(result))
+                likeCount.innerText = JSON.stringify(result);
+            },
+            error: function (error) {
+                console.log("오류", error);
+            }
+        });
+	}
+}
+
 
 function dateCompare(date, nowDate) {
         let year = date.getFullYear();

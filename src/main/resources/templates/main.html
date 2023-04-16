@@ -354,6 +354,7 @@
                             <div class="input-group" style="height: 50px;">
                                 <div>
                                     <button class="btn btnEvent" id="like_btn" style="width: 30px; height: 40px; margin-bottom: 10px;"
+                                            th:onclick="|location.href='@{/{boardId}/like(boardId=${muckstarBoard.id})}'|"
                                             type="button">
                                         <img src="/image/muckstargram_img/favorite_icon.PNG"
                                              style="width: 30px; height: 30px;">

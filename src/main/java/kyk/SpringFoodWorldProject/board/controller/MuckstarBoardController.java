@@ -322,14 +322,13 @@ public class MuckstarBoardController {
 
 
     /**
-     * 글 좋아요 업데이트 기능
+     * 상세 글에서 좋아요 업데이트 기능
      */
     @GetMapping ("/muckstarBoard/{boardId}/like")
     public String likeUpdate(@PathVariable Long boardId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                              RedirectAttributes redirectAttributes,
                              Model model) {
-        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
 
@@ -338,12 +337,9 @@ public class MuckstarBoardController {
             return "messages";
         }
 
-
         likeService.saveLike(loginMember.getId(), boardId);
         redirectAttributes.addAttribute("boardId", boardId);
 
         return "redirect:/boards/muckstarBoard/{boardId}";
     }
-
-
 }
