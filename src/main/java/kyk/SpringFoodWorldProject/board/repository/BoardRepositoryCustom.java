@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface BoardRepositoryCustom {
     Long findFirstCursorBoardId(String boardType);
-    Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
-
     Long findFirstCursorBoardIdInMember(Long memberId, String boardType);
+    Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, Pageable pageable, String boardType);
+    Slice<Board> searchBySliceByWriter(String memberId, Long lastCursorBoardId, Boolean first, String writerSearchKeyword, Pageable pageable, String boardType);
 
     List<Board> popularBoardList(String boardType);
 

@@ -89,32 +89,26 @@
 
 <section style="position: relative; width: 70vw; height: 80vh;">
   <!--검색-->
-  <div style="position: absolute; top: 3%; left: 47%;">
-    <form th:action="@{/boards/muckstarBoard}" method="get">
-      <div class="row">
-        <div class="col-md-1" style="width: 15vw;">
-          <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이"/>
-        </div>
+  <div class="row" style="width: 1000px; height: 30px;; margin-left: 650px; margin-top: 50px;">
+    <div class="col-md-3">
+      <input type="text" id="writerSearchKeyword" class="form-control" placeholder="작성자 닉네임 정확히 기재"/>
+    </div>
 
-        <div class="col-md-1" style="width: 5vw;">
-          <button type="submit" class="btn btn-secondary">검색</button>
-        </div>
+    <div class="col-md-1">
+      <button class="btn btn-secondary" id="searchButton">검색</button>
+    </div>
 
-        <div class="col-md-1" style="width: 6vw;">
-          <button class="btn btn-danger" id="write"
-                  th:onclick="|location.href='@{/boards/muckstarBoard/upload}'|"
-                  type="button">글 작성
-          </button>
-        </div>
-      </div>
-    </form>
+    <div class="col-md-3">
+      <button class="btn btn-danger" id="write"
+              th:onclick="|location.href='@{/boards/muckstarBoard/upload}'|"
+              type="button">글 작성
+      </button>
+    </div>
   </div>
 
-
   <span class="cursorBoardId" th:id="${firstCursorBoardId}" style="display: none;"></span>
-
   <div class="muckstarList" id="mucstarList"
-       style="position: absolute; width: 70vw; height: 90vh; top: 7%;">
+       style="position: absolute; width: 70vw; height: 90vh;">
   </div>
 </section>
 

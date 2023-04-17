@@ -32,12 +32,11 @@ public class MemberApiController {
     public ResponseEntity<?> muckstarBoardsScroll(@RequestParam(value = "lastCursorBoardId", defaultValue = "0") Long lastCursorBoardId,
                                                   @RequestParam(value = "memberId") String memberId,
                                                   @RequestParam(value = "first") Boolean first,
-                                                  @PageableDefault(size=27) Pageable pageable,
-                                                  BoardSearchCond boardSearchCond) {
+                                                  @PageableDefault(size=27) Pageable pageable) {
         String boardType = "먹스타그램";
         log.info("회원 아이디 = {}", memberId);
 
-        Slice<Board> boards = boardService.searchBySlice(memberId, lastCursorBoardId, first, boardSearchCond, pageable, boardType);
+        Slice<Board> boards = boardService.searchBySlice(memberId, lastCursorBoardId, first, pageable, boardType);
 
         return new ResponseEntity<>(boards, HttpStatus.OK);
     }

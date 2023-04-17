@@ -34,13 +34,18 @@ public class MuckstarApiController {
     @GetMapping("/api/muckstarBoard")
     public ResponseEntity<?> muckstarBoardsScroll(@RequestParam(value = "lastCursorBoardId", defaultValue = "0") Long lastCursorBoardId,
                                                   @RequestParam(value = "first") Boolean first,
-                                                  @PageableDefault(size=3) Pageable pageable,
-                                                  BoardSearchCond boardSearchCond) {
+                                                  @RequestParam(value = "writerSearchKeyword") String writerSearchKeyword,
+                                                  @PageableDefault(size=3) Pageable pageable) {
         String boardType = "먹스타그램";
 
-        Slice<Board> boards = boardService.searchBySlice("", lastCursorBoardId, first, boardSearchCond, pageable, boardType);
-
-        return new ResponseEntity<>(boards, HttpStatus.OK);
+        if (writerSearchKeyword.isBlank()) {
+            Slice<Board> boards = boardService.searchBySlice("", lastCursorBoardId, first, pageable, boardType);
+            return new ResponseEntity<>(boards, HttpStatus.OK);
+        }
+        else {
+            Slice<Board> boards = boardService.searchBySliceByWriter("", lastCursorBoardId, first, writerSearchKeyword, pageable, boardType);
+            return new ResponseEntity<>(boards, HttpStatus.OK);
+        }
     }
 
 

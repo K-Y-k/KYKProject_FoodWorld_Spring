@@ -59,7 +59,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
 
     @Override
-    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
+    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, Pageable pageable, String boardType) {
 
         List<Board> results = queryFactory.selectFrom(board)
                 .leftJoin(board.member, member).fetchJoin()
@@ -68,6 +68,27 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                         ltBoardId(lastCursorBoardId, first),
                         memberIdEq(memberId),
                         boardTypeEq(boardType)
+                )
+                .limit(pageable.getPageSize() + 1)
+                .orderBy(board.id.desc())
+                .fetch();
+
+        log.info("리스트 개수={}", results.size());
+
+        return checkLastPage(pageable, results);
+    }
+
+    @Override
+    public Slice<Board> searchBySliceByWriter(String memberId, Long lastCursorBoardId, Boolean first, String writerSearchKeyword, Pageable pageable, String boardType) {
+
+        List<Board> results = queryFactory.selectFrom(board)
+                .leftJoin(board.member, member).fetchJoin()
+                .leftJoin(board.boardFiles, boardFile).fetchJoin()
+                .where(
+                        ltBoardId(lastCursorBoardId, first),
+                        memberIdEq(memberId),
+                        boardTypeEq(boardType),
+                        board.writer.eq(writerSearchKeyword)
                 )
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(board.id.desc())

@@ -289,8 +289,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType) {
-        return boardRepository.searchBySlice(memberId, lastCursorBoardId, first, boardSearchCond, pageable, boardType);
+    public Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, Pageable pageable, String boardType) {
+        return boardRepository.searchBySlice(memberId, lastCursorBoardId, first, pageable, boardType);
+    }
+
+    @Override
+    public Slice<Board> searchBySliceByWriter(String memberId, Long lastCursorBoardId, Boolean first, String writerSearchKeyword, Pageable pageable, String boardType) {
+        return boardRepository.searchBySliceByWriter(memberId, lastCursorBoardId, first, writerSearchKeyword, pageable, boardType);
     }
 
 

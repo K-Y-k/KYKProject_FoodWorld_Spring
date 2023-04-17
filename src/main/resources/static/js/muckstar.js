@@ -1,7 +1,7 @@
-let page = 0;
-let first = true;
-let scrollCheck = true;
-let lastCursorBoardId = $(".cursorBoardId").attr("id");
+var page = 0;
+var first = true;
+var scrollCheck = true;
+var lastCursorBoardId = $(".cursorBoardId").attr("id");
 
 //if($(window).scrollTop() + $(window).height() == $(document).height()) {
 //    storyLoad();
@@ -11,23 +11,78 @@ storyLoad();
 
 $(window).scroll(function() {
     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-      console.log(++page);
+        console.log(++window.page);
 
-      if (scrollCheck == true) {
+        console.log('스크롤 상태', window.scrollCheck);
+        console.log('처음인가', window.first);
+        console.log("마지막 글 id = ", window.lastCursorBoardId);
+
+        if (window.scrollCheck == true) {
             storyLoad();
-      }
+        }
 //    넣는 방식 예제 : $("#card").append("<h1>Page " + page + "</h1>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~");
     }
 });
 
-var writerSearchKeyword = $('input[name=inputName]').val();
 
-function storyLoad() {
+// 검색 기능 : 각 page, first, scrollCheck, lastCursorBoardId를 초기 값으로 다시 설정하고 검색을 시작한다.
+var searchButton = document.getElementById('searchButton');
+
+searchButton.addEventListener('click', function(e) {
+    $("#mucstarList").empty()
+
+    window.page = 0;
+    window.first = true;
+    window.scrollCheck = true;
+    window.lastCursorBoardId = $(".cursorBoardId").attr("id");
+    console.log("마지막 글 id = ", lastCursorBoardId);
+
+    var writerSearchKeyword = $('#writerSearchKeyword').val();
+    console.log("작성자 = ", writerSearchKeyword);
+
 	$.ajax({
 	    type: "GET",
 		url: '/boards/api/muckstarBoard',
 		dataType: "json",
-		data: {lastCursorBoardId, first},
+		data: {lastCursorBoardId, first, writerSearchKeyword},
+		beforeSend: function() {
+		    $('#loading').show();
+		},
+		async: false,
+		success: function(result) {
+		    console.log(JSON.stringify(result))
+
+		    $.each(result.content, function(index, board){
+		        console.log("JSON의 내용에서 가져온 요소: ", index);
+
+		        let muckstarItem = getStoryItem(board);
+		        $("#mucstarList").append(muckstarItem);
+
+		            lastCursorBoardId = board.id;
+		    });
+		    if (first) {
+                first = false;
+            }
+	    },
+	    error: function (error) {
+            console.log("오류", error);
+        }
+	});
+});
+
+
+// Slice 페이징 처리
+function storyLoad() {
+    console.log("마지막 글 id = ", lastCursorBoardId);
+
+    var writerSearchKeyword = $('#writerSearchKeyword').val();
+    console.log("작성자 = ", writerSearchKeyword);
+
+	$.ajax({
+	    type: "GET",
+		url: '/boards/api/muckstarBoard',
+		dataType: "json",
+		data: {lastCursorBoardId, first, writerSearchKeyword},
 		beforeSend: function() {
 		    $('#loading').show();
 		},
@@ -47,7 +102,6 @@ function storyLoad() {
 
                 	lastCursorBoardId = board.id;
                 });
-
 		    }
 		    else {
 		        $.each(result.content, function(index, board){
@@ -58,7 +112,7 @@ function storyLoad() {
 
 		            lastCursorBoardId = board.id;
 		        });
-		        if(first) {
+		        if (first) {
                     first = false;
                 }
 		    }
@@ -85,7 +139,7 @@ function getStoryItem(board) {
                             <td> <img src="/image/muckstargram_img/muckstar_background.PNG" style="width: 23vw;"></td>
 
                             <td>
-                                <div class="card" id="card" style="margin-top: 10%; left: 10%; width: 40vw; height: 70vh;">
+                                <div class="card" id="card" style="margin-top: 5%; left: 10%; width: 40vw; height: 70vh;">
                                     <a href="/boards/muckstarBoard/${board.id}">
                                         <img class="muckstar-image" src="/imageFileUpload/${board.boardFiles[0].storedFileName}"
                                              style="width: 40vw; height: 62vh;">
@@ -103,7 +157,7 @@ function getStoryItem(board) {
                                         <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
                                         <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
 
-                                        <span id="date" style="float: right; margin-left: 40%;">${comparedDate}</span>
+                                        <span id="date" style="float: right; font-size: 20px; margin-left: 25%;">${comparedDate}</span>
                                     </div>
                                 </div>
                             </td>

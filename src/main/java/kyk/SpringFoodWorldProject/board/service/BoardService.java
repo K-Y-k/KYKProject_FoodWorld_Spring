@@ -61,8 +61,8 @@ public interface BoardService {
     /**
      * 무한 스크롤 페이징 처리
      */
-    Slice<Board> searchBySlice(String memberId, Long lastBoardId, Boolean first, BoardSearchCond boardSearchCond, Pageable pageable, String boardType);
-    
+    Slice<Board> searchBySlice(String memberId, Long lastBoardId, Boolean first, Pageable pageable, String boardType);
+    Slice<Board> searchBySliceByWriter(String memberId, Long lastCursorBoardId, Boolean first, String writerSearchKeyword, Pageable pageable, String boardType);
     
     /**
      * 글 삭제

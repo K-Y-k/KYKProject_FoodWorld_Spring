@@ -423,7 +423,6 @@ class BoardServiceImplTest {
     void test() {
         // given
         Slice<Board> boards = boardRepository.searchBySlice( "", 10L, true,
-                new BoardSearchCond(),
                 PageRequest.ofSize(3), "자유게시판");
         try {
             // when
@@ -444,11 +443,9 @@ class BoardServiceImplTest {
     void checkLast() {
         // given
         Slice<Board> getLastPage = boardRepository.searchBySlice("", 10L, true,
-                new BoardSearchCond(),
                 PageRequest.ofSize(10), "자유게시판");
 
         Slice<Board> getMiddlePage = boardRepository.searchBySlice("", 10L, true,
-                new BoardSearchCond(),
                 PageRequest.ofSize(4), "자유게시판");
 
         // when
