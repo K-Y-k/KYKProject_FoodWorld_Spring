@@ -69,11 +69,16 @@ public class MuckstarBoardController {
      */
     @GetMapping("/muckstarBoard/{boardId}")
     public String board_detail(@PathVariable Long boardId,
-                        @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                        @ModelAttribute("comment") CommentDto commentDto,
-                        @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
-                        @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
-                        Model model) {
+                               @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                               @ModelAttribute("comment") CommentDto commentDto,
+                               @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
+                               @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
+                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                               Model model) {
+        int nowPage = 1;
+        int startPage = 1;
+        int endPage = 1;
+
         // 조회수 상승
         boardService.updateCount(boardId);
 
@@ -84,27 +89,37 @@ public class MuckstarBoardController {
         // 좋아요 개수 업데이트
         boardService.updateLikeCount(boardId, likeCount);
 
-
         // 댓글 가져오기
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        List<Comment> comments = board.getComments();
+        Page<Comment> comments = commentService.findPageListByBoardId(pageable, boardId);
 
         if (comments != null && !comments.isEmpty()) {
+            nowPage = pageable.getPageNumber() + 1;
+            startPage = Math.max(1, nowPage - 2);
+            endPage = Math.min(nowPage + 2, comments.getTotalPages());
+            long commentCount = comments.getTotalElements();
+
             model.addAttribute("comments", comments);
+            model.addAttribute("commentCount", commentCount);
+
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+
+            model.addAttribute("hasPrev", comments.hasPrevious());
+            model.addAttribute("hasNext", comments.hasNext());
         }
-        
+        else {
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+        }
+
         // 파일 가져오기
         List<BoardFile> boardFiles = board.getBoardFiles();
         if (boardFiles != null && !boardFiles.isEmpty()) {
             model.addAttribute("boardFiles", boardFiles);
-        }
-
-        // 프로필 사진 가져오기
-        Member member = board.getMember();
-        ProfileFile profileFile = member.getProfileFile();
-        if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
-            model.addAttribute("profileFile", profileFile);
         }
 
         model.addAttribute("board", board);
@@ -121,12 +136,17 @@ public class MuckstarBoardController {
     @PostMapping("/muckstarBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                 @Valid @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
+        int nowPage = 1;
+        int startPage = 1;
+        int endPage = 1;
+
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
-        if(loginMember == null) {
+        if (loginMember == null) {
             log.info("로그인 상태가 아님");
 
             model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
@@ -143,9 +163,28 @@ public class MuckstarBoardController {
 
             Board board = boardService.findById(boardId).orElseThrow(() ->
                     new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-            List<Comment> comments = board.getComments();
+            Page<Comment> comments = commentService.findPageListByBoardId(pageable, boardId);
+
             if (comments != null && !comments.isEmpty()) {
+                nowPage = pageable.getPageNumber() + 1;
+                startPage = Math.max(1, nowPage - 2);
+                endPage = Math.min(nowPage + 2, comments.getTotalPages());
+                long commentCount = comments.getTotalElements();
+
                 model.addAttribute("comments", comments);
+                model.addAttribute("commentCount", commentCount);
+
+                model.addAttribute("nowPage", nowPage);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
+
+                model.addAttribute("hasPrev", comments.hasPrevious());
+                model.addAttribute("hasNext", comments.hasNext());
+            }
+            else {
+                model.addAttribute("nowPage", nowPage);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
             }
 
             List<BoardFile> boardFiles = board.getBoardFiles();
@@ -160,8 +199,6 @@ public class MuckstarBoardController {
             }
 
             model.addAttribute("board", board);
-
-            // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
             model.addAttribute("localDateTime", LocalDateTime.now());
 
             return "boards/muckstarboard/muckstarBoard_detail";

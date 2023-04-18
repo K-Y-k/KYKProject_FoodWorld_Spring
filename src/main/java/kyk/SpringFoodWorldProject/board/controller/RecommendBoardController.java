@@ -125,7 +125,12 @@ public class RecommendBoardController {
                         @ModelAttribute("comment") CommentDto commentDto,
                         @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                         @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
+                        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                         Model model) {
+        int nowPage = 1;
+        int startPage = 1;
+        int endPage = 1;
+
         // 조회수 상승
         boardService.updateCount(boardId);
 
@@ -136,14 +141,31 @@ public class RecommendBoardController {
         // 좋아요 개수 업데이트
         boardService.updateLikeCount(boardId, likeCount);
 
-
         // 댓글 가져오기
         Board board = boardService.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        List<Comment> comments = board.getComments();
+        Page<Comment> comments = commentService.findPageListByBoardId(pageable, boardId);
 
         if (comments != null && !comments.isEmpty()) {
+            nowPage = pageable.getPageNumber() + 1;
+            startPage = Math.max(1, nowPage - 2);
+            endPage = Math.min(nowPage + 2, comments.getTotalPages());
+            long commentCount = comments.getTotalElements();
+
             model.addAttribute("comments", comments);
+            model.addAttribute("commentCount", commentCount);
+
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+
+            model.addAttribute("hasPrev", comments.hasPrevious());
+            model.addAttribute("hasNext", comments.hasNext());
+        }
+        else {
+            model.addAttribute("nowPage", nowPage);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
         }
 
         // 파일 가져오기
@@ -166,12 +188,17 @@ public class RecommendBoardController {
     @PostMapping("/recommendBoard/{boardId}/comment")
     public String commentUpload(@PathVariable Long boardId,
                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                 @Valid @ModelAttribute("commentUpload") CommentUploadDto commentUploadDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
+        int nowPage = 1;
+        int startPage = 1;
+        int endPage = 1;
+
         // 세션에 회원 데이터가 없으면 홈 화면으로 이동
-        if(loginMember == null) {
+        if (loginMember == null) {
             log.info("로그인 상태가 아님");
 
             model.addAttribute("message", "회원만 댓글을 작성할 수 있습니다. 로그인 먼저 해주세요!");
@@ -188,10 +215,28 @@ public class RecommendBoardController {
 
             Board board = boardService.findById(boardId).orElseThrow(() ->
                     new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-            List<Comment> comments = board.getComments();
+            Page<Comment> comments = commentService.findPageListByBoardId(pageable, boardId);
 
             if (comments != null && !comments.isEmpty()) {
+                nowPage = pageable.getPageNumber() + 1;
+                startPage = Math.max(1, nowPage - 2);
+                endPage = Math.min(nowPage + 2, comments.getTotalPages());
+                long commentCount = comments.getTotalElements();
+
                 model.addAttribute("comments", comments);
+                model.addAttribute("commentCount", commentCount);
+
+                model.addAttribute("nowPage", nowPage);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
+
+                model.addAttribute("hasPrev", comments.hasPrevious());
+                model.addAttribute("hasNext", comments.hasNext());
+            }
+            else {
+                model.addAttribute("nowPage", nowPage);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
             }
 
             List<BoardFile> boardFiles = board.getBoardFiles();
@@ -200,7 +245,6 @@ public class RecommendBoardController {
             }
 
             model.addAttribute("board", board);
-
             model.addAttribute("localDateTime", LocalDateTime.now());
 
             return "boards/recommendboard/recommendBoard_detail";

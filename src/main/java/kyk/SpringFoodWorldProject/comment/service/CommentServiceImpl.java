@@ -10,10 +10,11 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -46,8 +47,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> pageList(Pageable pageable) {
-        return commentRepository.pageList(pageable);
+    public Page<Comment> findPageListByBoardId(Pageable pageable, Long boardId) {
+        return commentRepository.findPageListByBoardId(pageable, boardId);
     }
 
     @Override

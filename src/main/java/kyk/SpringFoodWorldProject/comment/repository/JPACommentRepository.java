@@ -1,6 +1,9 @@
 package kyk.SpringFoodWorldProject.comment.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,11 @@ public interface JPACommentRepository extends JpaRepository<Comment, Long> {
     @Query("select count(*) from Comment c where c.board.id = :boardId")
     int findCommentCount(Long boardId);
 
+
+    /**
+     * 댓글 페이징
+     */
+    Page<Comment> findPageListByBoardId(Pageable pageable, Long boardId);
 
 
     /**

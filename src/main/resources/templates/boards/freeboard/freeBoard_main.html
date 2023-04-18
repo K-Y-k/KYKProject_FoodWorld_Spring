@@ -173,7 +173,7 @@
         <nav aria-label="Page navigation example" style="position: absolute; top: 80%;">
             <ul class="pagination justify-content-center">
               <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
-                <a class="page-link" th:href="@{/boards/freeBoard(page=${boards.pageable.pageNumber - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
+                <a class="page-link" th:href="@{/boards/freeBoard(page=${previous}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
               </li>
 
               <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
@@ -210,7 +210,7 @@
               
 
               <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
-                  <a class="page-link" th:href="@{/boards/freeBoard(page=${boards.pageable.pageNumber + 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
+                  <a class="page-link" th:href="@{/boards/freeBoard(page=${next}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
               </li>
             </ul>
           </nav>

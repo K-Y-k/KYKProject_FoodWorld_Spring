@@ -201,7 +201,7 @@
 
           <span class="input-group">
               <div style="font-weight: 400; font-size: 20px; margin-left: 2%;">댓글</div>
-              <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${#lists.size(comments)} + ')'"></div>
+              <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${commentCount}+ ')'"></div>
               <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + 0 + ')'"></div>
           </span>
 
@@ -227,8 +227,7 @@
                                       <td style="float: left;">
                                           <img class="rounded-circle"
                                                th:src="@{|/profileImageUpload/${comment.member.profileFile.storedFileName}|}"
-                                               style="width: 3vw; height: 5vh;"
-                                               alt="...">
+                                               style="width: 3vw; height: 5vh;">
                                       </td>
 
                                       <td class="fw-bold" style="float: left;"
@@ -270,7 +269,7 @@
                                style="white-space: normal; word-break:break-all; position: absolute; left: 8.5%;"
                                th:text="${comment.content}"></div>
 
-                          <form th:if="${session.loginMember != null && session.loginMember.id == comment.member.id}"
+                          <form th:if="${session.loginMember != null and session.loginMember.id == comment.member.id and commentUpdate != null}"
                                 th:id="|commentContentInput_${comment.id}|"
                                 class="commentUpdateInput" style="display: none;"
                                 th:action="@{/boards/comments/{boardId}/{commentId}/edit(boardId=${board.id}, commentId=${comment.id})}"
@@ -298,7 +297,39 @@
                       </div>
 
                   </div>
+
+                  <!--댓글 페이지-->
+                  <nav aria-label="Page navigation example" style="position: relative;">
+                      <ul class="pagination justify-content-center">
+                          <li th:if="${hasPrev != null}"
+                              class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
+                              <a class="page-link"
+                                 th:href="@{/boards/recommendBoard/{boardId}(page=${comments.pageable.pageNumber - 1}, boardId=${board.id})}">이전</a>
+                          </li>
+
+                          <li th:if="${startPage != null} and ${endPage != null}"
+                              class="page-item"
+                              th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                              <a class="page-link"
+                                 th:if="${page != nowPage} and ${page != 0}"
+                                 th:href="@{/boards/recommendBoard/{boardId}(page = ${page - 1}, boardId=${board.id})}"
+                                 th:text="${page}"></a>
+
+                              <strong class="page-link"
+                                      th:if="${page == nowPage}"
+                                      th:text="${page}" style="color: red;"></strong>
+                          </li>
+
+
+                          <li th:if="${hasNext != null}"
+                              class="page-item" th:classappend="${!hasNext} ? 'disabled'">
+                              <a class="page-link"
+                                 th:href="@{/boards/recommendBoard/{boardId}(page=${comments.pageable.pageNumber + 1}, boardId=${board.id})}">다음</a>
+                          </li>
+                      </ul>
+                  </nav>
               </div>
+
           </div>
       </div>
   </div>

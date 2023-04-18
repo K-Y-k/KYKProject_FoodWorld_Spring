@@ -3,9 +3,10 @@ package kyk.SpringFoodWorldProject.comment.repository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +22,10 @@ public class CommentRepositoryImpl implements CommentRepository{
     }
 
     @Override
-    public List<Comment> pageList(Pageable pageable) {
-        return null;
+    public Page<Comment> findPageListByBoardId(Pageable pageable, Long boardId) {
+        return commentRepository.findPageListByBoardId(pageable, boardId);
     }
+
 
     @Override
     public Optional<Comment> findById(Long id) {
