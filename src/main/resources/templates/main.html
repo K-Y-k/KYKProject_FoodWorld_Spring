@@ -452,8 +452,8 @@
                             <div th:each="chatMessage : ${chatMessage}">
                                 <!--현재 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
-                                    style="margin-left: 40px; width: 280px; margin-top: 3%; list-style-type: none;">
-                                    <table>
+                                    style="margin-left: 40px; max-width: 280px; margin-top: 3%; list-style-type: none;">
+                                    <table style="float: right;">
                                         <tr>
                                             <td style="vertical-align: bottom;">
                                                 <span style="font-size: 15px; padding: 0px 5px 0px 5px;">

@@ -172,8 +172,8 @@ function onMessageReceived(payload) {
         let nowTime = createTime(date);
 
         if (chat.senderId == userId){ // 본인이 보낸 것이면
-            let talkMessage = `<li style="margin-left: 40px; width: 280px; margin-top: 3%; list-style-type: none;">
-                                 <table>
+            let talkMessage = `<li style="margin-left: 40px; max-width: 280px; margin-top: 3%; list-style-type: none;">
+                                 <table style="float: right;">
                                     <tr>
                                         <td style="vertical-align: bottom;">
                                             <span style="font-size: 15px; padding: 0px 5px 0px 5px;">`
