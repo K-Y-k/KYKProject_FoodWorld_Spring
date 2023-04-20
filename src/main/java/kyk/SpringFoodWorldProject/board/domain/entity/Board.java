@@ -99,6 +99,17 @@ public class Board extends BaseTimeEntity{
         this.content = content;
         this.subType = subType;
     }
+    public void updateRecommendBoard(String title, String content, String subType, String area, String menuName){
+        this.title = title;
+        this.content = content;
+        this.subType = subType;
+        if (area != null) {
+            this.area = area;
+        }
+        if (menuName != null) {
+            this.menuName = menuName;
+        }
+    }
 
     public void updateLikeCount(int likeCount){
         this.likeCount = likeCount;

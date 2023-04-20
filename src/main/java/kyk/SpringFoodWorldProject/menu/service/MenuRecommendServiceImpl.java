@@ -22,6 +22,7 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -73,10 +74,8 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
     }
 
     @Override
-    public MenuRecommend findById(Long menuRecommendId) {
-        MenuRecommend menuRecommend = menuRecommendRepository.findById(menuRecommendId).orElseThrow(() ->
-                new IllegalArgumentException("메뉴 가져오기 실패: 메뉴룰 찾지 못했습니다." + menuRecommendId));
-        return menuRecommend;
+    public Optional<MenuRecommend> findById(Long menuRecommendId) {
+        return menuRecommendRepository.findById(menuRecommendId);
     }
 
 

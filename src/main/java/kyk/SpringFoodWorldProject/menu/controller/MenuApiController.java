@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.*;
 public class MenuApiController {
     private final MenuRecommendServiceImpl menuRecommendService;
 
-    @GetMapping("/api/menuRecommendList")
-    public ResponseEntity<?> menuRecommendList(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<MenuRecommend> menuRecommends = menuRecommendService.PageList(loginMember.getId(), pageable);
-
-        for (MenuRecommend menuRecommend : menuRecommends) {
-            log.info("리스트 각 메뉴들 = {}", menuRecommend.getMenuName());
-        }
-
-        return new ResponseEntity<>(menuRecommends, HttpStatus.OK);
-    }
+//    @GetMapping("/api/menuRecommendList")
+//    public ResponseEntity<?> menuRecommendList(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+//                                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+//        Page<MenuRecommend> menuRecommends = menuRecommendService.PageList(loginMember.getId(), pageable);
+//
+//        for (MenuRecommend menuRecommend : menuRecommends) {
+//            log.info("리스트 각 메뉴들 = {}", menuRecommend.getMenuName());
+//        }
+//
+//        return new ResponseEntity<>(menuRecommends, HttpStatus.OK);
+//    }
 
     @GetMapping("/api/randomMenu")
     public ResponseEntity<?> randomMenuPick(String selectedCategory) {

@@ -127,20 +127,28 @@ public class MenuController {
             return "messages";
         }
 
-        MenuRecommend findMenuRecommend = menuRecommendService.findById(menuRecommendId);
+        MenuRecommend findMenuRecommend = menuRecommendService.findById(menuRecommendId).orElseThrow(() ->
+                new IllegalArgumentException("메뉴 조회 실패: " + menuRecommendId));
+        String storedFileName = findMenuRecommend.getStoredFileName();
         model.addAttribute("updateForm", findMenuRecommend);
+        model.addAttribute("storedFileName", storedFileName);
 
         return "/menurecommend/menu_recommend_update";
     }
 
     @PostMapping("/{menuRecommendId}/edit")
     public String updateMenu(@PathVariable Long menuRecommendId,
-                             @Valid @ModelAttribute(value = "updateForm", binding = true) MenuRecommendUpdateForm updateForm, BindingResult bindingResult,
+                             @Valid @ModelAttribute(value = "updateForm") MenuRecommendUpdateForm updateForm, BindingResult bindingResult,
                              @SessionAttribute(LoginSessionConst.LOGIN_MEMBER) Member loginMember,
                              Model model) throws IOException {
         log.info("바인딩 에러 정보 = {}", bindingResult);
         if (bindingResult.hasErrors()) {
-            return "/menurecommend/menu_recommend_upload";
+            MenuRecommend findMenuRecommend = menuRecommendService.findById(menuRecommendId).orElseThrow(() ->
+                    new IllegalArgumentException("메뉴 조회 실패: " + menuRecommendId));
+            String storedFileName = findMenuRecommend.getStoredFileName();
+            model.addAttribute("storedFileName", storedFileName);
+
+            return "/menurecommend/menu_recommend_update";
         }
 
         menuRecommendService.updateMenu(menuRecommendId, updateForm);

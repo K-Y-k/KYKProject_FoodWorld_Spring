@@ -50,7 +50,7 @@ public class MuckstarBoardController {
     private String attachFileLocation;
 
     /**
-     * 글 모두 조회 폼
+     * 먹스타그램 메인 폼 반환
      */
     @GetMapping("/muckstarBoard")
     public String muckstarBoards(Model model) {

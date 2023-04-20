@@ -126,7 +126,7 @@
             <label th:for="img">메뉴 이미지 선택</label>
             <br>
             <img th:id="thumbnail"
-                 th:src="@{|/menuRecommendImageUpload/${updateForm.storedFileName}|}"
+                 th:src="@{|/menuRecommendImageUpload/${storedFileName}|}"
                  style="width: 30vw; height: 40vh;">
             <input class="form-control mt-2" id="InputImage" type="file" name="imageFile" onchange="readURL(this)">
 

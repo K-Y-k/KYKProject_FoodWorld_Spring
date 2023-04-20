@@ -27,4 +27,8 @@ public class BoardUpdateForm {
 
     private String subType;
 
+    private String area;
+
+    private String menuName;
+
 }

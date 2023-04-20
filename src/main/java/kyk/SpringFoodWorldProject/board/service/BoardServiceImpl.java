@@ -207,9 +207,17 @@ public class BoardServiceImpl implements BoardService {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
-        log.info("서브 타입 = {}", findBoard.getSubType());
+        log.info("보드 타입 = {}", findBoard.getBoardType());
+        log.info("서브 타입 = {}", updateParam.getSubType());
+        log.info("식당 = {}", updateParam.getArea());
+        log.info("메뉴 = {}", updateParam.getMenuName());
 
-        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
+        if (findBoard.getBoardType().equals("추천게시판")) {
+            findBoard.updateRecommendBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType(), updateParam.getArea(), updateParam.getMenuName());
+        }
+        else {
+            findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
+        }
 
 
         log.info("수정완료");
