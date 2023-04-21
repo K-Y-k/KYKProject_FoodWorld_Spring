@@ -25,8 +25,9 @@ public interface BoardService {
     /**
      * 글 수정
      */
-    Long updateBoard(Long boardId, BoardUpdateForm boardUpdateDto);
-    Long muckstartUpdateBoard(Long boardId, MuckstarUpdateForm updateParam);
+    Long updateBoard(Long boardId, FreeBoardUpdateForm boardUpdateDto);
+    Long recommendUpdateBoard(Long boardId, RecommendBoardUpdateForm updateParam);
+    Long muckstarUpdateBoard(Long boardId, MuckstarUpdateForm updateParam);
 
     /**
      * 글 id로 조회

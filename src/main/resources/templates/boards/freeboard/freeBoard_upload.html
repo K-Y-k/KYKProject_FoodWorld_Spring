@@ -92,9 +92,10 @@
 
                 <br>
 
+                <div class="field-error" style="color: red;" th:errors="*{subType}"></div>
                 <div class="form-group col-sm-2">
                     <select th:field="*{subType}" class="form-select">
-                        <option th:value="'말머리 ' + '선택'">말머리 선택</option>
+                        <option value="">카테고리 선택</option>
                         <option th:value="사는얘기">사는얘기</option>
                         <option th:value="질문">질문</option>
                     </select>

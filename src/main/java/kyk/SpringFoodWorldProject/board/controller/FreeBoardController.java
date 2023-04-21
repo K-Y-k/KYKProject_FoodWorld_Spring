@@ -2,7 +2,7 @@ package kyk.SpringFoodWorldProject.board.controller;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.FreeBoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
@@ -265,7 +265,6 @@ public class FreeBoardController {
                                 @ModelAttribute("commentUpdate") CommentUpdateDto commentUpdateDto,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
-        // 세션에 회원 데이터가 없으면 홈 화면으로 이동
         if(loginMember == null) {
             log.info("로그인 상태가 아님");
 
@@ -273,6 +272,7 @@ public class FreeBoardController {
             model.addAttribute("redirectUrl", "/members/login");
             return "messages";
         }
+        log.info("정보 = {}", commentUpdateDto.getContent());
 
         commentService.updateComment(commentId, commentUpdateDto);
 
@@ -385,7 +385,7 @@ public class FreeBoardController {
      */
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam, BindingResult bindingResult,
+                       @Valid @ModelAttribute("updateForm") FreeBoardUpdateForm updateParam, BindingResult bindingResult,
                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("boardId", boardId);

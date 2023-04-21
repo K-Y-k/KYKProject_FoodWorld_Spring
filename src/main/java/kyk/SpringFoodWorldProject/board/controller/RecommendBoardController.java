@@ -2,7 +2,7 @@ package kyk.SpringFoodWorldProject.board.controller;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.RecommendBoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
@@ -359,14 +359,18 @@ public class RecommendBoardController {
      */
     @PostMapping("/recommendBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @Valid @ModelAttribute("updateForm") BoardUpdateForm updateParam, BindingResult bindingResult,
+                       @Valid @ModelAttribute("updateForm") RecommendBoardUpdateForm updateParam, BindingResult bindingResult,
                        Model model) {
+
         if (bindingResult.hasErrors()) {
+            log.info("지역={}", updateParam.getArea());
+            log.info("메뉴={}", updateParam.getMenuName());
+
             model.addAttribute("boardId", boardId);
             return "boards/recommendBoard/recommendBoard_edit";
         }
 
-        boardService.updateBoard(boardId, updateParam);
+        boardService.recommendUpdateBoard(boardId, updateParam);
         return "redirect:/boards/recommendBoard/{boardId}";
     }
 

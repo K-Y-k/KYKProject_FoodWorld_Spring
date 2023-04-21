@@ -8,7 +8,6 @@ import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
-import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -203,36 +202,32 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
-    public Long updateBoard(Long boardId, BoardUpdateForm updateParam) {
+    public Long updateBoard(Long boardId, FreeBoardUpdateForm updateParam) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-
-        log.info("보드 타입 = {}", findBoard.getBoardType());
-        log.info("서브 타입 = {}", updateParam.getSubType());
-        log.info("식당 = {}", updateParam.getArea());
-        log.info("메뉴 = {}", updateParam.getMenuName());
-
-        if (findBoard.getBoardType().equals("추천게시판")) {
-            findBoard.updateRecommendBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType(), updateParam.getArea(), updateParam.getMenuName());
-        }
-        else {
-            findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
-        }
-
+        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
 
         log.info("수정완료");
         return findBoard.getId();
     }
 
     @Override
-    public Long muckstartUpdateBoard(Long boardId, MuckstarUpdateForm updateParam) {
+    public Long recommendUpdateBoard(Long boardId, RecommendBoardUpdateForm updateParam) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-
         log.info("서브 타입 = {}", findBoard.getSubType());
+        findBoard.updateRecommendBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType(), updateParam.getArea(), updateParam.getMenuName());
 
+        log.info("수정완료");
+        return findBoard.getId();
+    }
+
+    @Override
+    public Long muckstarUpdateBoard(Long boardId, MuckstarUpdateForm updateParam) {
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
+                new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+        log.info("서브 타입 = {}", findBoard.getSubType());
         findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
-
 
         log.info("수정완료");
         return findBoard.getId();

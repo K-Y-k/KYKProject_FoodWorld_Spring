@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -28,6 +27,7 @@ public class BoardUploadForm {
     private String content;
 
     private String boardType;
+    @NotBlank(message = "카테고리를 선택해주세요")
     private String subType;
     private String area;
     private String menuName;
@@ -47,8 +47,6 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
-                .area(area)
-                .menuName(menuName)
                 .fileAttached(0)
                 .build();
     }
@@ -60,8 +58,6 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
-                .area(area)
-                .menuName(menuName)
                 .fileAttached(1)
                 .build();
     }

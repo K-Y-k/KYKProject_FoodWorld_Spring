@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
-public class BoardUpdateForm {
+public class FreeBoardUpdateForm {
     private Long id;
 
     @NotBlank(message = "제목을 입력해주세요")
@@ -26,9 +26,5 @@ public class BoardUpdateForm {
     private String boardType;
 
     private String subType;
-
-    private String area;
-
-    private String menuName;
 
 }

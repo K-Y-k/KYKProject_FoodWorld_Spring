@@ -1,12 +1,8 @@
 package kyk.SpringFoodWorldProject.member.domain.dto;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 

@@ -1,21 +1,14 @@
 package kyk.SpringFoodWorldProject.board.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardUploadForm;
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardUpdateForm;
+import kyk.SpringFoodWorldProject.board.domain.dto.FreeBoardUpdateForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
-import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
-import kyk.SpringFoodWorldProject.board.repository.JPABoardRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
-import kyk.SpringFoodWorldProject.comment.repository.JPACommentRepository;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.like.service.LikeServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
-import kyk.SpringFoodWorldProject.member.repository.JPAMemberRepository;
 import kyk.SpringFoodWorldProject.member.repository.SpringDataJpaMemberRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,14 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -120,7 +110,7 @@ class BoardServiceImplTest {
     @Test
     void updateBoard() {
         // given
-        BoardUpdateForm updateDto = new BoardUpdateForm(1L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
+        FreeBoardUpdateForm updateDto = new FreeBoardUpdateForm(1L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
 
         // when : 기존에 생성된 게시글 중의 id를 하나 넣음
         Long updateBoardId = boardService.updateBoard(updateDto.getId(), updateDto);
