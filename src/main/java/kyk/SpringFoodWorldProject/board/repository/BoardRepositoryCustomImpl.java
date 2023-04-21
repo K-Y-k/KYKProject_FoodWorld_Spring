@@ -152,8 +152,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
 
         return queryFactory.selectFrom(board)
-                .leftJoin(board.member, member)
-                .leftJoin(board.boardFiles, boardFile)
                 .where(
                         board.boardType.eq(boardType),
                         board.createdDate.between(startToday, endToday)
@@ -169,7 +167,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     public Page<Board> categoryBoardList(String boardType, BoardSearchCond boardSearchDto, Pageable pageable) {
         QueryResults<Board> results = queryFactory.selectFrom(board)
                 .leftJoin(board.member, member)
-                .leftJoin(board.boardFiles, boardFile)
                 .where(
                         board.boardType.eq(boardType),
                         boardWriterEq(boardSearchDto.getWriterSearchKeyword()),
