@@ -6,6 +6,8 @@ import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
+import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.follow.repository.FollowRepository;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import kyk.SpringFoodWorldProject.member.repository.ProfileFileRepository;
@@ -29,6 +31,7 @@ import java.util.Random;
 public class TestDataInit {
     private final SpringDataJpaMemberRepository memberRepository;
     private final ProfileFileRepository profileFileRepository;
+    private final FollowRepository followRepository;
     private final SpringDataJpaBoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final CommentServiceImpl commentService;
@@ -47,6 +50,16 @@ public class TestDataInit {
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember1));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember2));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
+        followRepository.save(new Follow(savedMember3, savedMember2));
+
+        // 게시글 데이터 추가
+        int memberCount = 1;
+        while (memberCount < 17) {
+            Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount));
+            profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember));
+            followRepository.save(new Follow(savedMember, savedMember2));
+            memberCount++;
+        }
 
 
         Random random = new Random();

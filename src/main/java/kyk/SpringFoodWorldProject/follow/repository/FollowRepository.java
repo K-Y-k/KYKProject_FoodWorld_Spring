@@ -1,6 +1,9 @@
 package kyk.SpringFoodWorldProject.follow.repository;
 
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.Optional;
 
@@ -32,4 +35,8 @@ public interface FollowRepository {
      * 팔로우 취소
      */
     void deleteByFromMember_IdAndToMember_Id(Long fromMemberId, Long toMemberId);
+
+
+    Long findFirstCursorFollowerId(Member member);
+    Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable);
 }

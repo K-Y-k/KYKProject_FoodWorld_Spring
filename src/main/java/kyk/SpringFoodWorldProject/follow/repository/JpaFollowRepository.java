@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface JpaFollowRepository extends JpaRepository<Follow, Long> {
+public interface JpaFollowRepository extends JpaRepository<Follow, Long>, FollowRepositoryCustom {
 
 	/**
 	 * 현재 회원이 상대 회원을 팔로우한 상태인지 확인

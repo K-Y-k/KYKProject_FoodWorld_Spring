@@ -206,6 +206,14 @@
 
         <br>
 
+        <div id="followerContainer" style="display: flex; flex-direction: row; border: solid 3px; border-color: rgb(101, 130, 22); overflow-x: scroll; white-space: nowrap;">
+            <div th:text="|${member.name}님의 팔로워|" style="position: absolute; height: 30px; margin-left: 20px; font-size: 20px;"></div>
+            <span class="cursorFollowerId" th:id="${firstCursorFollowerId}" style="display: none;"></span>
+
+        </div>
+
+        <br>
+
         <span class="memberId" th:id="${member.id}" style="display: none;"></span>
         <span class="cursorBoardId" th:id="${firstCursorBoardId}" style="display: none;"></span>
 
@@ -214,6 +222,14 @@
         </div>
 
     </aside>
+
+    <footer style="margin-left: 1350px; position: relative; width: 250px; height: 110vh; overflow-y: scroll;">
+        <div style="border: solid 3px; border-color: rgb(202, 130, 22); ">
+            팔로우 추천!
+
+        </div>
+
+    </footer>
 </div>
 
 

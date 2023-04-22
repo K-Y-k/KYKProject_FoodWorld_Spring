@@ -1,36 +1,111 @@
 let page = 0;
-let first = true;
-let scrollCheck = true;
+let followerFirst = true;
+let muckstarFirst = true;
+let followerScrollCheck = true;
+let muckstarScrollCheck = true;
 let memberId = $(".memberId").attr("id");
+let lastCursorFollowerId = $(".cursorFollowerId").attr("id");
 let lastCursorBoardId = $(".cursorBoardId").attr("id");
 
-const sectionHeight = document.getElementById('section-height');
+var sectionHeight = document.getElementById('section-height');
 let plusHeight = 0;
+
+followerLoad();
+storyLoad();
+
+// 팔로워 리스트 스크롤 내려갈시의 작동
+var followerContainer = document.getElementById('followerContainer');
+followerContainer.addEventListener('scroll', function() {
+    if (followerContainer.scrollLeft + followerContainer.clientWidth >= followerContainer.scrollWidth) {
+        followerLoad();
+    }
+});
+
+function followerLoad() {
+	$.ajax({
+	    type: "GET",
+		url: '/members/api/follow/'+memberId,
+		dataType: "json",
+		data: {lastCursorFollowerId, followerFirst},
+		async: false,
+		success: function(result) {
+		    console.log("팔로워 JSON", JSON.stringify(result))
+
+		    if(result.last ==  true) {
+                console.log("마지막 페이지");
+            	followerScrollCheck = false;
+
+            	$.each(result.content, function(index, follower){
+                    console.log("팔로워 JSON의 내용에서 가져온 요소: ", index);
+
+                    let followerItem = getFollowerItem(follower);
+                    $("#followerContainer").append(followerItem);
+
+                    lastCursorFollowerId = follower.id;
+                 });
+            }
+		    else {
+		        $.each(result.content, function(index, follower){
+		            console.log("팔로워 JSON의 내용에서 가져온 요소: ", index);
+
+		            let followerItem = getFollowerItem(follower);
+                    $("#followerContainer").append(followerItem);
+
+                    lastCursorFollowerId = follower.id;
+		        });
+		        if (followerFirst) {
+                    followerFirst = false;
+                }
+		    }
+	    },
+	    error: function (error) {
+            console.log("오류", error);
+        }
+	});
+}
+
+function getFollowerItem(follower) {
+    let item = `<table style="margin-left: 20px; margin-top: 40px;">
+                    <tr>
+                        <td>
+                            <img src="/profileImageUpload/${follower.fromMember.profileFile.storedFileName}"
+                                 class="rounded-circle"
+                                 style="width: 70px; height: 70px; margin-left: 20px; text-align: center;">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <h5 style="text-align: center;">${follower.fromMember.name}</h5>
+                        </td>
+                    </tr>
+                </table>`;
+
+    console.log("가져온 요소의 출력 결과", item);
+	return item;
+}
+
 
 //if($(window).scrollTop() + $(window).height() == $(document).height()) {
 //    storyLoad();
 //}
-
-storyLoad();
-
 $(window).scroll(function() {
     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
       console.log(++page);
 
-      if (scrollCheck == true) {
+      if (muckstarScrollCheck == true) {
             storyLoad();
       }
 //    넣는 방식 예제 : $("#card").append("<h1>Page " + page + "</h1>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~<BR/>So<BR/>MANY<BR/>BRS<BR/>YEAHHH~");
     }
 });
 
-
 function storyLoad() {
 	$.ajax({
 	    type: "GET",
 		url: '/members/api/muckstarBoard',
 		dataType: "json",
-		data: {lastCursorBoardId, memberId, first},
+		data: {lastCursorBoardId, memberId, muckstarFirst},
 		beforeSend: function() {
 		    $('#loading').show();
 		},
@@ -40,7 +115,7 @@ function storyLoad() {
 
 		    if(result.last ==  true) {
                 console.log("마지막 페이지");
-            	scrollCheck = false;
+            	muckstarScrollCheck = false;
 
                 plusHeight += 100
 		        sectionHeight.style.height = plusHeight+'vh';
@@ -66,8 +141,8 @@ function storyLoad() {
 
 		            lastCursorBoardId = board.id;
 		        });
-		        if(first) {
-                    first = false;
+		        if (muckstarFirst) {
+                    muckstarFirst = false;
                 }
 		    }
 	    },
@@ -76,7 +151,6 @@ function storyLoad() {
         }
 	});
 }
-
 
 function getStoryItem(board) {
     let item = `<a href="/boards/muckstarBoard/${board.id}">

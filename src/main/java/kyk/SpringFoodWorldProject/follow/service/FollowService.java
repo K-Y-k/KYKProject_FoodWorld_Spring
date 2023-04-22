@@ -1,6 +1,9 @@
 package kyk.SpringFoodWorldProject.follow.service;
 
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.Optional;
 
@@ -27,8 +30,7 @@ public interface FollowService {
      */
     int countByFromMember_Id(Long fromMemberId);
 
-    /**
-     * 팔로우 취소
-     */
-    void deleteByFromMember_IdAndToMember_Id(Long fromMemberId, Long toMemberId);
+    Long findFirstCursorFollowerId(Member member);
+    Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable);
+
 }

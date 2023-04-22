@@ -7,6 +7,8 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +58,12 @@ public class FollowServiceImpl implements FollowService{
     }
 
     @Override
-    public void deleteByFromMember_IdAndToMember_Id(Long fromMemberId, Long toMemberId) {
-        followRepository.deleteByFromMember_IdAndToMember_Id(fromMemberId, toMemberId);
+    public Long findFirstCursorFollowerId(Member member) {
+        return followRepository.findFirstCursorFollowerId(member);
+    }
+
+    @Override
+    public Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
+        return followRepository.searchBySlice(member, lastCursorFollowerId, first, pageable);
     }
 }

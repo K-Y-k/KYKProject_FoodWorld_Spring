@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.member.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.follow.service.FollowServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
@@ -24,6 +25,30 @@ import org.springframework.web.bind.annotation.*;
 public class MemberApiController {
 
     private final BoardServiceImpl boardService;
+    private final FollowServiceImpl followService;
+    private final MemberServiceImpl memberService;
+
+
+    /**
+     * 현재 회원 프로필의 회원의 팔로워 조회
+     */
+    @GetMapping("/api/follow/{toMemberId}")
+    public ResponseEntity<?> followerScroll(@PathVariable Long toMemberId,
+                                            @RequestParam(value = "lastCursorFollowerId", defaultValue = "0") Long lastCursorFollowerId,
+                                            @RequestParam(value = "followerFirst") Boolean first,
+                                            @PageableDefault(size=6) Pageable pageable) {
+
+        Member findToMember = memberService.findById(toMemberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + toMemberId));
+
+        Slice<Follow> followers = followService.searchBySlice(findToMember, lastCursorFollowerId, first, pageable);
+
+        for (Follow follower : followers) {
+            log.info("follower={}", follower.getFromMember().getName());
+        }
+        return new ResponseEntity<>(followers, HttpStatus.OK);
+    }
+
 
     /**
      * 현재 클릭한 프로필의 회원이 작성한 먹스타그램 글을 ajax 비동기로 받은 마지막 id를 기준으로 json 변형후 보내줌
@@ -31,7 +56,7 @@ public class MemberApiController {
     @GetMapping("/api/muckstarBoard")
     public ResponseEntity<?> muckstarBoardsScroll(@RequestParam(value = "lastCursorBoardId", defaultValue = "0") Long lastCursorBoardId,
                                                   @RequestParam(value = "memberId") String memberId,
-                                                  @RequestParam(value = "first") Boolean first,
+                                                  @RequestParam(value = "muckstarFirst") Boolean first,
                                                   @PageableDefault(size=27) Pageable pageable) {
         String boardType = "먹스타그램";
         log.info("회원 아이디 = {}", memberId);

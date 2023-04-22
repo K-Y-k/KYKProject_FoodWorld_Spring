@@ -151,18 +151,27 @@ public class MemberController {
         model.addAttribute("followingCount", followingCount);
 
 
-        // 회원이 작성한 먹스타그램 제일 최근 id
+        // 현재 회원이 팔로우한 상태인지 확인
         try {
             Optional<Follow> followState = followService.findByFromMember_IdAndToMember_Id(loginMember.getId(), memberId);
 
             if (followState.isPresent()){
                 model.addAttribute("unFollow", followState);
             }
-
         } catch (NullPointerException e){
             log.info("NPE 에러");
         }
 
+        // 회원의 팔로워 최근 id 가져오기
+        try {
+            Long firstCursorFollowerId = followService.findFirstCursorFollowerId(member);
+            log.info("최근 팔로워 id = {}", firstCursorFollowerId);
+            model.addAttribute("firstCursorFollowerId", firstCursorFollowerId);
+        } catch (NullPointerException e){
+            log.info("NPE 에러");
+        }
+
+        // 회원의 먹스타그램 최근 id 가져오기
         try {
             Long firstCursorBoardIdInMember = boardService.findFirstCursorBoardIdInMember(memberId, boardType);
             model.addAttribute("firstCursorBoardId", firstCursorBoardIdInMember);

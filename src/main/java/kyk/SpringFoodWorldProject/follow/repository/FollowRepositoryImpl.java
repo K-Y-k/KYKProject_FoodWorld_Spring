@@ -2,7 +2,10 @@ package kyk.SpringFoodWorldProject.follow.repository;
 
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.like.domain.entity.Like;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -36,5 +39,15 @@ public class FollowRepositoryImpl implements FollowRepository{
     @Override
     public void deleteByFromMember_IdAndToMember_Id(Long fromMemberId, Long toMemberId) {
         followRepository.deleteByFromMember_IdAndToMember_Id(fromMemberId, toMemberId);
+    }
+
+    @Override
+    public Long findFirstCursorFollowerId(Member member) {
+        return followRepository.findFirstCursorFollowerId(member);
+    }
+
+    @Override
+    public Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable) {
+        return followRepository.searchBySlice(member, lastCursorBoardId, first, pageable);
     }
 }

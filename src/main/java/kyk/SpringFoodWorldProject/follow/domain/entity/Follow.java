@@ -2,14 +2,12 @@ package kyk.SpringFoodWorldProject.follow.domain.entity;
 
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -25,7 +23,7 @@ public class Follow extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "follow_id")
-	private int id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "fromMember_Id")
@@ -34,6 +32,11 @@ public class Follow extends BaseTimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "toMember_Id")
 	private Member toMember;
+
+	public Follow(Member fromMember, Member toMember) {
+		this.fromMember = fromMember;
+		this.toMember = toMember;
+	}
 }
 
 
