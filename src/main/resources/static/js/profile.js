@@ -13,7 +13,7 @@ let plusHeight = 0;
 followerLoad();
 storyLoad();
 
-// 팔로워 리스트 스크롤 내려갈시의 작동
+// 팔로워 리스트 가로 스크롤 끝에 닿을시 ajax 실행
 var followerContainer = document.getElementById('followerContainer');
 followerContainer.addEventListener('scroll', function() {
     if (followerContainer.scrollLeft + followerContainer.clientWidth >= followerContainer.scrollWidth) {
@@ -65,12 +65,14 @@ function followerLoad() {
 }
 
 function getFollowerItem(follower) {
-    let item = `<table style="margin-left: 20px; margin-top: 40px;">
+    let item = `<table style="margin-left: 20px; margin-top: 10px;">
                     <tr>
                         <td>
-                            <img src="/profileImageUpload/${follower.fromMember.profileFile.storedFileName}"
-                                 class="rounded-circle"
-                                 style="width: 70px; height: 70px; margin-left: 20px; text-align: center;">
+                            <a href="/members/profile/${follower.fromMember.id}">
+                                <img src="/profileImageUpload/${follower.fromMember.profileFile.storedFileName}"
+                                    class="rounded-circle"
+                                    style="width: 70px; height: 70px; margin-left: 20px; text-align: center;">
+                            </a>
                         </td>
                     </tr>
 

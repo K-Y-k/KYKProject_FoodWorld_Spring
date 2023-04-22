@@ -206,9 +206,14 @@
 
         <br>
 
-        <div id="followerContainer" style="display: flex; flex-direction: row; border: solid 3px; border-color: rgb(101, 130, 22); overflow-x: scroll; white-space: nowrap;">
-            <div th:text="|${member.name}님의 팔로워|" style="position: absolute; height: 30px; margin-left: 20px; font-size: 20px;"></div>
+        <div style="border: solid 3px; border-color: rgb(101, 130, 22);">
+            <div style="display: block; height: 30px; margin-left: 20px;">
+                <span th:text="|${member.name}님의 팔로워|" style="font-size: 20px;"></span>
+            </div>
             <span class="cursorFollowerId" th:id="${firstCursorFollowerId}" style="display: none;"></span>
+
+            <div id="followerContainer" style="display: flex; flex-direction: row; overflow-x: scroll; white-space: nowrap">
+            </div>
 
         </div>
 

@@ -36,7 +36,7 @@ public class MemberApiController {
     public ResponseEntity<?> followerScroll(@PathVariable Long toMemberId,
                                             @RequestParam(value = "lastCursorFollowerId", defaultValue = "0") Long lastCursorFollowerId,
                                             @RequestParam(value = "followerFirst") Boolean first,
-                                            @PageableDefault(size=6) Pageable pageable) {
+                                            @PageableDefault(size=7) Pageable pageable) {
 
         Member findToMember = memberService.findById(toMemberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + toMemberId));
