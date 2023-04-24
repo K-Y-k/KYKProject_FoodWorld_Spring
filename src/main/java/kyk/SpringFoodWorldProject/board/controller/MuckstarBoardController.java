@@ -118,6 +118,10 @@ public class MuckstarBoardController {
             model.addAttribute("boardFiles", boardFiles);
         }
 
+        // 작성자의 프로필 사진
+        ProfileFile findProfileFile = board.getMember().getProfileFile();
+        model.addAttribute("profileFile",findProfileFile);
+
         model.addAttribute("board", board);
 
         // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것

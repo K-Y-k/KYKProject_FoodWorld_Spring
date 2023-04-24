@@ -30,6 +30,9 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
     }
 
 
+    /**
+     * 회원을 팔로우한 회원들로 최신 팔로우 id 가져오기
+     */
     @Override
     public Long findFirstCursorFollowerId(Member member) {
         Follow findFollower = queryFactory.selectFrom(follow)
@@ -43,6 +46,9 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
         return findFollower.getId();
     }
 
+    /**
+     * 팔로우한 회원들만 페이징
+     */
     @Override
     public Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
 
