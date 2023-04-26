@@ -12,7 +12,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Transactional
 @Slf4j
@@ -65,5 +67,10 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
         return followRepository.searchBySlice(member, lastCursorFollowerId, first, pageable);
+    }
+
+    @Override
+    public List<Member> recommendMember(Long currentMemberId) {
+        return followRepository.recommendMember(currentMemberId);
     }
 }

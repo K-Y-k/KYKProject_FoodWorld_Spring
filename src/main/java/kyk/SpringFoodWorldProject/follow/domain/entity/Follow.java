@@ -25,11 +25,11 @@ public class Follow extends BaseTimeEntity {
 	@Column(name = "follow_id")
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fromMember_Id")
 	private Member fromMember;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "toMember_Id")
 	private Member toMember;
 

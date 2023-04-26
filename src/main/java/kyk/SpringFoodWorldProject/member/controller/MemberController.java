@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -179,6 +180,18 @@ public class MemberController {
             log.info("NPE 에러");
         }
 
+        // 회원과 연관된 팔로워들 추천 리스트
+        if (loginMember != null) {
+            List<Member> recommendMembers = followService.recommendMember(loginMember.getId());
+
+            if (!recommendMembers.isEmpty()) {
+                for (Member member1 : recommendMembers) {
+                    log.info("최종 결과 팔로우 추천 리스트 = {}", member1.getName());
+                }
+
+                model.addAttribute("recommendMembers", recommendMembers);
+            }
+        }
 
         return "members/member_profile";
     }

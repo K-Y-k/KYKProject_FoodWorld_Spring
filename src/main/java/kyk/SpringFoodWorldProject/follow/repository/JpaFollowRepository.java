@@ -1,8 +1,11 @@
 package kyk.SpringFoodWorldProject.follow.repository;
 
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface JpaFollowRepository extends JpaRepository<Follow, Long>, FollowRepositoryCustom {
@@ -28,4 +31,21 @@ public interface JpaFollowRepository extends JpaRepository<Follow, Long>, Follow
 	 * 팔로우 해제
 	 */
 	void deleteByFromMember_IdAndToMember_Id(Long fromMemberId, Long toMemberId);
+
+	@Query(value = "SELECT * " +
+			"FROM ( " +
+			"  SELECT DISTINCT m.*, ROW_NUMBER() OVER (ORDER BY dbms_random.value) AS rn " +
+			"  FROM ( " +
+			"    SELECT f1.fromMember_id AS member_id " +
+			"    FROM Follow f1 " +
+			"    WHERE f1.toMember_id = :currentMemberId " +
+			"    UNION " +
+			"    SELECT f2.toMember_id AS member_id " +
+			"    FROM Follow f2 " +
+			"    WHERE f2.fromMember_id = :currentMemberId " +
+			"  ) f " +
+			"  INNER JOIN Member m ON m.member_id = f.member_id " +
+			") " +
+			"WHERE rn <= 5;", nativeQuery = true)
+	List<Member> recommendFollow(Long currentMemberId);
 }

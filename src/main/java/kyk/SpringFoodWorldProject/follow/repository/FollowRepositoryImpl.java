@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,4 +51,10 @@ public class FollowRepositoryImpl implements FollowRepository{
     public Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable) {
         return followRepository.searchBySlice(member, lastCursorBoardId, first, pageable);
     }
+
+    @Override
+    public List<Member> recommendMember(Long currentMemberId) {
+        return followRepository.recommendMember(currentMemberId);
+    }
+
 }

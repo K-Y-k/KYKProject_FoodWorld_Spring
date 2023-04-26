@@ -50,9 +50,9 @@ public class TestDataInit {
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember1));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember2));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
-        followRepository.save(new Follow(savedMember3, savedMember2));
+        followRepository.save(new Follow(savedMember2, savedMember3));
 
-        // 게시글 데이터 추가
+        // 회원, 팔로우 데이터 추가
         int memberCount = 1;
         while (memberCount < 17) {
             Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount));

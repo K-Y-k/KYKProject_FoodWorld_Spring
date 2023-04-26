@@ -5,6 +5,7 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository {
@@ -39,4 +40,5 @@ public interface FollowRepository {
 
     Long findFirstCursorFollowerId(Member member);
     Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable);
+    List<Member> recommendMember(Long currentMemberId);
 }

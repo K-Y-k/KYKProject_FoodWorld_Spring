@@ -228,9 +228,28 @@
 
     </aside>
 
-    <footer style="margin-left: 1350px; position: relative; width: 250px; height: 110vh; overflow-y: scroll;">
-        <div style="border: solid 3px; border-color: rgb(202, 130, 22); ">
-            팔로우 추천!
+    <footer style="margin-left: 1350px; position: relative; top: 3.5%; width: 250px; height: 40vh;">
+        <div style="border: solid 3px; border-color: rgb(202, 130, 22); width: 250px; text-align: center; height: 40vh; overflow-y: scroll;">
+            <span style="font-size: 20px;">팔로우 추천</span>
+
+            <table th:if="${recommendMembers != null}"
+                    th:each="recommendMember : ${recommendMembers}"
+                    style="margin-top: 5px;">
+                <tr>
+                    <td>
+                        <a th:href="@{|/members/profile/${recommendMember.id}|}">
+                            <img th:src="@{|/profileImageUpload/${recommendMember.profileFile.storedFileName}|}"
+                             class="rounded-circle"
+                             style="width: 70px; height: 70px;">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{|/members/profile/${recommendMember.id}|}" style="margin-left: 15px; text-decoration: none;">
+                            <span th:text="${recommendMember.name}"></span>
+                        </a>
+                    </td>
+                </tr>
+            </table>
 
         </div>
 
