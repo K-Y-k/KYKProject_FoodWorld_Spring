@@ -161,21 +161,21 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
             log.info("followerTotalCount = {}", followerTotalCount);
         }
 
-        // 합한 팔로우 리스트가 하나이상 존재하고 위 회원의 현재 연관된 팔로워를 가져올 수 있는 합산수가 15개보다 크면
+        // 합한 팔로우 리스트가 하나이상 존재하고 위 카운트 쿼리로 회원의 현재 연관된 팔로워를 가져올 수 있는 합산수인 followerTotalCount가 15개보다 크면
         if (addFollowerList.size() > 0 && followerTotalCount >= 15) {
             // followerTotalCount=15개만 리스트에 담는다.
-            followerOfFollowerList(currentMemberId, rand, noMemberList, resultFollowerList, listCount, 15, follower, currentMember, addFollowerList);
+            followerOfFollowerList(currentMemberId, rand, noMemberList, resultFollowerList, listCount, 15, follower, currentMember, addFollowerList, followingList);
         }
-        else { // 15개보다 작으면
+        else { // followerTotalCount가 15개보다 작으면
             // 회원의 현재 연관된 팔로워를 가져올 수 있는 합산수(followerTotalCount)만큼만 리스트에 담는다.
-            followerOfFollowerList(currentMemberId, rand, noMemberList, resultFollowerList, listCount, followerTotalCount, follower, currentMember, addFollowerList);
+            followerOfFollowerList(currentMemberId, rand, noMemberList, resultFollowerList, listCount, followerTotalCount, follower, currentMember, addFollowerList, followingList);
         }
 
         return resultFollowerList;
     }
 
     // 연관된 팔로워들을 불러오는 메소드
-    private void followerOfFollowerList(Long currentMemberId, Random rand, List<Long> noMemberList, List<Member> resultFollowerList, int listCount, int followerTotalCount, QMember follower, QMember currentMember, List<Member> followerList) {
+    private void followerOfFollowerList(Long currentMemberId, Random rand, List<Long> noMemberList, List<Member> resultFollowerList, int listCount, int followerTotalCount, QMember follower, QMember currentMember, List<Member> followerList,  List<Member> followingList) {
         while (listCount < followerTotalCount) { // followerTotalCount 만큼 담을 때까지 반복
             int FollowerIndex = rand.nextInt(followerList.size());   // 랜덤으로 합산한 팔로우 리스트에서 하나 선택
             Member FollowerMember = followerList.get(FollowerIndex);
@@ -189,6 +189,7 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
                     .where(
                             follower.id.ne(currentMemberId),            // 본인인 현재 회원이 나오지 않게 방지 조건
                             follower.id.notIn(noMemberList),            // 중복방지를 위한 제외대상 리스트에 포함되지 않게 조건
+                            follower.notIn(followingList),              // 본인인 현재 회원이 이미 팔로우한 회원은 포함되지 않게 조건
                             currentMember.id.ne(currentMemberId),       // 본인인 현재 회원이 나오지 않게 방지 조건
                             currentMember.id.eq(FollowerMember.getId()) // 해당 회원을 팔로우한 팔로워만 나오게 하는 조건
                     )

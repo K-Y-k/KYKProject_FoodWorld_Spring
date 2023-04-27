@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +50,20 @@ public class MemberApiController {
         }
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
+
+    /**
+     * 현재 회원과 연관된 팔로워 추천
+     */
+//    @GetMapping("/api/followRecommend")
+//    public ResponseEntity<?> recommendFollower(@RequestParam(value = "userId") Long userId) {
+//        if (userId != null) {
+//            List<Member> recommendMember = followService.recommendMember(userId);
+//            return new ResponseEntity<>(recommendMember, HttpStatus.OK);
+//        }
+//        else {
+//            return ResponseEntity.ok(HttpStatus.OK);
+//        }
+//    }
 
 
     /**

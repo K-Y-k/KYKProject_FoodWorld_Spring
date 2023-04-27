@@ -11,6 +11,7 @@ var sectionHeight = document.getElementById('section-height');
 let plusHeight = 0;
 
 followerLoad();
+followRecommendLoad();
 storyLoad();
 
 // 팔로워 리스트 가로 스크롤 끝에 닿을시 ajax 실행
@@ -78,7 +79,7 @@ function getFollowerItem(follower) {
 
                     <tr>
                         <td>
-                            <h5 style="text-align: center;">${follower.fromMember.name}</h5>
+                            <h5 style="margin-left: 20px; text-align: center;">${follower.fromMember.name}</h5>
                         </td>
                     </tr>
                 </table>`;
@@ -86,6 +87,58 @@ function getFollowerItem(follower) {
     console.log("가져온 요소의 출력 결과", item);
 	return item;
 }
+
+
+//// 팔로우 추천 리스트 스크롤 끝에 닿을시 기존 데이터 비우고 ajax 실행하여 새로 가져옴
+//var followRecommendContainer = document.getElementById('followRecommendContainer');
+//followRecommendContainer.addEventListener('scroll', function() {
+//});
+//
+//function followRecommendLoad() {
+//	$.ajax({
+//	    type: "GET",
+//		url: '/members/api/followRecommend',
+//		dataType: "json",
+//		data: {userId},
+//		async: false,
+//		success: function(result) {
+//		    console.log("팔로우 추천 리스트 JSON", JSON.stringify(result))
+//
+//            $.each(result.content, function(index, followRecommend){
+//                console.log("팔로우 추천 리스트 JSON의 내용에서 가져온 요소: ", index);
+//
+//                let followRecommendItem = getFollowRecommendItem(followRecommend);
+//                $("#followRecommendContainer").append(followRecommendItem);
+//
+//            });
+//	    },
+//	    error: function (error) {
+//            console.log("오류", error);
+//        }
+//	});
+//}
+//
+//function getFollowRecommendItem(followRecommend) {
+//    let item = `<table style="margin-top: 5px;">
+//                    <tr>
+//                        <td>
+//                             <a href="/members/profile/${followRecommend.id}">
+//                                 <img src="/profileImageUpload/${followRecommend.profileFile.storedFileName}"
+//                                      class="rounded-circle"
+//                                      style="width: 70px; height: 70px;">
+//                             </a>
+//                        </td>
+//                        <td>
+//                            <a th:href="/members/profile/${followRecommend.id}" style="margin-left: 15px; text-decoration: none;">
+//                                <span th:text="${followRecommend.name}"></span>
+//                            </a>
+//                        </td>
+//                    </tr>
+//               </table>`;
+//
+//    console.log("가져온 요소의 출력 결과", item);
+//	return item;
+//}
 
 
 //if($(window).scrollTop() + $(window).height() == $(document).height()) {

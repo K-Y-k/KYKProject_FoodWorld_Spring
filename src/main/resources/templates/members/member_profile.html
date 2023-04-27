@@ -229,8 +229,12 @@
     </aside>
 
     <footer style="margin-left: 1350px; position: relative; top: 3.5%; width: 250px; height: 40vh;">
-        <div style="border: solid 3px; border-color: rgb(202, 130, 22); width: 250px; text-align: center; height: 40vh; overflow-y: scroll;">
+        <div id="followRecommendContainer" style="border: solid 3px; border-color: rgb(202, 130, 22); width: 250px; text-align: center; height: 40vh; overflow-y: scroll;">
             <span style="font-size: 20px;">팔로우 추천</span>
+            <button class="btn btnEvent" th:onclick="|location.href='@{/members/profile/{memberId}(memberId=${member.id})}'|" type="button">
+                <img src="/image/main_img/redirect.PNG" style="width: 30px; height: 30px;">
+            </button>
+
 
             <table th:if="${recommendMembers != null}"
                     th:each="recommendMember : ${recommendMembers}"
@@ -270,12 +274,16 @@
 </script>
 
 
-<script type="text/javascript" th:src="@{/js/profile.js}" ></script>
 <script th:inline="javascript">
-function clicked() {
-    alert("완료");
-    location.href = [[|@{/members/follow/{memberId}(memberId=${member.id})}|]];
-}
+    var userId = [[${session.loginMember.id}]];
+
+    function clicked() {
+        alert("완료");
+        location.href = [[|@{/members/follow/{memberId}(memberId=${member.id})}|]];
+    }
 </script>
+
+<script type="text/javascript" th:src="@{/js/profile.js}" ></script>
+
 </body>
 </html>
