@@ -146,13 +146,13 @@ function getStoryItem(board) {
                                     </a>
 
                                     <div class="input-group" style="margin-left: 5%;">
-                                        <button class="btn btnEvent" style="width: 3vw; height: 3vh;"
+                                        <button class="btn btnEvent"
                                                 id="${board.id}"
                                                 onclick="likeUpdate(this);" type="button">
                                             <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 3vw; height: 5vh;">
                                         </button>
 
-                                        <span class="like" id="likeCount${board.id}" style="font-weight: 500; font-size: 250%; margin-left: 5%;">${board.likeCount}</span>
+                                        <span class="like" id="likeCount${board.id}" style="font-weight: 500; font-size: 250%;">${board.likeCount}</span>
 
                                         <img src="/image/muckstargram_img/comment_icon.PNG" style = "width: 3vw; height: 5vh; margin-left: 5%; margin-top:1%">
                                         <span class="comment" style ="font-weight: 500; font-size: 250%; margin-left: 3%;">${board.commentCount}</span>
@@ -185,7 +185,7 @@ function likeUpdate(boardId) {
 
     if (userId === 'GuestId'){
         var confirmMessage = `회원만 좋아요를 누를 수 있습니다. 로그인 먼저 해주세요!`;
-        if (confirmMessage(confirmMessage)) {
+        if (confirm(confirmMessage)) {
             var loginUrl = `/members/login`;
             location.href = loginUrl;
         }

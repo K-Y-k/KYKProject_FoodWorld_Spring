@@ -169,7 +169,7 @@
           <div class="input-group" style="margin-left: 45%;">
               <h4 class="like" style="font-weight: 400; margin-top: 1.5%;" th:text="${likeCount}"></h4>
 
-              <button class="btn btnEvent" id="like_btn" style="width: 3vw; height: 3vh;"
+              <button class="btn btnEvent" id="like_btn"
                       th:onclick="|location.href='@{/boards/freeBoard/{boardId}/like(boardId=${board.id})}'|"
                       type="button">
                   <img src="/image/muckstargram_img/recommend_icon.PNG" style="width: 3vw; height: 5vh;">

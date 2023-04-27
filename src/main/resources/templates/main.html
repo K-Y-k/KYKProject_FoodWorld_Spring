@@ -353,13 +353,13 @@
 
                             <div class="input-group" style="height: 50px;">
                                 <div>
-                                    <button class="btn btnEvent" id="like_btn" style="width: 30px; height: 40px; margin-bottom: 10px;"
+                                    <button class="btn btnEvent" id="like_btn"
                                             th:onclick="|location.href='@{/{boardId}/like(boardId=${muckstarBoard.id})}'|"
                                             type="button">
                                         <img src="/image/muckstargram_img/favorite_icon.PNG"
-                                             style="width: 30px; height: 30px;">
+                                             style="width: 30px; height: 30px; margin-bottom: 5px;">
                                     </button>
-                                    <span class="like" style="font-weight: 500; font-size: 25px; margin-left: 20px; margin-bottom: 10px;"
+                                    <span class="like" style="font-weight: 500; font-size: 25px;"
                                           th:text="${muckstarBoard.likeCount}"></span>
                                 </div>
 
