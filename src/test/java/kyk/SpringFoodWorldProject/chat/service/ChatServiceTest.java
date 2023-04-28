@@ -31,15 +31,15 @@ class ChatServiceTest {
     @BeforeEach
     public void init() {
         // 회원 데이터 추가
-        memberRepository.saveMember(new Member("테스터1", "test", "test!"));
+        memberRepository.saveMember(new Member("테스터1", "test", "test!", "customer"));
     }
 
     @Test
     @DisplayName("회원끼리의 채팅방 생성 및 현재 회원들로 구성된 방 찾기")
     void createRoomAndFindRoom() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
         // when
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
@@ -53,9 +53,9 @@ class ChatServiceTest {
     @DisplayName("현재 회원과 관련된 모든 채팅방들 조회")
     void membersChatRoomList() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
-        Member savedMember3 = memberRepository.saveMember(new Member("ccc", "cc", "cc"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
+        Member savedMember3 = memberRepository.saveMember(new Member("ccc", "cc", "cc", "customer"));
 
         ChatRoom createChatRoom1 = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
         ChatRoom createChatRoom2 = chatService.createChatRoom(savedMember1.getId(), savedMember3.getId());
@@ -75,8 +75,8 @@ class ChatServiceTest {
     @DisplayName("채팅 메시지 저장")
     void saveChatMessage() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
 
@@ -91,8 +91,8 @@ class ChatServiceTest {
     @DisplayName("해당 회원이 입장했던 메시지 저장되어있는지 조회")
     void findEnterMessage() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
 
@@ -110,8 +110,8 @@ class ChatServiceTest {
     @DisplayName("해당 방에 퇴장한 유저 메시지를 지우는 작업")
     void deleteLeaveMessage() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
         ChatRoom createChatRoom = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
 
@@ -133,9 +133,9 @@ class ChatServiceTest {
     @DisplayName("현재 회원이 이미 퇴장햇던 메시지가 있는 방은 조회를 안하고 다른 채팅방들만 조회")
     void findNotLeaveMessageChatRoom() {
         // given
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
-        Member savedMember3 = memberRepository.saveMember(new Member("ccc", "cc", "cc"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
+        Member savedMember3 = memberRepository.saveMember(new Member("ccc", "cc", "cc", "customer"));
 
         ChatRoom chatRoom1 = chatService.createChatRoom(savedMember1.getId(), savedMember2.getId());
         ChatRoom chatRoom2 = chatService.createChatRoom(savedMember1.getId(), savedMember3.getId());

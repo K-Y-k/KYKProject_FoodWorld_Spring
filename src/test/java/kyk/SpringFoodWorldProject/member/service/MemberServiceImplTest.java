@@ -34,7 +34,7 @@ class MemberServiceImplTest {
     @Test
     void save_findById() {
         // given
-        Member member = new Member("memberA", "id1", "paw123");
+        Member member = new Member("memberA", "id1", "paw123", "customer");
 
         // when
         Member savedMember = memberRepository.saveMember(member);
@@ -71,8 +71,8 @@ class MemberServiceImplTest {
     @Test
     void findAll() {
         // given
-        Member member1 = new Member("memberA", "id1", "pw1");
-        Member member2 = new Member("memberB", "id2", "pw2");
+        Member member1 = new Member("memberA", "id1", "pw1", "customer");
+        Member member2 = new Member("memberB", "id2", "pw2", "customer");
 
         memberRepository.saveMember(member1);
         memberRepository.saveMember(member2);
@@ -90,7 +90,7 @@ class MemberServiceImplTest {
     @Test
     void login() {
         // given
-        Member member1 = new Member("memberA", "id1", "pw1");
+        Member member1 = new Member("memberA", "id1", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         // when
@@ -107,7 +107,7 @@ class MemberServiceImplTest {
     @Test
     void changeProfile() throws IOException {
         // given
-        Member member1 = new Member("memberA", "id1", "pw1");
+        Member member1 = new Member("memberA", "id1", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
         memberService.login(savedMember.getLoginId(), savedMember.getPassword());
 

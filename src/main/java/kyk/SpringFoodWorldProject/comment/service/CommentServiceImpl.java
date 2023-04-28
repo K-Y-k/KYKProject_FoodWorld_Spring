@@ -6,12 +6,14 @@ import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
+import kyk.SpringFoodWorldProject.comment.repository.CommentRepositoryCustomImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +71,15 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void delete(Long commentId) {
         commentRepository.delete(commentId);
+    }
+
+    @Override
+    public Long findFirstCursorBoardId(Long boardId) {
+        return commentRepository.findFirstCursorBoardId(boardId);
+    }
+
+    @Override
+    public Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId) {
+        return commentRepository.searchBySlice(lastCursorBoardId, first, pageable, boardId);
     }
 }

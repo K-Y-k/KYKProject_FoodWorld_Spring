@@ -11,7 +11,7 @@ var sectionHeight = document.getElementById('section-height');
 let plusHeight = 0;
 
 followerLoad();
-followRecommendLoad();
+//followRecommendLoad();
 storyLoad();
 
 // 팔로워 리스트 가로 스크롤 끝에 닿을시 ajax 실행
@@ -141,9 +141,6 @@ function getFollowerItem(follower) {
 //}
 
 
-//if($(window).scrollTop() + $(window).height() == $(document).height()) {
-//    storyLoad();
-//}
 $(window).scroll(function() {
     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
       console.log(++page);

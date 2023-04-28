@@ -43,9 +43,9 @@ class BoardServiceImplTest {
     @BeforeEach
     public void init() {
         // 회원 데이터 추가 3
-        memberRepository.saveMember(new Member("테스터1", "test", "test!"));
-        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        memberRepository.saveMember(new Member("테스터1", "test", "test!", "customer"));
+        Member savedMember1 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember2 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
 
         // 게시글 데이터 추가 20
@@ -72,7 +72,7 @@ class BoardServiceImplTest {
 //    @Rollback(value = false)
     void upload() throws Exception {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -217,7 +217,7 @@ class BoardServiceImplTest {
     @Test
     void delete() throws IOException {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -256,7 +256,7 @@ class BoardServiceImplTest {
     @Test
     void updateCount() throws IOException {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -291,7 +291,7 @@ class BoardServiceImplTest {
     @Test
     void like() throws IOException {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -335,7 +335,7 @@ class BoardServiceImplTest {
     @Test
     void comment() throws IOException {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -372,7 +372,7 @@ class BoardServiceImplTest {
     @Test
     void commentCount() throws IOException {
         // given
-        Member member1 = new Member("이름1", "loginId", "pw1");
+        Member member1 = new Member("이름1", "loginId", "pw1", "customer");
         Member savedMember = memberRepository.saveMember(member1);
 
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -452,7 +452,7 @@ class BoardServiceImplTest {
     @DisplayName("카테고리가 선택된 페이지 리스트")
     void categoryPageList() {
         // given
-        Member savedMember4 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember4 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
         int boardCount = 1;
         while (boardCount < 20) {
             boardRepository.save(new Board("제목" + (boardCount+2), "내용" + boardCount, "작가" + (boardCount+1), savedMember4, "추천게시판", "식당"));

@@ -54,8 +54,29 @@
                             <span>채팅방</span>
                         </a>
                     </li>
-                </ul>
 
+                    <li style="position: relative; left: 7%;">
+                        <h5 th:if="${session.loginMember != null}"
+                            th:text="${session.loginMember.name}+ '님 접속중'"
+                            style="font-size : 13px; margin-top: 20px;"></h5>
+
+                        <br/>
+
+                        <form th:action="@{/members/logout}" method="post">
+                            <button th:if="${session.loginMember != null}"
+                                    type="submit" class="btn btn-primary" id="logout"
+                                    style="width: 90px; height: 35px; position :absolute; top: 56%;"
+                                    th:onclick="@{/members/logout}">로그아웃
+                            </button>
+                        </form>
+
+                        <button th:if="${session.loginMember == null}"
+                                type="submit" class="btn btn-primary"
+                                style="width: 80px; height: 35px; position :absolute; top: 56%;" id="login"
+                                th:onclick="|location.href='@{/members/login}'|">로그인
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
     </header>
@@ -275,8 +296,6 @@
 
 
 <script th:inline="javascript">
-    var userId = [[${session.loginMember.id}]];
-
     function clicked() {
         alert("완료");
         location.href = [[|@{/members/follow/{memberId}(memberId=${member.id})}|]];

@@ -5,6 +5,7 @@ import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,6 +46,16 @@ public class CommentRepositoryImpl implements CommentRepository{
     @Override
     public int findCommentCount(Long boardId) {
         return commentRepository.findCommentCount(boardId);
+    }
+
+    @Override
+    public Long findFirstCursorBoardId(Long boardId) {
+        return commentRepository.findFirstCursorBoardId(boardId);
+    }
+
+    @Override
+    public Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId) {
+        return commentRepository.searchBySlice(lastCursorBoardId, first, pageable, boardId);
     }
 
 

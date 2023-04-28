@@ -3,8 +3,10 @@ package kyk.SpringFoodWorldProject.comment.service;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.comment.repository.CommentRepositoryCustomImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -20,5 +22,8 @@ public interface CommentService {
     int findCommentCount(Long boardId);
 
     void delete(Long commentId);
+
+    Long findFirstCursorBoardId(Long boardId);
+    Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId);
 
 }

@@ -94,22 +94,22 @@
 
 
         <!--검색-->
-        <div style="position: absolute; top: 3%; left: 47%;">
+        <div style="margin-left: 745px; margin-top: 15px;">
             <form th:action="@{/boards/recommendBoard}" method="get">
                 <div class="row" style="">
-                    <div class="col-md-1" style="width: 6vw;">
+                    <div class="col-md-1" style="width: 150px;">
                         <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이" th:value="${writerSearchKeyword}"/>
                     </div>
 
-                    <div class="col-md-2" style="width: 12vw;">
+                    <div class="col-md-2" style="width: 300px;">
                         <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목" th:value="*{titleSearchKeyword}"/>
                     </div>
 
-                    <div class="col-md-1" style="width: 5vw;">
+                    <div class="col-md-1" style="width: 100px;">
                         <button type="submit" class="btn btn-secondary">검색</button>
                     </div>
 
-                    <div class="col-md-1" style="width: 6vw;">
+                    <div class="col-md-1" style="width: 150px;">
                         <button class="btn btn-danger" id="write"
                                 th:onclick="|location.href='@{/boards/recommendBoard/upload}'|"
                                 type="button">글 작성

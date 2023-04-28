@@ -43,19 +43,19 @@ public class TestDataInit {
     @PostConstruct
     public void init() throws IOException {
         // 회원 데이터 추가 3
-        Member savedMember1 = memberRepository.saveMember(new Member("테스터1", "test", "test!"));
-        Member savedMember2 = memberRepository.saveMember(new Member("ddd", "dd", "dd"));
-        Member savedMember3 = memberRepository.saveMember(new Member("aaa", "aa", "aa"));
+        Member savedMember1 = memberRepository.saveMember(new Member("admin", "qq", "qq", "admin"));
+        Member savedMember2 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
+        Member savedMember3 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
 
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember1));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember2));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
         followRepository.save(new Follow(savedMember2, savedMember3));
 
-        // 회원, 팔로우 데이터 추가
+        // 회원, 팔로우 데이터 추가 16
         int memberCount = 1;
         while (memberCount < 17) {
-            Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount));
+            Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount, "customer"));
             profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember));
             followRepository.save(new Follow(savedMember, savedMember2));
             memberCount++;
@@ -69,15 +69,17 @@ public class TestDataInit {
         int lowerBound2 = 100;
         int upperBound2 = 10000;
 
+        Board savedBoard1 = boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "자유게시판","사는얘기", null, null, 0, 0));
 
         // 게시글 데이터 추가
-        // 자유게시판 글 19
+        // 자유게시판 글 및 댓글 19
         int boardCount = 1;
         while (boardCount < 20) {
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
             int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("샘플 제목" + (boardCount+2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
+            boardRepository.save(new Board("샘플 제목" + (boardCount + 2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
+            commentService.saveComment(savedMember2.getId(), savedBoard1.getId(), new CommentUploadDto(1L,"안녕하세요"+boardCount));
             boardCount++;
         }
 

@@ -43,13 +43,15 @@ public class Member extends BaseTimeEntity {
 
     private int followingCount;
 
+    private String role;
 
 
     @Builder
-    public Member(String name, String loginId, String password) {
+    public Member(String name, String loginId, String password, String role) {
         this.name = name;
         this.loginId = loginId;
         this.password = password;
+        this.role = role;
     }
 
     

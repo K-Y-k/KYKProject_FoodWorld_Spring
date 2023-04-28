@@ -44,7 +44,7 @@ class MenuRecommendServiceImplTest {
     @DisplayName("이미지를 필수로 넣은 메뉴를 업로드하고 전체의 리스트로 조회가 정상 작동하는지 테스트")
     void uploadMenuAndPageList() throws IOException {
         // given
-        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111"));
+        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111", "customer"));
 
         // 테스트용 이미지 생성
         BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
@@ -73,7 +73,7 @@ class MenuRecommendServiceImplTest {
     @DisplayName("등록했던 메뉴를 수정 테스트")
     void updateMenu() throws IOException {
         // given
-        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111"));
+        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111", "customer"));
 
         BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -102,7 +102,7 @@ class MenuRecommendServiceImplTest {
     @DisplayName("등록했던 메뉴를 삭제 테스트")
     void deleteMenu() throws IOException {
         // given
-        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111"));
+        Member saveMember = memberRepository.saveMember(new Member("kyk", "asd", "111", "customer"));
 
         BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
