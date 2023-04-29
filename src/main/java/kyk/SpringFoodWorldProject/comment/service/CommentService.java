@@ -23,7 +23,7 @@ public interface CommentService {
 
     void delete(Long commentId);
 
-    Long findFirstCursorBoardId(Long boardId);
+    Long findFirstCursorCommentId(Long commentId);
     Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId);
 
 }

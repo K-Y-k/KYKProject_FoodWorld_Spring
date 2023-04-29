@@ -1,5 +1,8 @@
 package kyk.SpringFoodWorldProject.web;
 
+import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
+import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class AdminApiController {
 
     private final CommentServiceImpl commentService;
+    private final ChatService chatService;
 
     /**
      * 선택한 게시글의 댓글 Slice 페이징 조회
@@ -36,7 +40,7 @@ public class AdminApiController {
                                            @PageableDefault(size=5) Pageable pageable) {
         log.info("lastCursorCommentId={}", lastCursorCommentId);
 
-        return getSlicePaging(boardId, lastCursorCommentId, first, pageable);
+        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable);
     }
 
     /**
@@ -52,13 +56,13 @@ public class AdminApiController {
 
         commentService.delete(Long.valueOf(commentId));
 
-        return getSlicePaging(boardId, lastCursorCommentId, first, pageable);
+        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable);
     }
 
-    private ResponseEntity<?> getSlicePaging(String boardId, Long lastCursorCommentId, Boolean first, Pageable pageable) {
+    private ResponseEntity<?> getCommentSlicePaging(String boardId, Long lastCursorCommentId, Boolean first, Pageable pageable) {
         if (lastCursorCommentId == 0) {
-            Long firstCursorBoardId = commentService.findFirstCursorBoardId(Long.valueOf(boardId));
-            Slice<Comment> comments = commentService.searchBySlice(firstCursorBoardId, first, pageable, boardId);
+            Long firstCursorCommentId = commentService.findFirstCursorCommentId(Long.valueOf(boardId));
+            Slice<Comment> comments = commentService.searchBySlice(firstCursorCommentId, first, pageable, boardId);
             boolean hasNext = comments.hasNext(); // 아래 다시 List -> Slice로 재변환해야할 때 넣기 위해 미리 선언
 
             // 엔티티의 로직, 매핑된 엔티티의 모두를 가져오는 것 등은 비효율적으로
@@ -112,6 +116,93 @@ public class AdminApiController {
         }
     }
 
+    /**
+     * 선택한 채팅방의 채팅 메시지 Slice 페이징 조회
+     */
+    @GetMapping("/api/chatMessage")
+    public ResponseEntity<?> chatMessageScroll(@RequestParam(value = "chatRoomId") String chatRoomId,
+                                               @RequestParam(value = "lastCursorChatMessageId", defaultValue = "0") Long lastCursorChatMessageId,
+                                               @RequestParam(value = "chatMessageFirst") Boolean first,
+                                               @PageableDefault(size=5) Pageable pageable) {
+        log.info("lastCursorChatMessageId={}", lastCursorChatMessageId);
+
+        return getChatMessageSlicePaging(chatRoomId, lastCursorChatMessageId, first, pageable);
+    }
+
+    /**
+     * 선택한 채팅 메시지 삭제 후 Slice 페이징 조회
+     */
+    @GetMapping("/api/chatMessage/delete")
+    public ResponseEntity<?> deleteChatMessage(@RequestParam(value = "chatRoomId") String chatRoomId,
+                                               @RequestParam(value = "chatMessageId") String chatMessageId,
+                                               @RequestParam(value = "lastCursorChatMessageId", defaultValue = "0") Long lastCursorChatMessageId,
+                                               @RequestParam(value = "chatMessageFirst") Boolean first,
+                                               @PageableDefault(size=5) Pageable pageable) {
+        log.info("lastCursorChatMessageId={}", lastCursorChatMessageId);
+        log.info("chatMessageId={}", chatMessageId);
+        log.info("chatRoomId={}", chatRoomId);
+
+        chatService.deleteChatMessage(Long.valueOf(chatMessageId));
+
+        return getChatMessageSlicePaging(chatRoomId, lastCursorChatMessageId, first, pageable);
+    }
+
+    private ResponseEntity<?> getChatMessageSlicePaging(String chatRoomId, Long lastCursorChatMessageId, Boolean first, Pageable pageable) {
+        if (lastCursorChatMessageId == 0) {
+            Long firstCursorChatMessageId = chatService.findFirstCursorChatMessageId(chatRoomId);
+            Slice<ChatMessage> chatMessages = chatService.searchBySlice(firstCursorChatMessageId, first, pageable, chatRoomId);
+            boolean hasNext = chatMessages.hasNext();
+
+            List<ChatMessageDTO> chatMessageDTOList = chatMessages.stream()
+                    .map(m -> new ChatMessageDTO(m.getId(), m.getCreatedDate(), m.getContent(), m.getSender(), m.getSenderProfile(),
+                                                 new ChatRoomDTO(m.getChatRoom().getRoomId(),
+                                                 new MemberDTO(m.getChatRoom().getMember1().getId(), m.getChatRoom().getMember1().getName(),
+                                                               new ProfileFileDTO(m.getChatRoom().getMember1().getProfileFile().getStoredFileName())),
+                                                 new MemberDTO(m.getChatRoom().getMember2().getId(), m.getChatRoom().getMember2().getName(),
+                                                               new ProfileFileDTO(m.getChatRoom().getMember2().getProfileFile().getStoredFileName())))))
+                    .collect(Collectors.toList());
+
+            for (ChatMessageDTO chatMessage : chatMessageDTOList) {
+                log.info("채팅 메시지 json={}", chatMessage.getContent());
+            }
+
+            Slice<ChatMessageDTO> sliceComments = new SliceImpl<>(chatMessageDTOList, pageable, hasNext);
+
+            if (sliceComments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceComments, HttpStatus.OK);
+            }
+        }
+        else {
+            Slice<ChatMessage> chatMessages = chatService.searchBySlice(lastCursorChatMessageId, first, pageable, chatRoomId);
+            boolean hasNext = chatMessages.hasNext();
+
+            List<ChatMessageDTO> chatMessageDTOList = chatMessages.stream()
+                    .map(m -> new ChatMessageDTO(m.getId(), m.getCreatedDate(), m.getContent(), m.getSender(), m.getSenderProfile(),
+                              new ChatRoomDTO(m.getChatRoom().getRoomId(),
+                                              new MemberDTO(m.getChatRoom().getMember1().getId(), m.getChatRoom().getMember1().getName(),
+                                                            new ProfileFileDTO(m.getChatRoom().getMember1().getProfileFile().getStoredFileName())),
+                                              new MemberDTO(m.getChatRoom().getMember2().getId(), m.getChatRoom().getMember2().getName(),
+                                                            new ProfileFileDTO(m.getChatRoom().getMember2().getProfileFile().getStoredFileName())))))
+                    .collect(Collectors.toList());
+
+            for (ChatMessageDTO chatMessage : chatMessageDTOList) {
+                log.info("채팅 메시지 json={}", chatMessage.getContent());
+            }
+
+            Slice<ChatMessageDTO> sliceComments = new SliceImpl<>(chatMessageDTOList, pageable, hasNext);
+
+            if (sliceComments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceComments, HttpStatus.OK);
+            }
+        }
+    }
+
     @Data
     @AllArgsConstructor
     static class CommentDTO {
@@ -145,5 +236,24 @@ public class AdminApiController {
         private String content;
         private String writer;
         private String boardType;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class ChatMessageDTO {
+        private Long id;
+        private LocalDateTime createdDate;
+        private String content;
+        private String sender;
+        private String senderProfile;
+        private ChatRoomDTO chatRoom;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class ChatRoomDTO {
+        private String roomId;
+        private MemberDTO member1;
+        private MemberDTO member2;
     }
 }

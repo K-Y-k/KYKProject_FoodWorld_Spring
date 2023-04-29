@@ -1,10 +1,13 @@
 package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.like.domain.entity.Like;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,4 +23,5 @@ public interface JPAChatRoomRepository extends JpaRepository<ChatRoom, Long>, Ch
     List<ChatRoom> findNotLeaveMessageRoom(Long memberId);
 
     ChatRoom findByRoomId(String roomId);
+
 }

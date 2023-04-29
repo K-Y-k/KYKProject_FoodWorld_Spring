@@ -4,7 +4,7 @@ let commentFirst = true;
 let lastCursorCommentId = $(".cursorCommentId").attr("id");
 
 
-// 팔로워 리스트 가로 스크롤 끝에 닿을시 ajax 실행
+// 댓글 리스트 세로 스크롤 끝에 닿을시 ajax 실행
 var commentContainer = document.getElementById('commentContainer');
 commentContainer.addEventListener('scroll', function() {
     if (commentContainer.scrollTop + commentContainer.clientHeight >= commentContainer.scrollHeight) {
@@ -55,6 +55,9 @@ function findComment() {
 
                     lastCursorCommentId = comment.id;
                  });
+		        if (commentFirst) {
+                    commentFirst = false;
+                }
             }
 		    else {
 		        $.each(result.content, function(index, comment){
@@ -166,6 +169,9 @@ function deleteComment() {
 
                         lastCursorCommentId = comment.id;
                      });
+                    if (commentFirst) {
+                        commentFirst = false;
+                    }
                 }
                 else {
                     $.each(result.content, function(index, comment){

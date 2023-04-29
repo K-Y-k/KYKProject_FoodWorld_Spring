@@ -96,16 +96,12 @@
     <div class="container row" style="float: none; margin: 100 auto;">
         <!--검색-->
         <div style="margin-left: 430px; display: flex;">
-            <span  class="navbar-brand" style="font-size: 25px; font: bold;">자유게시판 관리</span>
+            <span  class="navbar-brand" style="font-size: 25px; font: bold;">채팅방 관리</span>
 
-            <form th:action="@{/admin/freeBoard}" method="get">
+            <form th:action="@{/admin/chat}" method="get">
                 <div class="row" style="margin-left: 125px;">
                     <div class="col-md-1" style="width: 150px;">
-                        <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이" th:value="${writerSearchKeyword}"/>
-                    </div>
-
-                    <div class="col-md-2" style="width: 300px;">
-                        <input type="text" name="titleSearchKeyword" class="form-control" placeholder="제목" th:value="*{titleSearchKeyword}"/>
+                        <input type="text" name="memberSearchKeyword" class="form-control" placeholder="참여자" th:value="${memberSearchKeyword}"/>
                     </div>
 
                     <div class="col-md-1" style="width: 150px;">
@@ -120,64 +116,50 @@
             <thead class="table-dark">
             <tr>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">번호</th>
-                <th class="col-md-5" style="text-align: center; margin: 0 auto;">제목</th>
-                <th class="col-md-1" style="text-align: center; margin: 0 auto;">글쓴이</th>
-                <th class="col-md-2" style="text-align: center; margin: 0 auto;">작성일</th>
-                <th class="col-md-1" style="text-align: center; margin: 0 auto;">조회수</th>
-                <th class="col-md-1" style="text-align: center; margin: 0 auto;">좋아요</th>
+                <th class="col-md-2" style="text-align: center; margin: 0 auto;">참여자</th>
+                <th class="col-md-2" style="text-align: center; margin: 0 auto;">채팅메시지 수</th>
+                <th class="col-md-2" style="text-align: center; margin: 0 auto;">생성일</th>
                 <th class="col-md-1" style="text-align: center; margin: 0 auto;">관리</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr th:each="board : ${boards}">
+            <tr th:each="chatRoom : ${chatRooms}">
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${board.id}"></td>
+                    th:text="${chatRoom.roomId}"></td>
 
-                <td class="col-md-5" style="text-decoration-line: none; width: 300px;">
-                    <a th:if="${not#strings.equals(board.subType, '말머리 선택')}"
-                       th:data-board-id="${board.id}"
-                       th:data-writer-id="${board.writer}"
-                       href="#" onclick="findComment()" th:text="|[${board.subType}]|"
-                       style="color: black; text-decoration-line: none; display: inline-block; overflow: hidden;"></a>
+                <td class="col-md-2" style="text-decoration-line: none; width: 300px;">
+                    <a th:data-chatRoom-id="${chatRoom.roomId}"
+                       th:data-member1-name="${chatRoom.member1.name}"
+                       th:data-member2-name="${chatRoom.member2.name}"
+                       href="#" onclick="findChatMessage()" th:text="|[${chatRoom.member1.name}]|"
+                       style="color: black; text-decoration-line: none; display: inline-block;"></a>
 
-                    <a th:data-board-id="${board.id}"
-                       th:data-writer-id="${board.writer}"
-                       href="#" onclick="findComment()" th:text="|${board.title}|"
-                       style="color: black; text-decoration-line: none; display: inline-block; width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
-
-                    <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none; display: inline-block; overflow: hidden;"
-                          th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></span>
+                    <a th:data-chatRoom-id="${chatRoom.roomId}"
+                       th:data-member1-name="${chatRoom.member1.name}"
+                       th:data-member2-name="${chatRoom.member2.name}"
+                       href="#" onclick="findChatMessage()" th:text="|[${chatRoom.member2.name}]|"
+                       style="color: black; text-decoration-line: none; display: inline-block;"></a>
                 </td>
 
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;">
-                    <a th:href="@{|/members/profile/${board.member.id}|}" style="color: black; text-decoration-line: none;">
-                        <th:block th:text="${board.writer}"/>
-                    </a>
+                <td class="col-md-2" style="text-align: center; margin: 0 auto;"
+                    th:text="${#lists.size(chatRoom.chatMessages)}">
                 </td>
 
                 <td class="col-md-2"
-                    th:if="${#temporals.day(board.createdDate)} == ${#temporals.day(localDateTime)}"
+                    th:if="${#temporals.day(chatRoom.createdDate)} == ${#temporals.day(localDateTime)}"
                     style="text-align: center; margin: 0 auto;"
-                    th:text="${#temporals.format(board.createdDate, 'HH:mm')}"></td>
+                    th:text="${#temporals.format(chatRoom.createdDate, 'HH:mm')}"></td>
                 <td class="col-md-2"
-                    th:if="${#temporals.day(board.createdDate)} != ${#temporals.day(localDateTime)}"
+                    th:if="${#temporals.day(chatRoom.createdDate)} != ${#temporals.day(localDateTime)}"
                     style="text-align: center; margin: 0 auto;"
-                    th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd')}"></td>
-
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${board.count}">조회수
-                </td>
-
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${board.likeCount}">좋아요
-                </td>
+                    th:text="${#temporals.format(chatRoom.createdDate, 'yyyy-MM-dd')}"></td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">
                     <button class="btn btn-primary"
                             type="submit"
                             style="width: 90px; height: 35px;"
-                            th:onclick="|location.href='@{/admin/boards/delete/{boardType}/{boardId}(boardType=${board.boardType}, boardId=${board.id})}'|">삭제
+                            th:onclick="|location.href='@{/admin/chatRoom/delete/{chatRoomId}(chatRoomId=${chatRoom.roomId})}'|">삭제
                     </button>
                 </td>
             </tr>
@@ -188,54 +170,40 @@
         <nav aria-label="Page navigation example" style="position: absolute; top: 65%;">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/freeBoard(page=${previous}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
+                    <a class="page-link" th:href="@{/admin/chat(page=${previous}, memberSearchKeyword=${param.memberSearchKeyword})}">이전</a>
                 </li>
 
                 <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
                     <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/admin/freeBoard(page = ${page - 1})}"
+                       th:if="${page != nowPage} and ${page != 0} and ${#strings.isEmpty(param.memberSearchKeyword)}"
+                       th:href="@{/admin/chat(page = ${page - 1})}"
                        th:text="${page}"></a>
                     <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/admin/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                       th:text="${page}"></a>
-                    <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/admin/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
-                       th:text="${page}"></a>
-                    <a class="page-link"
-                       th:if="${page != nowPage} and ${page != 0} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
-                       th:href="@{/admin/freeBoard(page = ${page - 1}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}"
+                       th:if="${page != nowPage} and ${page != 0} and ${not #strings.isEmpty(param.memberSearchKeyword)}"
+                       th:href="@{/admin/chat(page = ${page - 1}, memberSearchKeyword=${param.memberSearchKeyword})}"
                        th:text="${page}"></a>
 
                     <strong class="page-link"
-                            th:if="${page == nowPage} and ${#strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
+                            th:if="${page == nowPage} and ${#strings.isEmpty(param.memberSearchKeyword)}"
                             th:text="${page}" style="color: red;"></strong>
                     <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.titleSearchKeyword)} and ${#strings.isEmpty(param.writerSearchKeyword)}"
-                            th:text="${page}" style="color: red;"></strong>
-                    <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${#strings.isEmpty(param.titleSearchKeyword)}"
-                            th:text="${page}" style="color: red;"></strong>
-                    <strong class="page-link"
-                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.writerSearchKeyword)} and ${not #strings.isEmpty(param.titleSearchKeyword)}"
+                            th:if="${page == nowPage} and ${not #strings.isEmpty(param.memberSearchKeyword)}"
                             th:text="${page}" style="color: red;"></strong>
                 </li>
 
 
                 <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/freeBoard(page=${next}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
+                    <a class="page-link" th:href="@{/admin/chat(page=${next}, memberSearchKeyword=${param.memberSearchKeyword})}">다음</a>
                 </li>
             </ul>
         </nav>
     </div>
 
-    <div id="commentContainer" style="float: right; border: solid 3px; width: 400px; height: 70vh; overflow-y: scroll;">
-        <h5 style="width: 400px; text-align: center; font-size: 20px;">댓글 관리</h5>
-        <span class="cursorCommentId" th:id="${firstCursorBoardId}" style="display: none;"></span>
+    <div id="chatMessageContainer" style="float: right; border: solid 3px; width: 400px; height: 70vh; overflow-y: scroll;">
+        <h5 style="width: 400px; text-align: center; font-size: 20px;">채팅 메시지 관리</h5>
+        <span class="cursorChatMessageId" th:id="${firstCursorChatMessageId}" style="display: none;"></span>
 
-        <div id="commentList"></div>
+        <div id="chatMessageList"></div>
 
     </div>
 </div>
@@ -252,7 +220,7 @@
         crossorigin="anonymous">
 </script>
 
-<script type="text/javascript" th:src="@{/js/admin_board.js}" ></script>
+<script type="text/javascript" th:src="@{/js/admin_chat.js}" ></script>
 
 </body>
 </html>

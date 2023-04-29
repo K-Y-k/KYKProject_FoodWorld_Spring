@@ -3,6 +3,9 @@ package kyk.SpringFoodWorldProject.web;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.chat.domain.dto.ChatSearchCond;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
+import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
@@ -36,6 +39,7 @@ public class AdminController {
     private final MemberServiceImpl memberService;
     private final BoardServiceImpl boardService;
     private final MenuRecommendServiceImpl menuRecommendService;
+    private final ChatService chatService;
 
     @GetMapping("/freeBoard")
     public String adminFreeBoard(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -132,7 +136,6 @@ public class AdminController {
         String boardType = "먹스타그램";
 
         String writerSearchKeyword = boardSearchCond.getWriterSearchKeyword();
-        String titleSearchKeyword = "";
 
         // 키워드의 컬럼에 따른 페이징된 게시글 출력
         if (writerSearchKeyword == null) {
@@ -314,4 +317,76 @@ public class AdminController {
         return "messages";
     }
 
+
+    @GetMapping("/chat")
+    public String adminChatRoom(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                Model model,
+                                ChatSearchCond chatSearchCond) {
+//        if (loginMember == null) {
+//            log.info("로그인 상태가 아님");
+//
+//            model.addAttribute("message", "로그인 먼저 해주세요!");
+//            model.addAttribute("redirectUrl", "/members/login");
+//            return "messages";
+//        } else if (!loginMember.getRole().equals("admin")) {
+//            log.info("관리자님이 아닙니다.");
+//
+//            model.addAttribute("message", "관리자님이 아닙니다.");
+//            model.addAttribute("redirectUrl", "/");
+//            return "messages";
+//        }
+
+
+        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        Page<ChatRoom> chatRooms = chatService.searchChatRoomByMember(chatSearchCond.getMemberSearchKeyword(), pageable);
+
+        // 패이지
+        int nowPage = pageable.getPageNumber() + 1;
+        int startPage = Math.max(1, nowPage - 2);
+        int endPage = Math.min(nowPage + 2, chatRooms.getTotalPages());
+
+        model.addAttribute("chatRooms", chatRooms);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        model.addAttribute("localDateTime", LocalDateTime.now());
+
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+        model.addAttribute("next", pageable.next().getPageNumber());
+
+        model.addAttribute("hasPrev", chatRooms.hasPrevious());
+        model.addAttribute("hasNext", chatRooms.hasNext());
+
+        model.addAttribute("memberSearchKeyword", chatSearchCond.getMemberSearchKeyword());
+
+        return "admin/admin_chat";
+    }
+
+    @GetMapping("/chatRoom/delete/{chatRoomId}")
+    public String chatRoomDelete(@PathVariable String chatRoomId,
+                                 @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                 Model model) {
+        if (loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        } else if (loginMember.getRole().equals("admin")) {
+            ChatRoom findChatRoom = chatService.findRoomByRoomId(chatRoomId);
+            chatService.delete(findChatRoom);
+        } else {
+            log.info("관리자님이 아닙니다.");
+
+            model.addAttribute("message", "관리자님이 아닙니다.");
+            model.addAttribute("redirectUrl", "/");
+            return "messages";
+        }
+
+        model.addAttribute("message", "채팅방 삭제 성공");
+        model.addAttribute("redirectUrl", "/admin/chat");
+        return "messages";
+    }
 }

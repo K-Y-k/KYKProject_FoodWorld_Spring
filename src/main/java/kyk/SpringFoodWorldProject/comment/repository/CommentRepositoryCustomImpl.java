@@ -30,10 +30,10 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 처음에는 최근 Id로 직접 받아오기 위해 필요한 메서드
      */
     @Override
-    public Long findFirstCursorBoardId(Long boardId) {
+    public Long findFirstCursorCommentId(Long commentId) {
         Comment findComment = queryFactory.selectFrom(comment)
                 .where(
-                        comment.board.id.eq(boardId)
+                        comment.board.id.eq(commentId)
                 )
                 .limit(1)
                 .orderBy(comment.id.desc())
@@ -51,13 +51,13 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 크기를 제한한 리스트와 다음 페이지의 여부를 같이 반환하는 Slice 페이징
      */
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId) {
+    public Slice<Comment> searchBySlice(Long lastCursorCommentId, Boolean first, Pageable pageable, String boardId) {
 
         List<Comment> results = queryFactory.selectFrom(comment)
                 .leftJoin(comment.member, member).fetchJoin()
                 .leftJoin(comment.board, board).fetchJoin()
                 .where(
-                        ltCommentId(lastCursorBoardId, first),
+                        ltCommentId(lastCursorCommentId, first),
                         boardIdEq(boardId)
                 )
                 .limit(pageable.getPageSize() + 1)

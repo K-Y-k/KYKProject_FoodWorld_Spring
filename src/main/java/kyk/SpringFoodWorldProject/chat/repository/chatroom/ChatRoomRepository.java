@@ -1,6 +1,10 @@
 package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -36,4 +40,7 @@ public interface ChatRoomRepository {
      */
     void delete(ChatRoom chatRoom);
 
+    Page<ChatRoom> searchChatRoomByMember(String  memberSearchKeyword, Pageable pageable);
+    Long findFirstCursorChatMessageId(String chatRoomId);
+    Slice<ChatMessage> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId);
 }

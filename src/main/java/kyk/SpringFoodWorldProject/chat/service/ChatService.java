@@ -10,6 +10,9 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +77,9 @@ public class ChatService {
     }
 
 
+    public void deleteChatMessage(Long chatMessageId) {
+        chatMessageRepository.deleteChatMessage(chatMessageId);
+    }
 
 
     /**
@@ -105,5 +111,16 @@ public class ChatService {
     // 해당 회원의 퇴장한 메시지 삭제
     public void deleteLeaveMessage(String roomId, Long memberId) {
         chatMessageRepository.deleteByLeaveMessage(roomId, memberId);
+    }
+
+    public Page<ChatRoom> searchChatRoomByMember(String  memberSearchKeyword, Pageable pageable) {
+        return chatRoomRepository.searchChatRoomByMember(memberSearchKeyword, pageable);
+    }
+
+    public Long findFirstCursorChatMessageId(String chatRoomId) {
+        return chatRoomRepository.findFirstCursorChatMessageId(chatRoomId);
+    }
+    public Slice<ChatMessage> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId) {
+        return chatRoomRepository.searchBySlice(lastCursorChatMessageId, first, pageable, chatRoomId);
     }
 }

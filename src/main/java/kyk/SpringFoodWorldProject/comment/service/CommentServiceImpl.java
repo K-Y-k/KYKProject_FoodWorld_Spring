@@ -74,8 +74,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Long findFirstCursorBoardId(Long boardId) {
-        return commentRepository.findFirstCursorBoardId(boardId);
+    public Long findFirstCursorCommentId(Long commentId) {
+        return commentRepository.findFirstCursorCommentId(commentId);
     }
 
     @Override

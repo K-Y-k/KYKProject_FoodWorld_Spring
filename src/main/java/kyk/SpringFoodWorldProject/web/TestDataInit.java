@@ -4,6 +4,10 @@ import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
 import kyk.SpringFoodWorldProject.board.repository.SpringDataJpaBoardRepository;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
+import kyk.SpringFoodWorldProject.chat.repository.chatmessage.ChatMessageRepository;
+import kyk.SpringFoodWorldProject.chat.repository.chatroom.ChatRoomRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
@@ -25,6 +29,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
+import static kyk.SpringFoodWorldProject.chat.domain.dto.MessageType.TALK;
+
 @Profile("local")
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +42,8 @@ public class TestDataInit {
     private final BoardFileRepository boardFileRepository;
     private final CommentServiceImpl commentService;
     private final MenuRecommendRepository menuRecommendRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     /**
      * 테스트용 데이터 추가
@@ -157,6 +165,18 @@ public class TestDataInit {
         menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "막창 세트2", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
         menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "대창 세트5", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
         menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창세트11", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+
+
+        // 채팅방 생성
+        ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("a", savedMember1, savedMember2));
+        ChatRoom savedRoom3 = chatRoomRepository.save(new ChatRoom("c", savedMember1, savedMember3));
+
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+
     }
 
 }

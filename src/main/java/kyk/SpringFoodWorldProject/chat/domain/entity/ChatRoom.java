@@ -34,4 +34,9 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    public ChatRoom(String roomId, Member member1, Member member2) {
+        this.roomId = roomId;
+        this.member1 = member1;
+        this.member2 = member2;
+    }
 }

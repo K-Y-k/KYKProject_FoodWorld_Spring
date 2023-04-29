@@ -11,6 +11,6 @@ import java.util.List;
  * QueryDsl을 구현하기 위한 사용자 정의 인터페이스
  */
 public interface CommentRepositoryCustom {
-    Long findFirstCursorBoardId(Long boardId);
+    Long findFirstCursorCommentId(Long commentId);
     Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId);
 }

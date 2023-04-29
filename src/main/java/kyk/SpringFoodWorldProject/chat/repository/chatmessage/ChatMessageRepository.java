@@ -26,4 +26,7 @@ public interface ChatMessageRepository {
      */
     void deleteByLeaveMessage(String roomId, Long memberId);
 
+    void deleteChatMessage(Long chatMessageId);
+
+
 }
