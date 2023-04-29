@@ -1,5 +1,7 @@
 package kyk.SpringFoodWorldProject.menu.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
+import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,5 +45,10 @@ public class SpringDataJpaMenuRecommendRepository implements MenuRecommendReposi
     @Override
     public void delete(Long menuRecommendId) {
         menuRecommendRepository.deleteById(menuRecommendId);
+    }
+
+    @Override
+    public Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable) {
+        return menuRecommendRepository.categoryMenuList(menuSearchCond, pageable);
     }
 }

@@ -387,7 +387,7 @@ public class RecommendBoardController {
 
         if (findBoard.getMember().getId().equals(loginMember.getId())) {
             likeService.deleteByBoard_Id(boardId);
-            boardService.delete(boardId);
+            boardService.delete(boardId, findBoard.getBoardType());
         } else {
             model.addAttribute("message", "회원님이 작성한 글만 삭제할 수 있습니다!");
             model.addAttribute("redirectUrl", "/boards/recommendBoard");

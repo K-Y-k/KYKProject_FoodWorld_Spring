@@ -1,4 +1,5 @@
 let boardId = 0;
+let commentId = 0;
 let commentFirst = true;
 let lastCursorCommentId = $(".cursorCommentId").attr("id");
 
@@ -11,6 +12,8 @@ commentContainer.addEventListener('scroll', function() {
     }
 });
 
+
+// 해당 게시글에 따른 댓글 조회
 function findComment() {
     console.log("lastCursorCommentId=", lastCursorCommentId);
 
@@ -73,6 +76,8 @@ function findComment() {
 	});
 }
 
+
+// 댓글 관리 창 스크롤 내릴 때의 조회
 function scrollComment(boardId) {
     console.log("lastCursorCommentId=", lastCursorCommentId);
     console.log("commentFirst=", commentFirst);
@@ -116,6 +121,75 @@ function scrollComment(boardId) {
 	});
 }
 
+
+// 댓글 삭제
+function deleteComment() {
+    // 클릭한 요소 가져오기
+    var commentElement = event.target;
+    // 클릭한 요소의 data-board-id 속성 값 가져오기
+    var getCommentId = commentElement.getAttribute("data-comment-id");
+    var getBoardId = commentElement.getAttribute("data-board-id");
+    var writer = commentElement.getAttribute("data-writer-id");
+
+    commentId = getCommentId;
+
+    console.log("commentFirst=", commentFirst);
+    console.log("boarId=", boardId);
+    console.log("commentId=", commentId);
+
+    var confirmMessage = `댓글을 삭제하시겠습니까?`;
+    if (confirm(confirmMessage)) {
+        $("#commentList").empty();
+        commentFirst = true;
+        lastCursorCommentId = 0;
+
+        $.ajax({
+            type: "GET",
+            url: '/admin/api/comment/delete',
+            dataType: "json",
+            data: {lastCursorCommentId, commentFirst, boardId, commentId},
+            async: false,
+            success: function(result) {
+                console.log("팔로워 JSON", JSON.stringify(result))
+                let boardInfo = `<h5 style="width: 380px; margin-top: 10px; text-align: center;">${boardId}번 게시글의 댓글들</h5>
+                                 <h5 style="width: 380px; text-align: center;">게시글 작성자: ${writer}</h5>`
+                $("#commentList").append(boardInfo);
+
+                if (result.last ==  true) {
+                    console.log("마지막 페이지");
+
+                    $.each(result.content, function(index, comment){
+                        console.log("댓글 JSON의 내용에서 가져온 요소: ", index);
+
+                        let commentItem = getCommentItem(comment);
+                        $("#commentList").append(commentItem);
+
+                        lastCursorCommentId = comment.id;
+                     });
+                }
+                else {
+                    $.each(result.content, function(index, comment){
+                        console.log("댓글 JSON의 내용에서 가져온 요소: ", index);
+
+                        let commentItem = getCommentItem(comment);
+                        $("#commentList").append(commentItem);
+
+                        lastCursorCommentId = comment.id;
+                    });
+                    if (commentFirst) {
+                        commentFirst = false;
+                    }
+                }
+            },
+            error: function (error) {
+                console.log("오류", error);
+            }
+        });
+	}
+}
+
+
+// 댓글 JSON을 html 형식으로 가공해서 넣기
 function getCommentItem(comment) {
     let date = new Date(comment.createdDate);
     console.log(comment.createdDate)
@@ -139,7 +213,10 @@ function getCommentItem(comment) {
 
                         <td>
                             <button class="btn btnEvent"
-                                    onclick="location.href='/admin/delete/comment/${comment.id}'" type="button"
+                                    data-comment-id="${comment.id}"
+                                    data-board-id="${comment.board.id}"
+                                    data-writer-id="${comment.board.writer}"
+                                    onclick="deleteComment()" type="button"
                                     style="float:right; width: 80px; background-color: #007bff; color: #ffffff;">
                                     삭제
                             </button>
@@ -162,6 +239,7 @@ function getCommentItem(comment) {
 	return item;
 }
 
+// 날짜 변환 함수
 function dateCompare(date, nowDate) {
         let year = date.getFullYear();
         let month = date.getMonth() + 1;

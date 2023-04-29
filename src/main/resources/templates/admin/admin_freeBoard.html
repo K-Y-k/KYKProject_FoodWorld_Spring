@@ -14,81 +14,81 @@
 <header style="width: 1900px; height: 120px;">
     <div class="px-3 py-2 bg-dark text-white" style="width: 1900px; height: 120px;">
         <div class="d-flex flex-wrap" style="margin-top: 30px;">
-                <ul class="nav justify-content my-md-0">
-                    <li style="margin-left: 30px;">
-                        <img src="/image/main_img/logo2.PNG" class="logo" style="z-index: 3; width: 170px; height: 90px;" id="logo2">
-                    </li>
+            <ul class="nav justify-content my-md-0">
+                <li style="margin-left: 30px;">
+                    <img src="/image/main_img/logo2.PNG" class="logo" style="z-index: 3; width: 170px; height: 90px;" id="logo2">
+                </li>
 
-                    <li style="display: flex; margin-left: 50px;">
-                        <img src="/image/main_img/home_icon.PNG" width="50px" height="50px">
-                        <a href="/" class="navbar-brand" style="margin-left: 30px;"><h4 class="thema">관리자 페이지</h4></a>
-                    </li>
+                <li style="display: flex; margin-left: 50px;">
+                    <img src="/image/main_img/home_icon.PNG" width="50px" height="50px">
+                    <a href="/" class="navbar-brand" style="margin-left: 30px;"><h4 class="thema">관리자 페이지</h4></a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/write_icon.PNG" width="45px" height="40px" style="margin-left: 63px;">
-                        <a href="/admin/members" class="nav-link text-white" style="margin-left: 40px;">
-                            회원관리
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/write_icon.PNG" width="45px" height="40px" style="margin-left: 63px;">
+                    <a href="/admin/members" class="nav-link text-white" style="margin-left: 40px;">
+                        회원관리
+                    </a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/write_icon.PNG" width = "45px" height="40px" style="margin-left: 50px;">
-                        <a href="/admin/freeBoard" class="nav-link text-white" style="margin-left: 20px;">
-                           자유게시판
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/write_icon.PNG" width = "45px" height="40px" style="margin-left: 50px;">
+                    <a href="/admin/freeBoard" class="nav-link text-white" style="margin-left: 20px;">
+                        자유게시판
+                    </a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/write_icon.PNG" width = "50px" height="40px" style="margin-left: 30px;">
-                        <a href="/admin/recommendBoard" class="nav-link text-white">
-                           추천게시판
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/write_icon.PNG" width="50px" height="40px" style="margin-left: 30px;">
+                    <a href="/admin/recommendBoard" class="nav-link text-white">
+                        추천게시판
+                    </a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/muckstar_icon.PNG" width = "40px" height="40px" style="margin-left: 35px;">
-                        <a href="/admin/muckstarBoard" class="nav-link text-white">
-                           먹스타그램
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/muckstar_icon.PNG" width="40px" height="40px" style="margin-left: 35px;">
+                    <a href="/admin/muckstarBoard" class="nav-link text-white">
+                        먹스타그램
+                    </a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/menu_recommend_icon.PNG" width = "50px" height="40px" style="margin-left: 28px;">
-                        <a href="/admin/menu" class="nav-link text-white">
-                           메뉴추천
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/menu_recommend_icon.PNG" width="50px" height="40px" style="margin-left: 28px;">
+                    <a href="/admin/menu" class="nav-link text-white">
+                        메뉴추천
+                    </a>
+                </li>
 
-                    <li>
-                        <img src="/image/main_img/chat_icon.PNG" width = "50px" height="40px" style="margin-left: 20px;">
-                        <a href="/admin/chat" class="nav-link text-white">
-                           채팅방
-                        </a>
-                    </li>
+                <li>
+                    <img src="/image/main_img/chat_icon.PNG" width="50px" height="40px" style="margin-left: 20px;">
+                    <a href="/admin/chat" class="nav-link text-white">
+                        채팅방
+                    </a>
+                </li>
 
-                    <li style="margin-left: 50px;">
-                        <h5 th:if="${session.loginMember != null}"
-                            th:text="${session.loginMember.name}+ '님 접속중'"
-                            id = "userName" style="font-size : 13px; margin-top: 20px;"></h5>
+                <li style="margin-left: 50px;">
+                    <h5 th:if="${session.loginMember != null}"
+                        th:text="${session.loginMember.name}+ '님 접속중'"
+                        id = "userName" style="font-size: 13px;"></h5>
 
-                        <br/>
+                    <br/>
 
-                        <form th:action="@{/members/logout}" method="post">
-                            <button th:if="${session.loginMember != null}"
-                                    type="submit" class="btn btn-primary" id="logout"
-                                    style="width: 90px; height: 35px;"
-                                    th:onclick="@{/members/logout}">로그아웃
-                            </button>
-                        </form>
-
-                        <button th:if="${session.loginMember == null}"
-                                type="submit" class="btn btn-primary"
-                                style="width: 80px; height: 35px;" id="login"
-                                th:onclick="|location.href='@{/members/login}'|">로그인
+                    <form th:action="@{/members/logout}" method="post">
+                        <button th:if="${session.loginMember != null}"
+                                type="submit" class="btn btn-primary" id="logout"
+                                style="width: 90px; height: 35px;"
+                                th:onclick="@{/members/logout}">로그아웃
                         </button>
-                    </li>
-                </ul>
-            </div>
+                    </form>
+
+                    <button th:if="${session.loginMember == null}"
+                            type="submit" class="btn btn-primary"
+                            style="width: 80px; height: 35px;" id="login"
+                            th:onclick="|location.href='@{/members/login}'|">로그인
+                    </button>
+                </li>
+            </ul>
+        </div>
     </div>
 </header>
 
@@ -98,7 +98,7 @@
         <div style="margin-left: 430px; display: flex;">
             <span  class="navbar-brand" style="font-size: 25px; font: bold;">자유게시판 관리</span>
 
-            <form th:action="@{/boards/freeBoard}" method="get">
+            <form th:action="@{/admin/freeBoard}" method="get">
                 <div class="row" style="margin-left: 125px;">
                     <div class="col-md-1" style="width: 150px;">
                         <input type="text" name="writerSearchKeyword" class="form-control" placeholder="글쓴이" th:value="${writerSearchKeyword}"/>
@@ -134,15 +134,17 @@
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;"
                     th:text="${board.id}"></td>
 
-                <td class="col-md-5" style="text-decoration-line: none; width: 400px;">
+                <td class="col-md-5" style="text-decoration-line: none; width: 300px;">
                     <a th:if="${not#strings.equals(board.subType, '말머리 선택')}"
                        th:data-board-id="${board.id}"
                        th:data-writer-id="${board.writer}"
                        href="#" onclick="findComment()" th:text="|[${board.subType}]|"
                        style="color: black; text-decoration-line: none; display: inline-block; overflow: hidden;"></a>
 
-                    <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|${board.title}|"
-                       style="color: black; text-decoration-line: none; display: inline-block; width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
+                    <a th:data-board-id="${board.id}"
+                       th:data-writer-id="${board.writer}"
+                       href="#" onclick="findComment()" th:text="|${board.title}|"
+                       style="color: black; text-decoration-line: none; display: inline-block; width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
 
                     <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none; display: inline-block; overflow: hidden;"
                           th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></span>
@@ -183,10 +185,10 @@
         </table>
 
         <!--페이지-->
-        <nav aria-label="Page navigation example" style="position: absolute; top: 85%;">
+        <nav aria-label="Page navigation example" style="position: absolute; top: 65%;">
             <ul class="pagination justify-content-center">
               <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
-                <a class="page-link" th:href="@{/boards/freeBoard(page=${previous}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
+                <a class="page-link" th:href="@{/admin/freeBoard(page=${previous}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">이전</a>
               </li>
 
               <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
@@ -223,13 +225,13 @@
 
 
               <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
-                  <a class="page-link" th:href="@{/boards/freeBoard(page=${next}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
+                  <a class="page-link" th:href="@{/admin/freeBoard(page=${next}, writerSearchKeyword=${param.writerSearchKeyword}, titleSearchKeyword=${param.titleSearchKeyword})}">다음</a>
               </li>
             </ul>
           </nav>
     </div>
 
-    <div id="commentContainer" style="float: right; border: solid 3px; width: 400px; height: 80vh; overflow-y: scroll;">
+    <div id="commentContainer" style="float: right; border: solid 3px; width: 400px; height: 70vh; overflow-y: scroll;">
         <h5 style="width: 400px; text-align: center; font-size: 20px;">댓글 관리</h5>
         <span class="cursorCommentId" th:id="${firstCursorBoardId}" style="display: none;"></span>
 
@@ -250,7 +252,7 @@
         crossorigin="anonymous">
 </script>
 
-<script type="text/javascript" th:src="@{/js/admin.js}" ></script>
+<script type="text/javascript" th:src="@{/js/admin_board.js}" ></script>
 
 </body>
 </html>

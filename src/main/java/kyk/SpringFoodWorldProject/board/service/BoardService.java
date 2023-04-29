@@ -68,7 +68,7 @@ public interface BoardService {
     /**
      * 글 삭제
      */
-    void delete(Long boardId);
+    void delete(Long boardId, String boardType);
 
 
     /**

@@ -1,9 +1,11 @@
 package kyk.SpringFoodWorldProject.menu.service;
 
+import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUpdateForm;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUploadForm;
+import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import kyk.SpringFoodWorldProject.menu.repository.MenuRecommendRepository;
 
@@ -150,5 +152,10 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
         }
 
         menuRecommendRepository.delete(menuRecommendId);
+    }
+
+    @Override
+    public Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable) {
+       return menuRecommendRepository.categoryMenuList(menuSearchCond, pageable);
     }
 }

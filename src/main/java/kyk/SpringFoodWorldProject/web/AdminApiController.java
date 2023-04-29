@@ -26,6 +26,9 @@ public class AdminApiController {
 
     private final CommentServiceImpl commentService;
 
+    /**
+     * 선택한 게시글의 댓글 Slice 페이징 조회
+     */
     @GetMapping("/api/comment")
     public ResponseEntity<?> commentScroll(@RequestParam(value = "boardId") String boardId,
                                            @RequestParam(value = "lastCursorCommentId", defaultValue = "0") Long lastCursorCommentId,
@@ -33,6 +36,26 @@ public class AdminApiController {
                                            @PageableDefault(size=5) Pageable pageable) {
         log.info("lastCursorCommentId={}", lastCursorCommentId);
 
+        return getSlicePaging(boardId, lastCursorCommentId, first, pageable);
+    }
+
+    /**
+     * 선택한 댓글 삭제 후 Slice 페이징 조회
+     */
+    @GetMapping("/api/comment/delete")
+    public ResponseEntity<?> deleteComment(@RequestParam(value = "boardId") String boardId,
+                                           @RequestParam(value = "commentId") String commentId,
+                                           @RequestParam(value = "lastCursorCommentId", defaultValue = "0") Long lastCursorCommentId,
+                                           @RequestParam(value = "commentFirst") Boolean first,
+                                           @PageableDefault(size=5) Pageable pageable) {
+        log.info("lastCursorCommentId={}", lastCursorCommentId);
+
+        commentService.delete(Long.valueOf(commentId));
+
+        return getSlicePaging(boardId, lastCursorCommentId, first, pageable);
+    }
+
+    private ResponseEntity<?> getSlicePaging(String boardId, Long lastCursorCommentId, Boolean first, Pageable pageable) {
         if (lastCursorCommentId == 0) {
             Long firstCursorBoardId = commentService.findFirstCursorBoardId(Long.valueOf(boardId));
             Slice<Comment> comments = commentService.searchBySlice(firstCursorBoardId, first, pageable, boardId);
@@ -42,9 +65,9 @@ public class AdminApiController {
             // 내가 필요한 필드 형태의 API 스펙을 위해 엔티티 -> DTO로 변환하고
             List<CommentDTO> commentDTOList = comments.stream()
                     .map(m -> new CommentDTO(m.getId(), m.getContent(), m.getCreatedDate(),
-                              new MemberDTO(m.getMember().getId(), m.getMember().getName(),
-                              new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
-                              new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter())))
+                            new MemberDTO(m.getMember().getId(), m.getMember().getName(),
+                                    new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
+                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType())))
                     .collect(Collectors.toList());
 
 //            return new Result(collect);
@@ -52,7 +75,7 @@ public class AdminApiController {
             for (CommentDTO comment : commentDTOList) {
                 log.info("댓글 json={}", comment.getContent());
             }
-            
+
             // 위 stream을 사용하기 위해 List로 변환했으므로 다시 Slice 형태로 재변환
             Slice<CommentDTO> sliceComments = new SliceImpl<>(commentDTOList, pageable, hasNext);
 
@@ -69,9 +92,9 @@ public class AdminApiController {
 
             List<CommentDTO> commentDTOList = comments.stream()
                     .map(m -> new CommentDTO(m.getId(), m.getContent(), m.getCreatedDate(),
-                              new MemberDTO(m.getMember().getId(), m.getMember().getName(),
-                              new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
-                              new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter())))
+                            new MemberDTO(m.getMember().getId(), m.getMember().getName(),
+                                    new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
+                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType())))
                     .collect(Collectors.toList());
 
             for (CommentDTO comment : commentDTOList) {
@@ -87,12 +110,6 @@ public class AdminApiController {
                 return new ResponseEntity<>(sliceComments, HttpStatus.OK);
             }
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
     }
 
     @Data
@@ -127,5 +144,6 @@ public class AdminApiController {
         private String title;
         private String content;
         private String writer;
+        private String boardType;
     }
 }

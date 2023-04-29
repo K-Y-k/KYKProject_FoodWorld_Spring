@@ -134,7 +134,7 @@ public class TestDataInit {
         commentService.saveComment(savedMember2.getId(), savedMuckstar1.getId(), new CommentUploadDto(1L,"안녕하세요3"));
 
 
-        // 메뉴 데이터 추가 18
+        // 메뉴 데이터 추가 21
         menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창/대창/막창 세트1", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
         menuRecommendRepository.save(new MenuRecommend("분식", "김밥천국", "참치김밥/떡볶이 세트", savedMember3, "example_김밥천국_김밥.PNG", "example_김밥천국_김밥.PNG"));
         menuRecommendRepository.save(new MenuRecommend("기타", "맛존매콤닭갈비", "매콤닭갈비", savedMember3, "example_닭갈비.PNG", "example_닭갈비.PNG"));
@@ -153,10 +153,10 @@ public class TestDataInit {
         menuRecommendRepository.save(new MenuRecommend( "샐러드", "리퍼브14샐러드", "샐러드", savedMember3, "example_샐러드.JPG", "example_샐러드.JPG"));
         menuRecommendRepository.save(new MenuRecommend( "도시락/죽", "본죽", "소고기버섯죽", savedMember3, "example_소고기버섯죽.JPG", "example_소고기버섯죽.JPG"));
         menuRecommendRepository.save(new MenuRecommend( "아시안", "천라쿵푸마라탕&마라샹궈", "마라탕", savedMember3, "example_마라탕.JPG", "example_마라탕.JPG"));
-
-
-
-
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창/대창/막창 세트1", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "막창 세트2", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "대창 세트5", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창세트11", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
     }
 
 }

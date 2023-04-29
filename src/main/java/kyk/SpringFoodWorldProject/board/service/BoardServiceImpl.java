@@ -303,24 +303,37 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
-    public void delete(Long boardId) {
+    public void delete(Long boardId, String boardType) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
-        List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
-        for (BoardFile boardFile : findBoardFiles) {
-            if(boardFile.getAttachedType().equals("attached")) {
-                Path beforeAttachPath = Paths.get(attachFileLocation+"\\" + boardFile.getStoredFileName());
-                try {
-                    Files.deleteIfExists(beforeAttachPath);
-                } catch (DirectoryNotEmptyException e) {
-                    log.info("디렉토리가 비어있지 않습니다");
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (boardType.equals("자유게시판") || boardType.equals("추천게시판")) {
+            List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
+            for (BoardFile boardFile : findBoardFiles) {
+                if (boardFile.getAttachedType().equals("attached")) {
+                    Path beforeAttachPath = Paths.get(attachFileLocation + "\\" + boardFile.getStoredFileName());
+                    try {
+                        Files.deleteIfExists(beforeAttachPath);
+                    } catch (DirectoryNotEmptyException e) {
+                        log.info("디렉토리가 비어있지 않습니다");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Path beforeFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
+                    try {
+                        Files.deleteIfExists(beforeFilePath);
+                    } catch (DirectoryNotEmptyException e) {
+                        log.info("디렉토리가 비어있지 않습니다");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            else {
-                Path beforeFilePath = Paths.get(imageFileLocation+"\\" + boardFile.getStoredFileName());
+        } else {
+            List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
+            for (BoardFile boardFile : findBoardFiles) {
+                Path beforeFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
                 try {
                     Files.deleteIfExists(beforeFilePath);
                 } catch (DirectoryNotEmptyException e) {
