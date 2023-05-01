@@ -37,6 +37,7 @@ public class ChatRoomController {
 
             if (!member1ChatRoom.isEmpty()) {
                 model.addAttribute("member1ChatRoom", member1ChatRoom);
+                model.addAttribute("localDateTime", LocalDateTime.now());
             }
         }
 
@@ -62,6 +63,7 @@ public class ChatRoomController {
 
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
+            redirectAttributes.addFlashAttribute("localDateTime", LocalDateTime.now());
         } else { // 기존에 있으면 전체 채팅방 조회
             // 만약 기존에 채팅을 하다가 퇴장했을 경우를 위해 양쪽 모두 퇴장 메시지를 먼저 지움
             if (findMembersChatRoom1 != null) {
@@ -74,6 +76,7 @@ public class ChatRoomController {
 
             List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());
             redirectAttributes.addFlashAttribute("member1ChatRoom", member1ChatRoom);
+            redirectAttributes.addFlashAttribute("localDateTime", LocalDateTime.now());
         }
         return "redirect:/chat";
     }

@@ -102,22 +102,63 @@
       채팅방</h3>
 
 
-  <div class="container p-4 detail">
+  <div class="container">
     <div class="row">
-      <div class="col-3 p-0">
-        <ul class="list-group chat-list" > <!--채팅방 목록-->
+      <div class="col" style="height:300px; overflow-y: scroll; overflow-x: hidden;">
+        <ul id="chat-list" class="list-group"> <!--채팅방 목록-->
           <div th:each="chatRoom : ${member1ChatRoom}">
-              <li class="list-group-item" style="background-color: rgb(247, 173, 207); text-align: center; height: 5vh;">
+              <li id="list-item" style="border: 1px solid black; text-align: center; height: 120px;">
                 <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}">
-                  <th:block th:if="${session.loginMember.id != chatRoom.member1.id}"
-                            th:text="${chatRoom.member1.name}"></th:block>
-                  <th:block th:if="${session.loginMember.id != chatRoom.member2.id}"
-                            th:text="${chatRoom.member2.name}"></th:block>
-                </a>
+                <table style="width: 288px; height: 118px;">
+                  <tr>
+                    <td>
+                      <img th:if="${session.loginMember.id != chatRoom.member1.id}"
+                           th:src="@{|/profileImageUpload/${chatRoom.member1.profileFile.storedFileName}|}"
+                           class="rounded-circle" style="width: 60px; height: 60px;"/>
+                      <img th:if="${session.loginMember.id != chatRoom.member2.id}"
+                           th:src="@{|/profileImageUpload/${chatRoom.member2.profileFile.storedFileName}|}"
+                           class="rounded-circle" style="width: 60px; height: 60px;"/>
+                    </td>
 
-                <button class="btn btn-primary" type="submit" th:onclick="onLeave();" style="width: 5vw; height: 3.5vh; float: right;">
-                  나가기
-                </button>
+                    <td>
+                      <table>
+                        <tr>
+                          <td>
+                            <span th:if="${session.loginMember.id != chatRoom.member1.id}"
+                                  th:text="${chatRoom.member1.name}"
+                                  style="text-decoration-line: none;"></span>
+                            <span th:if="${session.loginMember.id != chatRoom.member2.id}"
+                                  th:text="${chatRoom.member2.name}"
+                                  style="text-decoration-line: none;"></span>
+                          </td>
+
+                          <td th:if="${chatRoom.chatMessages.size() > 0 and chatRoom.chatMessages != null}">
+                            <span th:if="${#temporals.day(chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).createdDate)} == ${#temporals.day(localDateTime)}"
+                                  th:text="${#temporals.format(chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).createdDate, 'HH:mm')}"
+                                  style="text-decoration-line: none;"></span>
+                            <span th:if="${#temporals.day(chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).createdDate)} != ${#temporals.day(localDateTime)}"
+                                  th:text="${#temporals.format(chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).createdDate, 'MM-dd')}"
+                                  style="text-decoration-line: none;"></span>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td style="width: 200px;">
+                            <span th:if="${chatRoom.chatMessages.size() > 0 and chatRoom.chatMessages != null}"
+                                  th:text="${chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).content}"
+                                  style="float: left;"></span>
+                          </td>
+                          <td>
+                            <button class="btn btn-primary" type="submit" th:onclick="onLeave();" style="font-size: 10px; width: 60px; height: 3vh; float: right;">
+                              나가기
+                            </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                </a>
               </li>
           </div>
         </ul>

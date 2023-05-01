@@ -386,7 +386,7 @@
         </div>
     </aside>
 
-    <footer style="float : right; position: relative; width: 500px; height: 110vh; margin-right: 90px;">
+    <footer style="float : right; position: relative; width: 510px; height: 110vh; margin-right: 90px;">
         <!--메뉴추천-->
         <div class="card">
             <h3 id="top_padding"
@@ -524,16 +524,16 @@
                 </div>
 
                 <!--채팅방 목록-->
-                <div class="col-3 p-0" style="">
+                <div class="col-3 p-0" style="height: 200px; overflow-y: scroll;">
                     <ul class="list-group chat-list">
-                        <li class="list-group-item" style="background-color: rgb(121, 241, 195); width: 170px; text-align: center;">
-                            <span style="font-family: 'Nanum Gothic'; font-style: normal; font-weight: 555;"
+                        <li class="list-group-item" style="background-color: rgb(121, 241, 195); width: 170px;">
+                            <span style="font-family: 'Nanum Gothic'; font-style: normal; font-weight: 555;;"
                                   id="chat_title">채팅방 목록</span>
                         </li>
                     </ul>
 
                     <div th:each="chatRoom : ${member1ChatRoom}">
-                        <li class="list-group-item" style="background-color: rgb(247, 173, 207); text-align: center; height: 5vh; width: 170px;">
+                        <li class="list-group-item" style="background-color: rgb(247, 173, 207); height: 5vh; width: 170px; ">
                             <a th:href="@{/room(roomId=${chatRoom.roomId})}">
                                 <th:block th:if="${session.loginMember.id != chatRoom.member1.id}"
                                           th:text="${chatRoom.member1.name}"></th:block>

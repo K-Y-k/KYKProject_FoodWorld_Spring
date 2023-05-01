@@ -50,7 +50,7 @@ public class TestDataInit {
      */
     @PostConstruct
     public void init() throws IOException {
-        // 회원 데이터 추가 3
+        // 회원 데이터 추가 총 19 및 팔로우 데이터 추가 총 17
         Member savedMember1 = memberRepository.saveMember(new Member("admin", "qq", "qq", "admin"));
         Member savedMember2 = memberRepository.saveMember(new Member("ddd", "dd", "dd", "customer"));
         Member savedMember3 = memberRepository.saveMember(new Member("aaa", "aa", "aa", "customer"));
@@ -58,9 +58,9 @@ public class TestDataInit {
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember1));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember2));
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
+
         followRepository.save(new Follow(savedMember2, savedMember3));
 
-        // 회원, 팔로우 데이터 추가 16
         int memberCount = 1;
         while (memberCount < 17) {
             Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount, "customer"));
@@ -77,10 +77,10 @@ public class TestDataInit {
         int lowerBound2 = 100;
         int upperBound2 = 10000;
 
-        Board savedBoard1 = boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "자유게시판","사는얘기", null, null, 0, 0));
 
-        // 게시글 데이터 추가
-        // 자유게시판 글 및 댓글 19
+        // 게시글 데이터 추가 총 50
+        // 자유게시판 글 20 및 댓글 19
+        Board savedBoard1 = boardRepository.save(new Board("자유게시판.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "자유게시판","사는얘기", null, null, 0, 0));
         int boardCount = 1;
         while (boardCount < 20) {
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
@@ -103,36 +103,35 @@ public class TestDataInit {
         }
         Board savedBoard = boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "추천게시판","식당", "부산시", null, 0, 0));
 
-
         // 먹스타그램 글 10
-        Board savedMuckstar1 = boardRepository.save(new Board("먹스타 샘플 제목1", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar1 = boardRepository.save(new Board("먹스타그램 게시글1", "내용1", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar1.jpg", savedMuckstar1));
 
-        Board savedMuckstar2 = boardRepository.save(new Board("먹스타 샘플 제목2", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar2 = boardRepository.save(new Board("먹스타그램 게시글2", "내용2", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar2.jpg", savedMuckstar2));
 
-        Board savedMuckstar3 = boardRepository.save(new Board("먹스타 샘플 제목3", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar3 = boardRepository.save(new Board("먹스타그램 게시글3", "내용3", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar3.jpg", savedMuckstar3));
 
-        Board savedMuckstar4 = boardRepository.save(new Board("먹스타 샘플 제목4", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar4 = boardRepository.save(new Board("먹스타그램 게시글4", "내용4", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar4.jpg", savedMuckstar4));
 
-        Board savedMuckstar5 = boardRepository.save(new Board("먹스타 샘플 제목5", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar5 = boardRepository.save(new Board("먹스타그램 게시글5", "내용5", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar5.jpg", savedMuckstar5));
 
-        Board savedMuckstar6 = boardRepository.save(new Board("먹스타 샘플 제목6", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar6 = boardRepository.save(new Board("먹스타그램 게시글6", "내용6", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar6.jpg", savedMuckstar6));
 
-        Board savedMuckstar7 = boardRepository.save(new Board("먹스타 샘플 제목7", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar7 = boardRepository.save(new Board("먹스타그램 게시글7", "내용7", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar7.jpg", savedMuckstar7));
 
-        Board savedMuckstar8 = boardRepository.save(new Board("먹스타 샘플 제목8", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar8 = boardRepository.save(new Board("먹스타그램 게시글8", "내용8", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar8.jpg", savedMuckstar8));
 
-        Board savedMuckstar9 = boardRepository.save(new Board("먹스타 샘플 제목9", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar9 = boardRepository.save(new Board("먹스타그램 게시글9", "내용9", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar9.jpg", savedMuckstar9));
 
-        Board savedMuckstar10 = boardRepository.save(new Board("먹스타 샘플 제목10", "예시로 작성한 먹스타그램 게시글입니다", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar10 = boardRepository.save(new Board("먹스타그램 게시글10", "내용10", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar10.jpg", savedMuckstar10));
 
 
@@ -143,7 +142,7 @@ public class TestDataInit {
 
 
         // 메뉴 데이터 추가 21
-        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창/대창/막창 세트1", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창/대창/막창 세트1", savedMember3, "example_곱창.PNG", "example_곱창.JPG"));
         menuRecommendRepository.save(new MenuRecommend("분식", "김밥천국", "참치김밥/떡볶이 세트", savedMember3, "example_김밥천국_김밥.PNG", "example_김밥천국_김밥.PNG"));
         menuRecommendRepository.save(new MenuRecommend("기타", "맛존매콤닭갈비", "매콤닭갈비", savedMember3, "example_닭갈비.PNG", "example_닭갈비.PNG"));
         menuRecommendRepository.save(new MenuRecommend("기타", "이순신국밥", "돼지국밥", savedMember3, "example_돼지국밥.PNG", "example_돼지국밥.PNG"));
@@ -161,16 +160,16 @@ public class TestDataInit {
         menuRecommendRepository.save(new MenuRecommend( "샐러드", "리퍼브14샐러드", "샐러드", savedMember3, "example_샐러드.JPG", "example_샐러드.JPG"));
         menuRecommendRepository.save(new MenuRecommend( "도시락/죽", "본죽", "소고기버섯죽", savedMember3, "example_소고기버섯죽.JPG", "example_소고기버섯죽.JPG"));
         menuRecommendRepository.save(new MenuRecommend( "아시안", "천라쿵푸마라탕&마라샹궈", "마라탕", savedMember3, "example_마라탕.JPG", "example_마라탕.JPG"));
-        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창/대창/막창 세트1", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
-        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "막창 세트2", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
-        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "대창 세트5", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
-        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창세트11", savedMember3, "example_곱창.PNG", "example_곱창.PNG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "막창 세트2", savedMember3, "example_곱창.PNG", "example_곱창.JPG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "대창 세트5", savedMember3, "example_곱창.PNG", "example_곱창.JPG"));
+        menuRecommendRepository.save(new MenuRecommend("기타", "철수네직화곱창", "곱창 세트11", savedMember3, "example_곱창.PNG", "example_곱창.JPG"));
 
 
-        // 채팅방 생성
+        // 채팅방 데이터 추가 2
         ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("a", savedMember1, savedMember2));
         ChatRoom savedRoom3 = chatRoomRepository.save(new ChatRoom("c", savedMember1, savedMember3));
 
+        // 채팅 메시지 데이터 추가 5
         chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
         chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
         chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
