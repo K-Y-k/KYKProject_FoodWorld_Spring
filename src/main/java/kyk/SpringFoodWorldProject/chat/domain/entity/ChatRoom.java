@@ -31,6 +31,7 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "member2_id")
     private Member member2;
 
+    @Builder.Default
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 

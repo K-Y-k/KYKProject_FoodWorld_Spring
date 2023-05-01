@@ -6,6 +6,7 @@ import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -50,5 +51,15 @@ public class SpringDataJpaMenuRecommendRepository implements MenuRecommendReposi
     @Override
     public Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable) {
         return menuRecommendRepository.categoryMenuList(menuSearchCond, pageable);
+    }
+
+    @Override
+    public Long findFirstCursorMenuId(String memberId) {
+        return menuRecommendRepository.findFirstCursorMenuId(memberId);
+    }
+
+    @Override
+    public Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
+        return menuRecommendRepository.searchBySlice(lastCursorId, first, pageable, memberId);
     }
 }

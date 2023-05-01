@@ -1,5 +1,7 @@
 package kyk.SpringFoodWorldProject.follow.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;

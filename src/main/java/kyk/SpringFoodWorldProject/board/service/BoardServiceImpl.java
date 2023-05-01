@@ -307,8 +307,9 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
 
+        List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
+
         if (boardType.equals("자유게시판") || boardType.equals("추천게시판")) {
-            List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
             for (BoardFile boardFile : findBoardFiles) {
                 if (boardFile.getAttachedType().equals("attached")) {
                     Path beforeAttachPath = Paths.get(attachFileLocation + "\\" + boardFile.getStoredFileName());
@@ -331,7 +332,6 @@ public class BoardServiceImpl implements BoardService {
                 }
             }
         } else {
-            List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(board);
             for (BoardFile boardFile : findBoardFiles) {
                 Path beforeFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
                 try {

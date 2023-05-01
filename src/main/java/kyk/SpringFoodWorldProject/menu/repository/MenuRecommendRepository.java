@@ -6,6 +6,7 @@ import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
@@ -24,4 +25,8 @@ public interface MenuRecommendRepository {
     void delete(Long boardId);
 
     Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable);
+
+    Long findFirstCursorMenuId(String memberId);
+    Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId);
+
 }

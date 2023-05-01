@@ -20,7 +20,7 @@ public interface CommentRepository {
 
     int findCommentCount(Long boardId);
 
-    Long findFirstCursorCommentId(Long commentId);
-    Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId);
+    Long findFirstCursorCommentId(String boardId, Boolean memberAdmin);
+    Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
 
 }

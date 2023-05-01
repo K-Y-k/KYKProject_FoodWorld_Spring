@@ -65,7 +65,7 @@ public class FollowServiceImpl implements FollowService{
     }
 
     @Override
-    public Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
+    public Slice<FollowDto> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
         return followRepository.searchBySlice(member, lastCursorFollowerId, first, pageable);
     }
 

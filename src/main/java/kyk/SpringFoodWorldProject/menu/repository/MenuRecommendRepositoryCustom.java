@@ -13,4 +13,6 @@ import org.springframework.data.domain.Slice;
  */
 public interface MenuRecommendRepositoryCustom {
     Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable);
+    Long findFirstCursorMenuId(String memberId);
+    Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId);
 }

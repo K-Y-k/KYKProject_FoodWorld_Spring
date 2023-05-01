@@ -1,6 +1,9 @@
 package kyk.SpringFoodWorldProject.member.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
@@ -51,35 +54,43 @@ public class Member extends BaseTimeEntity {
 
     private String role;
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Follow> fromMembers = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Follow> toMembers = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member"})
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MenuRecommend> menuRecommends = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnoreProperties({"member1"})
     @OneToMany(mappedBy = "member1", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChatRoom> member1ChatRooms = new ArrayList<>();
 
-    @JsonIgnoreProperties({"member1"})
+    @Builder.Default
+    @JsonIgnoreProperties({"member2"})
     @OneToMany(mappedBy = "member2", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChatRoom> member2ChatRooms = new ArrayList<>();
 

@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.member.controller;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
+import kyk.SpringFoodWorldProject.follow.domain.dto.FollowDto;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.follow.service.FollowServiceImpl;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
@@ -43,9 +44,9 @@ public class MemberApiController {
         Member findToMember = memberService.findById(toMemberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + toMemberId));
 
-        Slice<Follow> followers = followService.searchBySlice(findToMember, lastCursorFollowerId, first, pageable);
+        Slice<FollowDto> followers = followService.searchBySlice(findToMember, lastCursorFollowerId, first, pageable);
 
-        for (Follow follower : followers) {
+        for (FollowDto follower : followers) {
             log.info("follower={}", follower.getFromMember().getName());
         }
         return new ResponseEntity<>(followers, HttpStatus.OK);

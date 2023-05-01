@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.follow.repository;
 
+import kyk.SpringFoodWorldProject.follow.domain.dto.FollowDto;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,6 @@ public interface FollowRepository {
 
 
     Long findFirstCursorFollowerId(Member member);
-    Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable);
+    Slice<FollowDto> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable);
     List<Member> recommendMember(Long currentMemberId);
 }

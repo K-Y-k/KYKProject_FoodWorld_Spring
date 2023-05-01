@@ -48,7 +48,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         Board findBoard = queryFactory.selectFrom(board)
                 .where(
                         board.member.id.eq(memberId),
-                        board.boardType.eq(boardType)
+                        boardTypeEq(boardType)
                 )
                 .limit(1)
                 .orderBy(board.id.desc())
@@ -88,7 +88,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                         ltBoardId(lastCursorBoardId, first),
                         memberIdEq(memberId),
                         boardTypeEq(boardType),
-                        board.writer.eq(writerSearchKeyword)
+                        boardWriterEq(writerSearchKeyword)
                 )
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(board.id.desc())

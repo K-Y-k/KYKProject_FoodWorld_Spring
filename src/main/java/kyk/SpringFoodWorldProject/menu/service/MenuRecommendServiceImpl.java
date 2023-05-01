@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -157,5 +158,15 @@ public class MenuRecommendServiceImpl implements MenuRecommendService{
     @Override
     public Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable) {
        return menuRecommendRepository.categoryMenuList(menuSearchCond, pageable);
+    }
+
+    @Override
+    public Long findFirstCursorMenuId(String memberId) {
+        return menuRecommendRepository.findFirstCursorMenuId(memberId);
+    }
+
+    @Override
+    public Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
+        return menuRecommendRepository.searchBySlice(lastCursorId, first, pageable, memberId);
     }
 }

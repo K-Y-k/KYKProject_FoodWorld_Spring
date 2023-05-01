@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.follow.repository;
 
+import kyk.SpringFoodWorldProject.follow.domain.dto.FollowDto;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
 import kyk.SpringFoodWorldProject.like.domain.entity.Like;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
@@ -48,7 +49,7 @@ public class FollowRepositoryImpl implements FollowRepository{
     }
 
     @Override
-    public Slice<Follow> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable) {
+    public Slice<FollowDto> searchBySlice(Member member, Long lastCursorBoardId, Boolean first, Pageable pageable) {
         return followRepository.searchBySlice(member, lastCursorBoardId, first, pageable);
     }
 

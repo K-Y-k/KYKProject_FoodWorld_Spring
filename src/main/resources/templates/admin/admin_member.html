@@ -148,16 +148,25 @@
                     style="text-align: center; margin: 0 auto;"
                     th:text="${#temporals.format(member.createdDate, 'yyyy-MM-dd')}"></td>
 
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${#lists.size(member.boards)}">
+                <td class="col-md-1" style="text-align: center; margin: 0 auto;">
+                    <a th:data-member-id="${member.id}"
+                       th:data-writer-id="${member.name}"
+                       data-type-id="board" style="text-decoration-line: none;"
+                       href="#" onclick="findComment()" th:text="${#lists.size(member.boards)}"></a>
                 </td>
 
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${#lists.size(member.comments)}">
+                <td class="col-md-1" style="text-align: center; margin: 0 auto;">
+                    <a th:data-member-id="${member.id}"
+                       th:data-writer-id="${member.name}"
+                       data-type-id="comment" style="text-decoration-line: none;"
+                       href="#" onclick="findComment()" th:text="${#lists.size(member.comments)}"></a>
                 </td>
 
-                <td class="col-md-1" style="text-align: center; margin: 0 auto;"
-                    th:text="${#lists.size(member.menuRecommends)}">
+                <td class="col-md-1" style="text-align: center; margin: 0 auto;">
+                    <a th:data-member-id="${member.id}"
+                       th:data-writer-id="${member.name}"
+                       data-type-id="menu" style="text-decoration-line: none;"
+                       href="#" onclick="findComment()" th:text="${#lists.size(member.menuRecommends)}"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">
@@ -204,14 +213,12 @@
         </nav>
     </div>
 
-    <div id="commentContainer" style="float: right; border: solid 3px; width: 400px; height: 70vh; overflow-y: scroll;">
-        <h5 style="width: 400px; text-align: center; font-size: 20px;">선택한 회원의 게시글 / 댓글 관리</h5>
-        <span class="cursorBoardId" th:id="${firstCursorBoardId}" style="display: none;"></span>
-        <span class="cursorCommentId" th:id="${firstCursorCommentId}" style="display: none;"></span>
-        <div id="boardList"></div>
+    <div id="childContainer" style="float: right; border: solid 3px; width: 400px; height: 70vh; overflow-y: scroll; overflow-x: hidden;">
+        <h5 id="container-title" style="width: 400px; text-align: center; font-size: 20px;">선택 회원의 게시글 / 댓글 / 메뉴 관리</h5>
+        <span class="cursorMemberId" th:id="${firstCursorBoardId}" style="display: none;"></span>
+        <span class="cursorChildId" th:id="${firstCursorChileId}" style="display: none;"></span>
 
-        <div id="commentList"></div>
-
+        <div id="childList"></div>
     </div>
 </div>
 

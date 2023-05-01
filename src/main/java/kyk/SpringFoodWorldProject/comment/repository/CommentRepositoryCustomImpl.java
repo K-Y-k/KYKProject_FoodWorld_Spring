@@ -30,10 +30,10 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 처음에는 최근 Id로 직접 받아오기 위해 필요한 메서드
      */
     @Override
-    public Long findFirstCursorCommentId(Long commentId) {
+    public Long findFirstCursorCommentId(String boardId, Boolean memberAdmin) {
         Comment findComment = queryFactory.selectFrom(comment)
                 .where(
-                        comment.board.id.eq(commentId)
+                        boardOrMemberIdEq(boardId, memberAdmin)
                 )
                 .limit(1)
                 .orderBy(comment.id.desc())
@@ -51,14 +51,14 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 크기를 제한한 리스트와 다음 페이지의 여부를 같이 반환하는 Slice 페이징
      */
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorCommentId, Boolean first, Pageable pageable, String boardId) {
+    public Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
 
         List<Comment> results = queryFactory.selectFrom(comment)
                 .leftJoin(comment.member, member).fetchJoin()
                 .leftJoin(comment.board, board).fetchJoin()
                 .where(
-                        ltCommentId(lastCursorCommentId, first),
-                        boardIdEq(boardId)
+                        ltCommentId(lastCursorId, first),
+                        boardOrMemberIdEq(boardOrMemberId, memberAdmin)
                 )
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(comment.id.desc())
@@ -68,8 +68,13 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
         return checkLastPage(pageable, results);
     }
     // BooleanExpression으로 하면 조합 가능해진다.
-    private BooleanExpression boardIdEq(String boardId) {
-        return hasText(boardId) ? comment.board.id.eq(Long.valueOf(boardId)) : null;
+    private BooleanExpression boardOrMemberIdEq(String boardId, Boolean memberAdmin) {
+        if (memberAdmin) {
+            return hasText(boardId) ? comment.member.id.eq(Long.valueOf(boardId)) : null;
+        }
+        else {
+            return hasText(boardId) ? comment.board.id.eq(Long.valueOf(boardId)) : null;
+        }
     }
 
     // no-offset 방식 처리하는 메서드

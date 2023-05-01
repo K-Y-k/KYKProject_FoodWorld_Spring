@@ -74,12 +74,12 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Long findFirstCursorCommentId(Long commentId) {
-        return commentRepository.findFirstCursorCommentId(commentId);
+    public Long findFirstCursorCommentId(String boardId, Boolean memberAdmin) {
+        return commentRepository.findFirstCursorCommentId(boardId, memberAdmin);
     }
 
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorBoardId, Boolean first, Pageable pageable, String boardId) {
-        return commentRepository.searchBySlice(lastCursorBoardId, first, pageable, boardId);
+    public Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
+        return commentRepository.searchBySlice(lastCursorId, first, pageable, boardOrMemberId, memberAdmin);
     }
 }

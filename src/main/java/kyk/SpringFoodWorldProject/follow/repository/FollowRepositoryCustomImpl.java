@@ -2,8 +2,10 @@ package kyk.SpringFoodWorldProject.follow.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kyk.SpringFoodWorldProject.follow.domain.dto.FollowDto;
 import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
-import kyk.SpringFoodWorldProject.follow.domain.entity.QFollow;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberDto;
+import kyk.SpringFoodWorldProject.member.domain.dto.ProfileFileDto;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.QMember;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +18,9 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static kyk.SpringFoodWorldProject.follow.domain.entity.QFollow.follow;
-import static kyk.SpringFoodWorldProject.member.domain.entity.QMember.member;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
@@ -51,7 +53,7 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
      * 팔로우한 회원들만 페이징
      */
     @Override
-    public Slice<Follow> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
+    public Slice<FollowDto> searchBySlice(Member member, Long lastCursorFollowerId, Boolean first, Pageable pageable) {
 
         List<Follow> results = queryFactory.selectFrom(follow)
                 .leftJoin(follow.fromMember).fetchJoin()
@@ -64,8 +66,17 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
                 .orderBy(follow.id.desc())
                 .fetch();
 
+        List<FollowDto> followDtos = results.stream()
+                        .map(m -> new FollowDto(m.getId(),
+                                new MemberDto(m.getFromMember().getId(), m.getFromMember().getName(), m.getFromMember().getLoginId(), m.getFromMember().getIntroduce(), m.getFromMember().getFollowCount(), m.getFromMember().getFollowingCount(), m.getFromMember().getRole(),
+                                        new ProfileFileDto(m.getFromMember().getProfileFile().getStoredFileName())),
+                                new MemberDto(m.getFromMember().getId(), m.getFromMember().getName(), m.getFromMember().getLoginId(), m.getFromMember().getIntroduce(), m.getFromMember().getFollowCount(), m.getFromMember().getFollowingCount(), m.getFromMember().getRole(),
+                                        new ProfileFileDto(m.getFromMember().getProfileFile().getStoredFileName()))))
+                                .collect(Collectors.toList());
+
+
         log.info("팔로워 리스트 ={}", results.size());
-        return checkLastPage(pageable, results);
+        return checkLastPage(pageable, followDtos);
     }
 
     // BooleanExpression으로 하면 조합 가능해진다.
@@ -83,7 +94,7 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
     }
 
     // 무한 스크롤 방식 처리하는 메서드
-    private Slice<Follow> checkLastPage(Pageable pageable, List<Follow> results) {
+    private Slice<FollowDto> checkLastPage(Pageable pageable, List<FollowDto> results) {
 
         boolean hasNext = false;
 
@@ -203,8 +214,8 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
 
                 noMemberList.add(FollowerOfFollowerMember.getId()); // 이번에 뽑았으니 중복방지를 위한 제외 대상 리스트에 추가하고
                 resultFollowerList.add(FollowerOfFollowerMember);   // 최종 반환할 팔로워 리스트에 담는다.
-                listCount++;
             }
+            listCount++;
         }
     }
 

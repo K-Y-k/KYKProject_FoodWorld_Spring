@@ -1,10 +1,14 @@
 package kyk.SpringFoodWorldProject.web;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
 import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
+import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
+import kyk.SpringFoodWorldProject.menu.service.MenuRecommendServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +21,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,8 +33,178 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminApiController {
 
+    private final BoardServiceImpl boardService;
     private final CommentServiceImpl commentService;
+    private final MenuRecommendServiceImpl menuRecommendService;
     private final ChatService chatService;
+
+
+    /**
+     * 선택한 회원의 게시글/댓글/메뉴 Slice 페이징 조회
+     */
+    @GetMapping("/api/member/{dataType}")
+    public ResponseEntity<?> childScroll(@PathVariable String dataType,
+                                         @RequestParam(value = "memberId") String memberId,
+                                         @RequestParam(value = "lastCursorChildId", defaultValue = "0") Long lastCursorChildId,
+                                         @RequestParam(value = "childFirst") Boolean first,
+                                         @PageableDefault(size=5) Pageable pageable) {
+        log.info("lastCursorChildId={}", lastCursorChildId);
+        log.info("dataType={}", dataType);
+
+        if (dataType.equals("comment")) {
+            return getCommentSlicePaging(memberId, lastCursorChildId, first, pageable, true);
+        } else if (dataType.equals("board")) {
+            return getBoardSlicePaging(memberId, lastCursorChildId, first, pageable);
+        } else if (dataType.equals("menu")) {
+            return getMenuSlicePaging(memberId, lastCursorChildId, first, pageable);
+        }
+        return null;
+    }
+
+    private ResponseEntity<?> getMenuSlicePaging(String memberId, Long lastCursorChildId, Boolean first, Pageable pageable) {
+        if (lastCursorChildId == 0) {
+            Long firstCursorMenuId = menuRecommendService.findFirstCursorMenuId(memberId);
+            log.info("첫 id={}", firstCursorMenuId);
+
+            Slice<MenuRecommend> menuRecommends = menuRecommendService.searchBySlice(firstCursorMenuId, first, pageable, memberId);
+            boolean hasNext = menuRecommends.hasNext();
+
+            List<MenuRecommendDTO> menuRecommendDTOList = menuRecommends.stream()
+                    .map(m -> new MenuRecommendDTO(m.getId(), m.getCategory(), m.getFranchises(), m.getMenuName(), m.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            for (MenuRecommendDTO menuRecommend : menuRecommendDTOList) {
+                log.info("메뉴 json={}", menuRecommend.getMenuName());
+            }
+
+            Slice<MenuRecommendDTO> sliceMenuRecommends = new SliceImpl<>(menuRecommendDTOList, pageable, hasNext);
+
+            for (MenuRecommendDTO sliceMenuRecommend : sliceMenuRecommends) {
+                log.info("최종 메뉴 json={}", sliceMenuRecommend.getMenuName());
+            }
+
+            if (sliceMenuRecommends.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceMenuRecommends, HttpStatus.OK);
+            }
+        } else {
+            Slice<MenuRecommend> menuRecommends = menuRecommendService.searchBySlice(lastCursorChildId, first, pageable, memberId);
+            boolean hasNext = menuRecommends.hasNext();
+
+            List<MenuRecommendDTO> menuRecommendDTOList = menuRecommends.stream()
+                    .map(m -> new MenuRecommendDTO(m.getId(), m.getCategory(), m.getFranchises(), m.getMenuName(), m.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            for (MenuRecommendDTO menuRecommend : menuRecommendDTOList) {
+                log.info("메뉴 json={}", menuRecommend.getMenuName());
+            }
+
+            Slice<MenuRecommendDTO> sliceMenuRecommends = new SliceImpl<>(menuRecommendDTOList, pageable, hasNext);
+
+            for (MenuRecommendDTO sliceMenuRecommend : sliceMenuRecommends) {
+                log.info("최종 메뉴 json={}", sliceMenuRecommend.getMenuName());
+            }
+
+            if (sliceMenuRecommends.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceMenuRecommends, HttpStatus.OK);
+            }
+        }
+    }
+
+    private ResponseEntity<?> getBoardSlicePaging(String memberId, Long lastCursorChildId, Boolean first, Pageable pageable) {
+        if (lastCursorChildId == 0) {
+            Long firstCursorBoardId = boardService.findFirstCursorBoardIdInMember(Long.valueOf(memberId), null);
+            Slice<Board> boards = boardService.searchBySliceByWriter(memberId, firstCursorBoardId, first, "", pageable, null);
+            boolean hasNext = boards.hasNext();
+
+            List<BoardDTO> boardDTOList = boards.stream()
+                    .map(m -> new BoardDTO(m.getId(), m.getTitle(), m.getContent(), m.getWriter(), m.getBoardType(), m.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            for (BoardDTO board : boardDTOList) {
+                log.info("게시글 json={}", board.getContent());
+            }
+
+            Slice<BoardDTO> sliceBoards = new SliceImpl<>(boardDTOList, pageable, hasNext);
+
+            for (BoardDTO sliceBoard : sliceBoards) {
+                log.info("최종 게시글 json={}", sliceBoard.getContent());
+            }
+
+            if (sliceBoards.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceBoards, HttpStatus.OK);
+            }
+        } else {
+            Slice<Board> boards = boardService.searchBySliceByWriter(memberId, lastCursorChildId, first, "", pageable, null);
+
+            boolean hasNext = boards.hasNext();
+
+            List<BoardDTO> boardDTOList = boards.stream()
+                    .map(m -> new BoardDTO(m.getId(), m.getTitle(), m.getContent(), m.getWriter(), m.getBoardType(), m.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            for (BoardDTO board : boardDTOList) {
+                log.info("게시글 json={}", board.getContent());
+            }
+
+            Slice<BoardDTO> sliceBoards = new SliceImpl<>(boardDTOList, pageable, hasNext);
+
+            for (BoardDTO sliceBoard : sliceBoards) {
+                log.info("최종 게시글 json={}", sliceBoard.getContent());
+            }
+
+            if (sliceBoards.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(sliceBoards, HttpStatus.OK);
+            }
+        }
+    }
+
+    /**
+     * 선택한 게시글/댓글 삭제 후 Slice 페이징 조회
+     */
+    @GetMapping("/api/member/{dataType}/delete")
+    public ResponseEntity<?> delete(@PathVariable String dataType,
+                                    @RequestParam(value = "memberId") String memberId,
+                                    @RequestParam(value = "childId") String childId,
+                                    @RequestParam(value = "lastCursorChildId", defaultValue = "0") Long lastCursorChildId,
+                                    @RequestParam(value = "childFirst") Boolean first,
+                                    @PageableDefault(size=5) Pageable pageable) throws IOException {
+        log.info("dataType={}", dataType);
+        log.info("lastCursorChildId={}", lastCursorChildId);
+        log.info("childId={}", childId);
+        log.info("memberId={}", memberId);
+        log.info("childFirst={}", first);
+
+
+        if (dataType.equals("comment")){
+            commentService.delete(Long.valueOf(childId));
+            return getCommentSlicePaging(memberId, lastCursorChildId, first, pageable, true);
+        } else if (dataType.equals("board")) {
+            Board findBoard = boardService.findById(Long.valueOf(childId)).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 조회 실패: " + Long.valueOf(childId)));
+            boardService.delete(findBoard.getId(), findBoard.getBoardType());
+            return getBoardSlicePaging(memberId, lastCursorChildId, first, pageable);
+        } else if (dataType.equals("menu")) {
+            MenuRecommend findMenu = menuRecommendService.findById(Long.valueOf(childId)).orElseThrow(() ->
+                    new IllegalArgumentException("메뉴 조회 실패: " + Long.valueOf(childId)));
+            menuRecommendService.delete(findMenu.getId());
+            return getMenuSlicePaging(memberId,lastCursorChildId,first, pageable);
+        }
+
+        return null;
+    }
+
 
     /**
      * 선택한 게시글의 댓글 Slice 페이징 조회
@@ -40,7 +216,7 @@ public class AdminApiController {
                                            @PageableDefault(size=5) Pageable pageable) {
         log.info("lastCursorCommentId={}", lastCursorCommentId);
 
-        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable);
+        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable, false);
     }
 
     /**
@@ -56,13 +232,13 @@ public class AdminApiController {
 
         commentService.delete(Long.valueOf(commentId));
 
-        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable);
+        return getCommentSlicePaging(boardId, lastCursorCommentId, first, pageable, false);
     }
 
-    private ResponseEntity<?> getCommentSlicePaging(String boardId, Long lastCursorCommentId, Boolean first, Pageable pageable) {
-        if (lastCursorCommentId == 0) {
-            Long firstCursorCommentId = commentService.findFirstCursorCommentId(Long.valueOf(boardId));
-            Slice<Comment> comments = commentService.searchBySlice(firstCursorCommentId, first, pageable, boardId);
+    private ResponseEntity<?> getCommentSlicePaging(String boardOrMemberId, Long lastCursorChildId, Boolean first, Pageable pageable, Boolean memberAdmin) {
+        if (lastCursorChildId == 0) {
+            Long firstCursorCommentId = commentService.findFirstCursorCommentId(boardOrMemberId, memberAdmin);
+            Slice<Comment> comments = commentService.searchBySlice(firstCursorCommentId, first, pageable, boardOrMemberId, memberAdmin);
             boolean hasNext = comments.hasNext(); // 아래 다시 List -> Slice로 재변환해야할 때 넣기 위해 미리 선언
 
             // 엔티티의 로직, 매핑된 엔티티의 모두를 가져오는 것 등은 비효율적으로
@@ -71,7 +247,7 @@ public class AdminApiController {
                     .map(m -> new CommentDTO(m.getId(), m.getContent(), m.getCreatedDate(),
                             new MemberDTO(m.getMember().getId(), m.getMember().getName(),
                                     new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
-                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType())))
+                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType(), m.getCreatedDate())))
                     .collect(Collectors.toList());
 
 //            return new Result(collect);
@@ -83,6 +259,10 @@ public class AdminApiController {
             // 위 stream을 사용하기 위해 List로 변환했으므로 다시 Slice 형태로 재변환
             Slice<CommentDTO> sliceComments = new SliceImpl<>(commentDTOList, pageable, hasNext);
 
+            for (CommentDTO sliceComment : sliceComments) {
+                log.info("최종 댓글 json={}", sliceComment.getContent());
+            }
+
             if (sliceComments.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
@@ -91,14 +271,14 @@ public class AdminApiController {
             }
         }
         else {
-            Slice<Comment> comments = commentService.searchBySlice(lastCursorCommentId, first, pageable, boardId);
+            Slice<Comment> comments = commentService.searchBySlice(lastCursorChildId, first, pageable, boardOrMemberId, memberAdmin);
             boolean hasNext = comments.hasNext();
 
             List<CommentDTO> commentDTOList = comments.stream()
                     .map(m -> new CommentDTO(m.getId(), m.getContent(), m.getCreatedDate(),
                             new MemberDTO(m.getMember().getId(), m.getMember().getName(),
                                     new ProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
-                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType())))
+                            new BoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType(), m.getCreatedDate())))
                     .collect(Collectors.toList());
 
             for (CommentDTO comment : commentDTOList) {
@@ -106,6 +286,10 @@ public class AdminApiController {
             }
 
             Slice<CommentDTO> sliceComments = new SliceImpl<>(commentDTOList, pageable, hasNext);
+
+            for (CommentDTO sliceComment : sliceComments) {
+                log.info("최종 댓글 json={}", sliceComment.getContent());
+            }
 
             if (sliceComments.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -236,6 +420,17 @@ public class AdminApiController {
         private String content;
         private String writer;
         private String boardType;
+        private LocalDateTime createdDate;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MenuRecommendDTO {
+        private Long id;
+        private String category;
+        private String franchises;
+        private String menuName;
+        private LocalDateTime createdDate;
     }
 
     @Data
