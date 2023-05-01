@@ -12,6 +12,4 @@ public interface ChatRoomRepositoryCustom {
 
     List<ChatRoom> findMemberChatRoom(Long memberId);
     Page<ChatRoom> searchChatRoomByMember(String  memberSearchKeyword, Pageable pageable);
-    Long findFirstCursorChatMessageId(String chatRoomId);
-    Slice<ChatMessage> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId);
 }

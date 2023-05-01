@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.service;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminBoardDTO;
 import kyk.SpringFoodWorldProject.board.domain.dto.*;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import org.springframework.data.domain.Page;

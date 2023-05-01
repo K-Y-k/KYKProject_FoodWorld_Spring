@@ -3,7 +3,7 @@ package kyk.SpringFoodWorldProject.menu.repository;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.admin.dto.AdminMenuRecommendDTO;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +11,8 @@ import org.springframework.data.domain.*;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
-import static kyk.SpringFoodWorldProject.comment.domain.entity.QComment.comment;
 import static kyk.SpringFoodWorldProject.member.domain.entity.QMember.member;
 import static kyk.SpringFoodWorldProject.menu.domain.entity.QMenuRecommend.menuRecommend;
 import static org.springframework.util.StringUtils.hasText;
@@ -89,9 +88,9 @@ public class MenuRecommendRepositoryCustomImpl implements MenuRecommendRepositor
      * 크기를 제한한 리스트와 다음 페이지의 여부를 같이 반환하는 Slice 페이징
      */
     @Override
-    public Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
+    public Slice<AdminMenuRecommendDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
 
-        List<MenuRecommend> results = queryFactory.selectFrom(menuRecommend)
+        List<MenuRecommend> menuRecommends = queryFactory.selectFrom(menuRecommend)
                 .leftJoin(menuRecommend.member, member).fetchJoin()
                 .where(
                         ltMenuId(lastCursorId, first),
@@ -100,9 +99,13 @@ public class MenuRecommendRepositoryCustomImpl implements MenuRecommendRepositor
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(menuRecommend.id.desc())
                 .fetch();
-        log.info("리스트 개수={}", results.size());
+        log.info("리스트 개수={}", menuRecommends.size());
 
-        return checkLastPage(pageable, results);
+        List<AdminMenuRecommendDTO> menuRecommendDTOList = menuRecommends.stream()
+                .map(m -> new AdminMenuRecommendDTO(m.getId(), m.getCategory(), m.getFranchises(), m.getMenuName(), m.getCreatedDate()))
+                .collect(Collectors.toList());
+
+        return checkLastPage(pageable, menuRecommendDTOList);
     }
     // BooleanExpression으로 하면 조합 가능해진다.
     private BooleanExpression memberIdEq(String memberId) {
@@ -122,7 +125,7 @@ public class MenuRecommendRepositoryCustomImpl implements MenuRecommendRepositor
     }
 
     // 무한 스크롤 방식 처리하는 메서드
-    private Slice<MenuRecommend> checkLastPage(Pageable pageable, List<MenuRecommend> results) {
+    private Slice<AdminMenuRecommendDTO> checkLastPage(Pageable pageable, List<AdminMenuRecommendDTO> results) {
 
         boolean hasNext = false;
 

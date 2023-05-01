@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.menu.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
+import kyk.SpringFoodWorldProject.admin.dto.AdminMenuRecommendDTO;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUpdateForm;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuRecommendUploadForm;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
@@ -21,5 +21,5 @@ public interface MenuRecommendService {
     void delete(Long menuRecommendId) throws IOException;
     Page<MenuRecommend> categoryMenuList(MenuSearchCond menuSearchCond, Pageable pageable);
     Long findFirstCursorMenuId(String memberId);
-    Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId);
+    Slice<AdminMenuRecommendDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId);
 }

@@ -1,4 +1,4 @@
-package kyk.SpringFoodWorldProject.web;
+package kyk.SpringFoodWorldProject.admin.controller;
 
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;

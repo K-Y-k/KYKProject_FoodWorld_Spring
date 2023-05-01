@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.menu.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
+import kyk.SpringFoodWorldProject.admin.dto.AdminMenuRecommendDTO;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class SpringDataJpaMenuRecommendRepository implements MenuRecommendReposi
     }
 
     @Override
-    public Slice<MenuRecommend> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
+    public Slice<AdminMenuRecommendDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String memberId) {
         return menuRecommendRepository.searchBySlice(lastCursorId, first, pageable, memberId);
     }
 }

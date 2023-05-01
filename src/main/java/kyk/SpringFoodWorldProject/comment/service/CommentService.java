@@ -1,14 +1,12 @@
 package kyk.SpringFoodWorldProject.comment.service;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
-import kyk.SpringFoodWorldProject.comment.repository.CommentRepositoryCustomImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-
-import java.util.List;
 
 public interface CommentService {
 
@@ -24,6 +22,6 @@ public interface CommentService {
     void delete(Long commentId);
 
     Long findFirstCursorCommentId(String boardId, Boolean memberAdmin);
-    Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
+    Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
 
 }

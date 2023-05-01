@@ -1,16 +1,13 @@
 package kyk.SpringFoodWorldProject.comment.repository;
 
-import kyk.SpringFoodWorldProject.board.domain.entity.Board;
-import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-
-import java.util.List;
 
 /**
  * QueryDsl을 구현하기 위한 사용자 정의 인터페이스
  */
 public interface CommentRepositoryCustom {
     Long findFirstCursorCommentId(String boardId, Boolean memberAdmin);
-    Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
+    Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
 }

@@ -1,8 +1,11 @@
 package kyk.SpringFoodWorldProject.chat.repository.chatmessage;
 
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminChatMessageDTO;
 import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +32,6 @@ public interface ChatMessageRepository {
     void deleteChatMessage(Long chatMessageId);
 
 
+    Long findFirstCursorChatMessageId(String chatRoomId);
+    Slice<AdminChatMessageDTO> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId);
 }

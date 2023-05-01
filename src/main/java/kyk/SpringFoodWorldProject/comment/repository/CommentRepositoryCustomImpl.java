@@ -2,12 +2,17 @@ package kyk.SpringFoodWorldProject.comment.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kyk.SpringFoodWorldProject.admin.dto.AdminBoardDTO;
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
+import kyk.SpringFoodWorldProject.admin.dto.AdminMemberDTO;
+import kyk.SpringFoodWorldProject.admin.dto.AdminProfileFileDTO;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
 import static kyk.SpringFoodWorldProject.comment.domain.entity.QComment.comment;
@@ -51,9 +56,9 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
      * 크기를 제한한 리스트와 다음 페이지의 여부를 같이 반환하는 Slice 페이징
      */
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
+    public Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
 
-        List<Comment> results = queryFactory.selectFrom(comment)
+        List<Comment> comments = queryFactory.selectFrom(comment)
                 .leftJoin(comment.member, member).fetchJoin()
                 .leftJoin(comment.board, board).fetchJoin()
                 .where(
@@ -63,9 +68,17 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(comment.id.desc())
                 .fetch();
-        log.info("리스트 개수={}", results.size());
 
-        return checkLastPage(pageable, results);
+        log.info("리스트 개수={}", comments.size());
+
+        List<AdminCommentDTO> commentDTOList = comments.stream()
+                .map(m -> new AdminCommentDTO(m.getId(), m.getContent(), m.getCreatedDate(),
+                        new AdminMemberDTO(m.getMember().getId(), m.getMember().getName(),
+                                new AdminProfileFileDTO(m.getMember().getProfileFile().getStoredFileName())),
+                        new AdminBoardDTO(m.getBoard().getId(), m.getBoard().getTitle(), m.getBoard().getContent(), m.getBoard().getWriter(), m.getBoard().getBoardType(), m.getCreatedDate(), m.getBoard().getCount(), m.getBoard().getLikeCount(), m.getBoard().getCommentCount())))
+                .collect(Collectors.toList());
+
+        return checkLastPage(pageable, commentDTOList);
     }
     // BooleanExpression으로 하면 조합 가능해진다.
     private BooleanExpression boardOrMemberIdEq(String boardId, Boolean memberAdmin) {
@@ -91,7 +104,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
     }
 
     // 무한 스크롤 방식 처리하는 메서드
-    private Slice<Comment> checkLastPage(Pageable pageable, List<Comment> results) {
+    private Slice<AdminCommentDTO> checkLastPage(Pageable pageable, List<AdminCommentDTO> results) {
 
         boolean hasNext = false;
 

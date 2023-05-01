@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.board.controller;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminBoardDTO;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;

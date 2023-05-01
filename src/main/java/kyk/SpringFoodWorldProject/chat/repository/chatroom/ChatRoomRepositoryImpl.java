@@ -52,14 +52,4 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository{
     public Page<ChatRoom> searchChatRoomByMember(String memberSearchKeyword, Pageable pageable) {
         return chatRoomRepository.searchChatRoomByMember(memberSearchKeyword, pageable);
     }
-
-    @Override
-    public Long findFirstCursorChatMessageId(String chatRoomId) {
-        return chatRoomRepository.findFirstCursorChatMessageId(chatRoomId);
-    }
-
-    @Override
-    public Slice<ChatMessage> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId) {
-        return chatRoomRepository.searchBySlice(lastCursorChatMessageId, first, pageable, chatRoomId);
-    }
 }

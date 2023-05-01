@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.comment.repository;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,6 @@ public interface CommentRepository {
     int findCommentCount(Long boardId);
 
     Long findFirstCursorCommentId(String boardId, Boolean memberAdmin);
-    Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
+    Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin);
 
 }

@@ -4,6 +4,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kyk.SpringFoodWorldProject.admin.dto.AdminBoardDTO;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoardFile.boardFile;

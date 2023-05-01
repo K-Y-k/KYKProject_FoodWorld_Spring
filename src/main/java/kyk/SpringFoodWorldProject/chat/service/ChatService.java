@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.chat.service;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminChatMessageDTO;
 import kyk.SpringFoodWorldProject.chat.domain.dto.ChatMessageDto;
 import kyk.SpringFoodWorldProject.chat.domain.dto.MessageType;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
@@ -118,9 +119,9 @@ public class ChatService {
     }
 
     public Long findFirstCursorChatMessageId(String chatRoomId) {
-        return chatRoomRepository.findFirstCursorChatMessageId(chatRoomId);
+        return chatMessageRepository.findFirstCursorChatMessageId(chatRoomId);
     }
-    public Slice<ChatMessage> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId) {
-        return chatRoomRepository.searchBySlice(lastCursorChatMessageId, first, pageable, chatRoomId);
+    public Slice<AdminChatMessageDTO> searchBySlice(Long lastCursorChatMessageId, Boolean first, Pageable pageable, String chatRoomId) {
+        return chatMessageRepository.searchBySlice(lastCursorChatMessageId, first, pageable, chatRoomId);
     }
 }

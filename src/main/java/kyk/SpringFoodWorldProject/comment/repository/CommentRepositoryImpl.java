@@ -1,6 +1,6 @@
 package kyk.SpringFoodWorldProject.comment.repository;
 
-import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,7 +54,7 @@ public class CommentRepositoryImpl implements CommentRepository{
     }
 
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
+    public Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
         return commentRepository.searchBySlice(lastCursorId, first, pageable, boardOrMemberId, memberAdmin);
     }
 

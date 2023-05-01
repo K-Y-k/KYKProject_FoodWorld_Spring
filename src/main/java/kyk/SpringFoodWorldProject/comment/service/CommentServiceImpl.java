@@ -1,12 +1,12 @@
 package kyk.SpringFoodWorldProject.comment.service;
 
+import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.repository.BoardRepository;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUploadDto;
 import kyk.SpringFoodWorldProject.comment.domain.dto.CommentUpdateDto;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
 import kyk.SpringFoodWorldProject.comment.repository.CommentRepository;
-import kyk.SpringFoodWorldProject.comment.repository.CommentRepositoryCustomImpl;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -79,7 +77,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Slice<Comment> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
+    public Slice<AdminCommentDTO> searchBySlice(Long lastCursorId, Boolean first, Pageable pageable, String boardOrMemberId, Boolean memberAdmin) {
         return commentRepository.searchBySlice(lastCursorId, first, pageable, boardOrMemberId, memberAdmin);
     }
 }
