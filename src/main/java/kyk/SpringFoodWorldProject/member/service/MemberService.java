@@ -4,6 +4,8 @@ import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -35,5 +37,8 @@ public interface MemberService {
 
     Long changeProfile(Long memberId, UpdateForm form) throws IOException;
 
+    Page<Member> findPageBy(Pageable pageable);
+    Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable);
 
+    void delete(Long memberId);
 }

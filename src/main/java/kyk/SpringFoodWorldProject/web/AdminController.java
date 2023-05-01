@@ -7,6 +7,7 @@ import kyk.SpringFoodWorldProject.chat.domain.dto.ChatSearchCond;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.member.domain.LoginSessionConst;
+import kyk.SpringFoodWorldProject.member.domain.dto.MemberSearchCond;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.service.MemberServiceImpl;
 import kyk.SpringFoodWorldProject.menu.domain.dto.MenuSearchCond;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Slf4j
@@ -40,6 +42,85 @@ public class AdminController {
     private final BoardServiceImpl boardService;
     private final MenuRecommendServiceImpl menuRecommendService;
     private final ChatService chatService;
+
+    @GetMapping("/members")
+    public String adminMember(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                              @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                              Model model,
+                              MemberSearchCond memberSearchCond) {
+//        if (loginMember == null) {
+//            log.info("로그인 상태가 아님");
+//
+//            model.addAttribute("message", "로그인 먼저 해주세요!");
+//            model.addAttribute("redirectUrl", "/members/login");
+//            return "messages";
+//        } else if (!loginMember.getRole().equals("admin")) {
+//            log.info("관리자님이 아닙니다.");
+//
+//            model.addAttribute("message", "관리자님이 아닙니다.");
+//            model.addAttribute("redirectUrl", "/");
+//            return "messages";
+//        }
+
+        Page<Member> members;
+
+        // 키워드의 컬럼에 따른 페이징된 회원 출력
+        String memberSearchKeyword = memberSearchCond.getMemberSearchKeyword();
+        log.info("memberSearchKeyword = {}", memberSearchKeyword);
+
+        if (memberSearchKeyword == null) {
+            members = memberService.findPageBy(pageable);
+        } else {
+            members = memberService.findByNameContaining(memberSearchKeyword, pageable);
+        }
+
+        int nowPage = pageable.getPageNumber() + 1;
+        int startPage = Math.max(1, nowPage - 2);
+        int endPage = Math.min(nowPage + 2, members.getTotalPages());
+
+        model.addAttribute("members", members);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        model.addAttribute("localDateTime", LocalDateTime.now());
+
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
+        model.addAttribute("next", pageable.next().getPageNumber());
+
+        model.addAttribute("hasPrev", members.hasPrevious());
+        model.addAttribute("hasNext", members.hasNext());
+
+        model.addAttribute("memberSearchKeyword", memberSearchKeyword);
+
+        return "admin/admin_member";
+    }
+
+    @GetMapping("/member/delete/{memberId}")
+    public String memberDelete(@PathVariable Long memberId,
+                               @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                               Model model) {
+        if (loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        } else if (loginMember.getRole().equals("admin")) {
+            memberService.delete(memberId);
+        } else {
+            log.info("관리자님이 아닙니다.");
+
+            model.addAttribute("message", "관리자님이 아닙니다.");
+            model.addAttribute("redirectUrl", "/");
+            return "messages";
+        }
+
+        model.addAttribute("message", "회원 추방 성공");
+        model.addAttribute("redirectUrl", "/admin/members");
+        return "messages";
+    }
+
 
     @GetMapping("/freeBoard")
     public String adminFreeBoard(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -257,6 +338,8 @@ public class AdminController {
 //            model.addAttribute("redirectUrl", "/");
 //            return "messages";
 //        }
+
+        log.info("선택된 카테고리 = {}", menuSearchCond.getSelectedCategory());
 
         // 키워드의 컬럼에 따른 페이징된 메뉴 출력
         Page<MenuRecommend> menuRecommends = menuRecommendService.categoryMenuList(menuSearchCond, pageable);

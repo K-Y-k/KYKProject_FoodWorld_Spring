@@ -4,6 +4,8 @@ import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -75,6 +77,21 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
     @Override
     public void updateProfileImage(String originalFileName, String storedFileName, Long memberId) {
         profileFileRepository.updateProfileImage(originalFileName, storedFileName, memberId);
+    }
+
+    @Override
+    public Page<Member> findPageBy(Pageable pageable) {
+        return memberRepository.findPageBy(pageable);
+    }
+
+    @Override
+    public Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable) {
+        return memberRepository.findByNameContaining(memberSearchKeyword, pageable);
+    }
+
+    @Override
+    public void delete(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 
 }

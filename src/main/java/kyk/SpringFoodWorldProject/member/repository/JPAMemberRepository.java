@@ -1,6 +1,9 @@
 package kyk.SpringFoodWorldProject.member.repository;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -13,5 +16,7 @@ import java.util.Optional;
 public interface JPAMemberRepository extends JpaRepository<Member, Long> {
     Member findByName(String name);
     Optional<Member> findByLoginId(String loginId);
+    Page<Member> findPageBy(Pageable pageable);
+    Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable);
 
 }

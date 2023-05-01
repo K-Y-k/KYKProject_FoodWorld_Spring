@@ -239,7 +239,7 @@ class BoardServiceImplTest {
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
         // when
-        boardService.delete(uploadBoardId);
+        boardService.delete(uploadBoardId, boardDto.getBoardType());
 
         // then
         Assertions.assertThrows(NoSuchElementException.class, () -> {

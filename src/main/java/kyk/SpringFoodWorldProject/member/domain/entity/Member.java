@@ -2,7 +2,13 @@ package kyk.SpringFoodWorldProject.member.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kyk.SpringFoodWorldProject.board.domain.entity.BaseTimeEntity;
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
+import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
+import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.follow.domain.entity.Follow;
+import kyk.SpringFoodWorldProject.like.domain.entity.Like;
+import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +51,37 @@ public class Member extends BaseTimeEntity {
 
     private String role;
 
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> fromMembers = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> toMembers = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member"})
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<MenuRecommend> menuRecommends = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member1"})
+    @OneToMany(mappedBy = "member1", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChatRoom> member1ChatRooms = new ArrayList<>();
+
+    @JsonIgnoreProperties({"member1"})
+    @OneToMany(mappedBy = "member2", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChatRoom> member2ChatRooms = new ArrayList<>();
 
     @Builder
     public Member(String name, String loginId, String password, String role) {

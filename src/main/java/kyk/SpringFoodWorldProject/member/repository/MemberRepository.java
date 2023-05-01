@@ -2,6 +2,8 @@ package kyk.SpringFoodWorldProject.member.repository;
 
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -29,5 +31,10 @@ public interface MemberRepository {
     ProfileFile findByMember(Member member);
 
     void updateProfileImage(String originalFileName, String storedFileName, Long memberId);
+
+    Page<Member> findPageBy(Pageable pageable);
+    Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable);
+
+    void delete(Long memberId);
 
 }

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -114,6 +116,21 @@ public class MemberServiceImpl implements MemberService {
 
         log.info("회원 프로필 변경");
         return member.getId();
+    }
+
+    @Override
+    public Page<Member> findPageBy(Pageable pageable) {
+        return memberRepository.findPageBy(pageable);
+    }
+
+    @Override
+    public Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable) {
+        return memberRepository.findByNameContaining(memberSearchKeyword, pageable);
+    }
+
+    @Override
+    public void delete(Long memberId) {
+        memberRepository.delete(memberId);
     }
 
     private void profileImageUpload(UpdateForm form, Member member) throws IOException {

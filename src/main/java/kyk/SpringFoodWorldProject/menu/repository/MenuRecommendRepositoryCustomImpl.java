@@ -54,7 +54,11 @@ public class MenuRecommendRepositoryCustomImpl implements MenuRecommendRepositor
     }
 
     private BooleanExpression menuCategoryEq(String selectedCategory) {
-        return hasText(selectedCategory) ? menuRecommend.category.eq(selectedCategory) : null;
+        if ("카테고리 전체".equals(selectedCategory)) {
+            return null;
+        } else {
+            return hasText(selectedCategory) ? menuRecommend.category.eq(selectedCategory) : null;
+        }
     }
     private BooleanExpression menuNameEq(String getMenuNameKeyword) {
         return hasText(getMenuNameKeyword) ? menuRecommend.menuName.like("%" + getMenuNameKeyword + "%"): null;
