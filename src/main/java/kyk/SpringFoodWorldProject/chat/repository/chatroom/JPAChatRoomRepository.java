@@ -19,7 +19,8 @@ public interface JPAChatRoomRepository extends JpaRepository<ChatRoom, Long>, Ch
 
     @Query("select r from ChatRoom r " +
             "where r.id not in " +
-            "(select m.chatRoom.id from ChatMessage m where m.messageType = 'LEAVE' AND m.senderId = :memberId)")
+            "(select m.chatRoom.id from ChatMessage m where m.messageType = 'LEAVE' AND m.senderId = :memberId) " +
+            "AND (r.member1.id = :memberId OR r.member2.id = :memberId)")
     List<ChatRoom> findNotLeaveMessageRoom(Long memberId);
 
     ChatRoom findByRoomId(String roomId);

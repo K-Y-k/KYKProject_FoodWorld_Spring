@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.chat.repository.chatroom;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kyk.SpringFoodWorldProject.chat.domain.dto.ChatRoomDto;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
@@ -28,16 +29,18 @@ public class ChatRoomRepositoryCustomImpl implements ChatRoomRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em); // 이렇게 JPAQueryFactory를 사용할 수는 있다.
     }
 
+
+
     @Override
     public List<ChatRoom> findMemberChatRoom(Long memberId) {
-        List<ChatRoom> fetch = queryFactory.selectFrom(chatRoom)
+        List<ChatRoom> findMemberChatRoom = queryFactory.selectFrom(chatRoom)
                 .where(
                         chatRoom.member1.id.in(memberId)
                                 .or(chatRoom.member2.id.in(memberId))
                 )
                 .fetch();
 
-        return fetch;
+        return findMemberChatRoom;
     }
 
     @Override
