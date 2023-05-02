@@ -29,8 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -43,26 +41,30 @@ public class AdminController {
     private final MenuRecommendServiceImpl menuRecommendService;
     private final ChatService chatService;
 
+    
+    /**
+     * 회원 관리 폼
+     */
     @GetMapping("/members")
     public String adminMember(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                               Model model,
                               MemberSearchCond memberSearchCond) {
+        // 관리자 체크
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
 
         Page<Member> members;
-
-        // 키워드의 컬럼에 따른 페이징된 회원 출력
         String memberSearchKeyword = memberSearchCond.getMemberSearchKeyword();
-        log.info("memberSearchKeyword = {}", memberSearchKeyword);
 
+        // 검색 키워드에 따른 페이징된 회원 가저오기
         if (memberSearchKeyword == null) {
             members = memberService.findPageBy(pageable);
         } else {
             members = memberService.findByNameContaining(memberSearchKeyword, pageable);
         }
 
+        // 회원 페이징 모델
         int nowPage = pageable.getPageNumber() + 1;
         int startPage = Math.max(1, nowPage - 2);
         int endPage = Math.min(nowPage + 2, members.getTotalPages());
@@ -72,19 +74,19 @@ public class AdminController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        model.addAttribute("localDateTime", LocalDateTime.now());
-
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
 
         model.addAttribute("hasPrev", members.hasPrevious());
         model.addAttribute("hasNext", members.hasNext());
-
+        
+        model.addAttribute("localDateTime", LocalDateTime.now());
         model.addAttribute("memberSearchKeyword", memberSearchKeyword);
 
         return "admin/admin_member";
     }
 
+    // 관리자 체크 메서드
     private static String checkAdmin(Member loginMember, Model model) {
         if (loginMember == null) {
             log.info("로그인 상태가 아님");
@@ -102,6 +104,9 @@ public class AdminController {
         return null;
     }
 
+    /**
+     * 회원 추방 기능
+     */
     @GetMapping("/member/delete/{memberId}")
     public String memberDelete(@PathVariable Long memberId,
                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -128,70 +133,81 @@ public class AdminController {
     }
 
 
+    /**
+     * 자유게시판 관리 폼
+     */
     @GetMapping("/freeBoard")
     public String adminFreeBoard(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             Model model,
                             BoardSearchCond boardSearchCond) {
+        // 관리자 체크
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "자유게시판";
-
         String writerSearchKeyword = boardSearchCond.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchCond.getTitleSearchKeyword();
 
-        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        // 검색 키워드에 따른 페이징된 게시글 가저오기
         boards = searchKeyWord(pageable, boardType, writerSearchKeyword, titleSearchKeyword);
 
         // 댓글 개수
         boardCommentCount(boards);
 
+        // 게시판 페이징 모델
         boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_freeBoard";
     }
-
+    
+    /**
+     * 추천 게시판 관리 폼
+     */
     @GetMapping("/recommendBoard")
     public String adminRecommendBoard(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                  @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                  Model model,
                                  BoardSearchCond boardSearchCond) {
+        // 관리자 체크
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "추천게시판";
-
         String writerSearchKeyword = boardSearchCond.getWriterSearchKeyword();
         String titleSearchKeyword = boardSearchCond.getTitleSearchKeyword();
 
-        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        // 키워드의 컬럼에 따른 페이징된 게시글 가저오기
         boards = searchKeyWord(pageable, boardType, writerSearchKeyword, titleSearchKeyword);
 
         // 댓글 개수
         boardCommentCount(boards);
 
+        // 게시판 페이징 모델
         boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_recommendBoard";
     }
 
+    /**
+     * 먹스타그램 관리 폼
+     */
     @GetMapping("/muckstarBoard")
     public String adminMuckstarBoard(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                      @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                      Model model,
                                      BoardSearchCond boardSearchCond) {
+        // 관리자 체크
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "먹스타그램";
-
         String writerSearchKeyword = boardSearchCond.getWriterSearchKeyword();
 
-        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        // 검색 키워드에 따른 페이징된 게시글 가저오기
         if (writerSearchKeyword == null) {
             boards = boardService.findPageListByBoardType(pageable, boardType);
         } else {
@@ -201,11 +217,13 @@ public class AdminController {
         // 댓글 개수
         boardCommentCount(boards);
 
+        // 게시글 페이징 모델
         boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_muckstarBoard";
     }
 
+    // 게시글 검색에 따른 페이지 처리 메서드
     private Page<Board> searchKeyWord(Pageable pageable, String boardType, String writerSearchKeyword, String titleSearchKeyword) {
         Page<Board> boards;
         if (writerSearchKeyword == null && titleSearchKeyword == null) {
@@ -219,7 +237,8 @@ public class AdminController {
         }
         return boards;
     }
-
+    
+    // 댓글 개수 메서드
     private void boardCommentCount(Page<Board> boards) {
         for (Board board : boards) {
             Board findBoard = boardService.findById(board.getId()).orElseThrow(() ->
@@ -229,6 +248,7 @@ public class AdminController {
         }
     }
 
+    // 게시글 페이징 모델 메서드
     private void boardPagingModel(Pageable pageable, Model model, BoardSearchCond boardSearchCond, Page<Board> boards) {
         int nowPage = pageable.getPageNumber() + 1;
         int startPage = Math.max(1, nowPage - 2);
@@ -239,19 +259,20 @@ public class AdminController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        model.addAttribute("localDateTime", LocalDateTime.now());
-
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
 
         model.addAttribute("hasPrev", boards.hasPrevious());
         model.addAttribute("hasNext", boards.hasNext());
 
+        model.addAttribute("localDateTime", LocalDateTime.now());
         model.addAttribute("writerSearchKeyword", boardSearchCond.getWriterSearchKeyword());
         model.addAttribute("titleSearchKeyword", boardSearchCond.getTitleSearchKeyword());
     }
-
-
+    
+    /**
+     * 게시글 삭제 기능
+     */
     @GetMapping("/boards/delete/{boardType}/{boardId}")
     public String boardDelete(@PathVariable String boardType,
                               @PathVariable Long boardId,
@@ -293,50 +314,47 @@ public class AdminController {
     }
 
 
+    /**
+     * 메뉴 랜덤 추천 관리 폼
+     */
     @GetMapping("/menu")
     public String adminMenu(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             Model model,
                             MenuSearchCond menuSearchCond) {
+        // 관리자 체크
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
-
-        log.info("선택된 카테고리 = {}", menuSearchCond.getSelectedCategory());
-
-        // 키워드의 컬럼에 따른 페이징된 메뉴 출력
+        
+        // 검색 키워드에 따른 페이징된 메뉴 가저오기
         Page<MenuRecommend> menuRecommends = menuRecommendService.categoryMenuList(menuSearchCond, pageable);
 
-        int nowPage = pageable.getPageNumber() + 1;  // 페이지에 넘어온 페이지를 가져옴 == boards.getPageable().getPageNumber()
-                                                     // pageable의 index는 0부터 시작이기에 1을 더해준 것이다.
-
-        int startPage = Math.max(1, nowPage - 2);                            // 마이너스가  나오지 않게 Math.max로 최대 1로 조정
-        int endPage = Math.min(nowPage + 2, menuRecommends.getTotalPages()); // 총 페이지보다 넘지 않게 Math.min으로 조정
-
-
-        // 페이징된 게시글 모델과 시작/현재/끝페이지 모델
+        // 메뉴 페이징 모델
+        int nowPage = pageable.getPageNumber() + 1;
+        int startPage = Math.max(1, nowPage - 2);                           
+        int endPage = Math.min(nowPage + 2, menuRecommends.getTotalPages()); 
+        
         model.addAttribute("menuRecommends", menuRecommends);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
-        // 등록한 날이 오늘 날짜이면 시/분까지만 나타나게 조건을 설정하기 위해서 현재 시간을 객체로 담아 보낸 것
-        model.addAttribute("localDateTime", LocalDateTime.now());
-
-        // 이전, 다음으로 적용
+        
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
 
-        // 이전, 다음 페이지의 존재 여부
         model.addAttribute("hasPrev", menuRecommends.hasPrevious());
         model.addAttribute("hasNext", menuRecommends.hasNext());
 
-        // 검색된 파라미터 모델
+        model.addAttribute("localDateTime", LocalDateTime.now());
         model.addAttribute("menuNameKeyword", menuSearchCond.getMenuNameKeyword());
         model.addAttribute("franchisesKeyword", menuSearchCond.getFranchisesKeyword());
 
         return "admin/admin_menu";
     }
 
+    /**
+     * 메뉴 삭제 기능
+     */
     @GetMapping("/menu/delete/{menuRecommendId}")
     public String menuDelete(@PathVariable Long menuRecommendId,
                              @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -363,6 +381,9 @@ public class AdminController {
     }
 
 
+    /**
+     * 채팅방 관리 폼
+     */
     @GetMapping("/chat")
     public String adminChatRoom(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
                                 @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -371,10 +392,10 @@ public class AdminController {
         String messages = checkAdmin(loginMember, model);
         if (messages != null) return messages;
 
-        // 키워드의 컬럼에 따른 페이징된 게시글 출력
+        // 검색 키워드의 컬럼에 따른 페이징된 채팅방 가저오기
         Page<ChatRoom> chatRooms = chatService.searchChatRoomByMember(chatSearchCond.getMemberSearchKeyword(), pageable);
 
-        // 패이지
+        // 채팅방 페이징 모델
         int nowPage = pageable.getPageNumber() + 1;
         int startPage = Math.max(1, nowPage - 2);
         int endPage = Math.min(nowPage + 2, chatRooms.getTotalPages());
@@ -384,19 +405,21 @@ public class AdminController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        model.addAttribute("localDateTime", LocalDateTime.now());
-
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         model.addAttribute("next", pageable.next().getPageNumber());
 
         model.addAttribute("hasPrev", chatRooms.hasPrevious());
         model.addAttribute("hasNext", chatRooms.hasNext());
-
+        
+        model.addAttribute("localDateTime", LocalDateTime.now());
         model.addAttribute("memberSearchKeyword", chatSearchCond.getMemberSearchKeyword());
 
         return "admin/admin_chat";
     }
 
+    /**
+     * 채팅방 삭제 기능
+     */
     @GetMapping("/chatRoom/delete/{chatRoomId}")
     public String chatRoomDelete(@PathVariable String chatRoomId,
                                  @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,

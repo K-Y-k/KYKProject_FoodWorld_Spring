@@ -13,7 +13,7 @@ chatMessageContainer.addEventListener('scroll', function() {
 });
 
 
-// 해당 채팅방에 따른 댓글 조회
+// 해당 채팅방에 따른 채팅 메시지 조회
 function findChatMessage() {
     console.log("채팅방 클릭시의 lastCursorChatMessageId=", lastCursorChatMessageId);
 
@@ -23,14 +23,13 @@ function findChatMessage() {
 
     // 클릭한 요소 가져오기
     var chatRoomElement = event.target;
-    // 클릭한 요소의 속성 값 가져오기
+    // 클릭한 요소의 data 속성 값 가져오기
     var getChatRoomId = chatRoomElement.getAttribute("data-chatRoom-id");
     var getMember1Name = chatRoomElement.getAttribute("data-member1-name");
     var getMember2Name = chatRoomElement.getAttribute("data-member2-name");
     console.log("채팅방 클릭시의 getChatRoomId=", getChatRoomId);
     console.log("채팅방 클릭시의 getMember1Name=", getMember1Name);
     console.log("채팅방 클릭시의 getMember2Name=", getMember2Name);
-
 
     chatRoomId = getChatRoomId;
 
@@ -155,7 +154,7 @@ function deleteChatMessage() {
             data: {lastCursorChatMessageId, chatMessageFirst, chatRoomId, chatMessageId},
             async: false,
             success: function(result) {
-                console.log("팔로워 JSON", JSON.stringify(result))
+                console.log("채팅 메시지 JSON", JSON.stringify(result))
                 let chatRoomInfo = `<h5 style="width: 380px; margin-top: 10px; text-align: center;">${chatRoomId}번 채팅방</h5>
                                     <h5 style="width: 380px; text-align: center;">채팅 참여자: ${getMember1Name}, ${getMember2Name} </h5>`
                 $("#chatMessageList").append(chatRoomInfo);
@@ -197,7 +196,7 @@ function deleteChatMessage() {
 }
 
 
-// 댓글 JSON을 html 형식으로 가공해서 넣기
+// 채팅 메시지 JSON을 html 형식으로 가공해서 넣기
 function getChatMessageItem(chatMessage) {
     let date = new Date(chatMessage.createdDate);
     console.log(chatMessage.createdDate)
@@ -246,6 +245,7 @@ function getChatMessageItem(chatMessage) {
     console.log("가져온 요소의 출력 결과", item);
 	return item;
 }
+
 
 // 날짜 변환 함수
 function dateCompare(date, nowDate) {

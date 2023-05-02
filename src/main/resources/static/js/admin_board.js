@@ -23,7 +23,7 @@ function findComment() {
 
     // 클릭한 요소 가져오기
     var boardElement = event.target;
-    // 클릭한 요소의 data-board-id 속성 값 가져오기
+    // 클릭한 요소의 data 속성 값 가져오기
     var getBoardId = boardElement.getAttribute("data-board-id");
     var writer = boardElement.getAttribute("data-writer-id");
 
@@ -129,7 +129,7 @@ function scrollComment(boardId) {
 function deleteComment() {
     // 클릭한 요소 가져오기
     var commentElement = event.target;
-    // 클릭한 요소의 data-board-id 속성 값 가져오기
+    // 클릭한 요소의 data 속성 값 가져오기
     var getCommentId = commentElement.getAttribute("data-comment-id");
     var getBoardId = commentElement.getAttribute("data-board-id");
     var writer = commentElement.getAttribute("data-writer-id");
@@ -244,6 +244,7 @@ function getCommentItem(comment) {
     console.log("가져온 요소의 출력 결과", item);
 	return item;
 }
+
 
 // 날짜 변환 함수
 function dateCompare(date, nowDate) {

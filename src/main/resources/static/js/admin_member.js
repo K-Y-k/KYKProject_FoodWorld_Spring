@@ -6,7 +6,7 @@ let dataType = '';
 let writer = '';
 let title = document.getElementById('container-title');
 
-// 댓글 리스트 세로 스크롤 끝에 닿을시 ajax 실행
+// 게시글/댓글/메뉴 리스트 세로 스크롤 끝에 닿을시 ajax 실행
 var childContainer = document.getElementById('childContainer');
 childContainer.addEventListener('scroll', function() {
     if (childContainer.scrollTop + childContainer.clientHeight >= childContainer.scrollHeight) {
@@ -15,7 +15,7 @@ childContainer.addEventListener('scroll', function() {
 });
 
 
-// 해당 게시글에 따른 댓글 조회
+// 해당 회원에 따른 게시글/댓글/메뉴 조회
 function findChild() {
     console.log("lastCursorChildId=", lastCursorChildId);
 
@@ -25,13 +25,15 @@ function findChild() {
 
     // 클릭한 요소 가져오기
     var boardElement = event.target;
-    // 클릭한 요소의 속성 값 가져오기
+    // 클릭한 요소의 data 속성 값 가져오기
     var getMemberId = boardElement.getAttribute("data-member-id");
     var getWriter = boardElement.getAttribute("data-writer-id");
     var getDataType = boardElement.getAttribute("data-type-id");
-    dataType = getDataType;
     writer = getWriter;
+    memberId = getMemberId;
+    dataType = getDataType;
 
+    // 선택한 것에 따른 관리창 제목 변경
     if (dataType === "board") {
         title.textContent = "선택한 회원의 게시글 관리"
     } else if (dataType === "comment") {
@@ -39,8 +41,6 @@ function findChild() {
     } else if (dataType === "menu") {
         title.textContent = "선택한 회원의 메뉴 관리"
     }
-
-    memberId = getMemberId;
 
     console.log("childFirst=", childFirst);
     console.log("memberId=", memberId);
@@ -94,7 +94,7 @@ function findChild() {
 }
 
 
-// 댓글 관리 창 스크롤 내릴 때의 조회
+// 게시글/댓글/메뉴 관리 창 스크롤 내릴 때의 조회
 function scrollChild(memberId) {
     console.log("lastCursorChildId=", lastCursorChildId);
     console.log("childFirst=", childFirst);
@@ -139,16 +139,15 @@ function scrollChild(memberId) {
 }
 
 
-// 삭제
+// 게시글/댓글/메뉴 삭제
 function deleteChild() {
     // 클릭한 요소 가져오기
     var childElement = event.target;
-    // 클릭한 요소의 data-board-id 속성 값 가져오기
+    // 클릭한 요소의 data 속성 값 가져오기
     var getChildId = childElement.getAttribute("data-child-id");
-
     childId = getChildId;
 
-
+    // 삭제후 다시 처음처럼 비우고 다시 가져오기
     var confirmMessage = `삭제하시겠습니까?`;
     if (confirm(confirmMessage)) {
         $("#childList").empty();
@@ -334,6 +333,7 @@ function getChildItem(child) {
         return item;
     }
 }
+
 
 // 날짜 변환 함수
 function dateCompare(date, nowDate) {

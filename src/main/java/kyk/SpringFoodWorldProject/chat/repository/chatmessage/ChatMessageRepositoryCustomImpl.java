@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.chat.repository.chatmessage;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kyk.SpringFoodWorldProject.admin.dto.AdminChatMessageDTO;
@@ -8,8 +7,6 @@ import kyk.SpringFoodWorldProject.admin.dto.AdminChatRoomDTO;
 import kyk.SpringFoodWorldProject.admin.dto.AdminMemberDTO;
 import kyk.SpringFoodWorldProject.admin.dto.AdminProfileFileDTO;
 import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
-import kyk.SpringFoodWorldProject.chat.domain.entity.ChatRoom;
-import kyk.SpringFoodWorldProject.chat.repository.chatroom.ChatRoomRepositoryCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 
@@ -31,7 +28,6 @@ public class ChatMessageRepositoryCustomImpl implements ChatMessageRepositoryCus
     public ChatMessageRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em); // 이렇게 JPAQueryFactory를 사용할 수는 있다.
     }
-
 
 
     /**
