@@ -14,7 +14,7 @@ public interface ProfileFileRepository extends JpaRepository<ProfileFile, Long> 
     /**
      * 현재 회원의 프로필 사진 엔티티 조회
      */
-    ProfileFile findByMember(Member member);
+    ProfileFile findProfileByMember(Member member);
 
     /**
      * 프로필 사진 엔티티의 필드 내용을 변경

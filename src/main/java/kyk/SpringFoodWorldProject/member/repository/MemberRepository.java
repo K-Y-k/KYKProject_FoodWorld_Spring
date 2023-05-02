@@ -28,7 +28,7 @@ public interface MemberRepository {
 
     ProfileFile saveProfile(ProfileFile profileFile);
 
-    ProfileFile findByMember(Member member);
+    ProfileFile findProfileByMember(Member member);
 
     void updateProfileImage(String originalFileName, String storedFileName, Long memberId);
 

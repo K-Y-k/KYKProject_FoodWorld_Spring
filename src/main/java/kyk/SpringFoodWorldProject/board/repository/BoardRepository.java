@@ -27,6 +27,7 @@ public interface BoardRepository {
      * 글 id로 조회
      */
     Optional<Board> findById(Long id);
+    List<Board> findByMemberId(Long memberId);
 
     /**
      * 글 모두 조회

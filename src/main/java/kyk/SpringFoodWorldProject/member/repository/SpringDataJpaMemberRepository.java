@@ -70,8 +70,8 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public ProfileFile findByMember(Member member) {
-        return profileFileRepository.findByMember(member);
+    public ProfileFile findProfileByMember(Member member) {
+        return profileFileRepository.findProfileByMember(member);
     }
 
     @Override

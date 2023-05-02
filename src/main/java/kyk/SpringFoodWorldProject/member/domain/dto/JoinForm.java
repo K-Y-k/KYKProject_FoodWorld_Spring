@@ -45,6 +45,7 @@ public class JoinForm {
                 .name(name)
                 .loginId(loginId)
                 .password(password)
+                .role("customer")
                 .build();
     }
 

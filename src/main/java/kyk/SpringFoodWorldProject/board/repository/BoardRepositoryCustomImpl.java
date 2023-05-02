@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.repository;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kyk.SpringFoodWorldProject.admin.dto.AdminBoardDTO;
 import kyk.SpringFoodWorldProject.board.domain.dto.BoardSearchCond;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static kyk.SpringFoodWorldProject.board.domain.entity.QBoard.board;
@@ -30,6 +32,17 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
     private final JPAQueryFactory queryFactory;
     public BoardRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em); // 이렇게 JPAQueryFactory를 사용할 수는 있다.
+    }
+
+    public List<Board> findByMemberId(Long memberId) {
+        List<Board> findMemberBoardList = queryFactory.selectFrom(board)
+                .leftJoin(board.boardFiles, boardFile)
+                .where(
+                        board.member.id.eq(memberId)
+                )
+                .fetch();
+
+        return findMemberBoardList;
     }
 
     @Override

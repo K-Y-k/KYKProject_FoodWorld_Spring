@@ -13,6 +13,7 @@ import java.util.List;
  * QueryDsl을 구현하기 위한 사용자 정의 인터페이스
  */
 public interface BoardRepositoryCustom {
+    List<Board> findByMemberId(Long memberId);
     Long findFirstCursorBoardId(String boardType);
     Long findFirstCursorBoardIdInMember(Long memberId, String boardType);
     Slice<Board> searchBySlice(String memberId, Long lastCursorBoardId, Boolean first, Pageable pageable, String boardType);

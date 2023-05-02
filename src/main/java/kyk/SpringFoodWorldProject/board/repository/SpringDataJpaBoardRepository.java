@@ -46,6 +46,11 @@ public class SpringDataJpaBoardRepository implements BoardRepository {
     }
 
     @Override
+    public List<Board> findByMemberId(Long memberId) {
+        return boardRepository.findByMemberId(memberId);
+    }
+
+    @Override
     public List<Board> findAll() {
         return boardRepository.findAll();
     }
