@@ -6,7 +6,6 @@ import kyk.SpringFoodWorldProject.admin.dto.AdminCommentDTO;
 import kyk.SpringFoodWorldProject.admin.dto.AdminMenuRecommendDTO;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.service.BoardServiceImpl;
-import kyk.SpringFoodWorldProject.chat.domain.entity.ChatMessage;
 import kyk.SpringFoodWorldProject.chat.service.ChatService;
 import kyk.SpringFoodWorldProject.comment.service.CommentServiceImpl;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
@@ -49,12 +48,13 @@ public class AdminApiController {
         log.info("lastCursorChildId={}", lastCursorChildId);
         log.info("dataType={}", dataType);
 
-        if (dataType.equals("comment")) {
-            return getCommentSlicePaging(memberId, lastCursorChildId, first, pageable, true);
-        } else if (dataType.equals("board")) {
-            return getBoardSlicePaging(memberId, lastCursorChildId, first, pageable);
-        } else if (dataType.equals("menu")) {
-            return getMenuSlicePaging(memberId, lastCursorChildId, first, pageable);
+        switch (dataType) {
+            case "comment":
+                return getCommentSlicePaging(memberId, lastCursorChildId, first, pageable, true);
+            case "board":
+                return getBoardSlicePaging(memberId, lastCursorChildId, first, pageable);
+            case "menu":
+                return getMenuSlicePaging(memberId, lastCursorChildId, first, pageable);
         }
         return null;
     }

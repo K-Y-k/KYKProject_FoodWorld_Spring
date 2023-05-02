@@ -48,19 +48,8 @@ public class AdminController {
                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                               Model model,
                               MemberSearchCond memberSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         Page<Member> members;
 
@@ -96,6 +85,23 @@ public class AdminController {
         return "admin/admin_member";
     }
 
+    private static String checkAdmin(Member loginMember, Model model) {
+        if (loginMember == null) {
+            log.info("로그인 상태가 아님");
+
+            model.addAttribute("message", "로그인 먼저 해주세요!");
+            model.addAttribute("redirectUrl", "/members/login");
+            return "messages";
+        } else if (!loginMember.getRole().equals("admin")) {
+            log.info("관리자님이 아닙니다.");
+
+            model.addAttribute("message", "관리자님이 아닙니다.");
+            model.addAttribute("redirectUrl", "/");
+            return "messages";
+        }
+        return null;
+    }
+
     @GetMapping("/member/delete/{memberId}")
     public String memberDelete(@PathVariable Long memberId,
                                @SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -127,19 +133,8 @@ public class AdminController {
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             Model model,
                             BoardSearchCond boardSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "자유게시판";
@@ -153,7 +148,7 @@ public class AdminController {
         // 댓글 개수
         boardCommentCount(boards);
 
-        pagingModel(pageable, model, boardSearchCond, boards);
+        boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_freeBoard";
     }
@@ -163,19 +158,8 @@ public class AdminController {
                                  @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                  Model model,
                                  BoardSearchCond boardSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "추천게시판";
@@ -189,7 +173,7 @@ public class AdminController {
         // 댓글 개수
         boardCommentCount(boards);
 
-        pagingModel(pageable, model, boardSearchCond, boards);
+        boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_recommendBoard";
     }
@@ -199,19 +183,8 @@ public class AdminController {
                                      @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                      Model model,
                                      BoardSearchCond boardSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         Page<Board> boards;
         String boardType = "먹스타그램";
@@ -228,7 +201,7 @@ public class AdminController {
         // 댓글 개수
         boardCommentCount(boards);
 
-        pagingModel(pageable, model, boardSearchCond, boards);
+        boardPagingModel(pageable, model, boardSearchCond, boards);
 
         return "admin/admin_muckstarBoard";
     }
@@ -256,7 +229,7 @@ public class AdminController {
         }
     }
 
-    private void pagingModel(Pageable pageable, Model model, BoardSearchCond boardSearchCond, Page<Board> boards) {
+    private void boardPagingModel(Pageable pageable, Model model, BoardSearchCond boardSearchCond, Page<Board> boards) {
         int nowPage = pageable.getPageNumber() + 1;
         int startPage = Math.max(1, nowPage - 2);
         int endPage = Math.min(nowPage + 2, boards.getTotalPages());
@@ -325,19 +298,8 @@ public class AdminController {
                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             Model model,
                             MenuSearchCond menuSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         log.info("선택된 카테고리 = {}", menuSearchCond.getSelectedCategory());
 
@@ -406,20 +368,8 @@ public class AdminController {
                                 @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                 Model model,
                                 ChatSearchCond chatSearchCond) {
-//        if (loginMember == null) {
-//            log.info("로그인 상태가 아님");
-//
-//            model.addAttribute("message", "로그인 먼저 해주세요!");
-//            model.addAttribute("redirectUrl", "/members/login");
-//            return "messages";
-//        } else if (!loginMember.getRole().equals("admin")) {
-//            log.info("관리자님이 아닙니다.");
-//
-//            model.addAttribute("message", "관리자님이 아닙니다.");
-//            model.addAttribute("redirectUrl", "/");
-//            return "messages";
-//        }
-
+        String messages = checkAdmin(loginMember, model);
+        if (messages != null) return messages;
 
         // 키워드의 컬럼에 따른 페이징된 게시글 출력
         Page<ChatRoom> chatRooms = chatService.searchChatRoomByMember(chatSearchCond.getMemberSearchKeyword(), pageable);

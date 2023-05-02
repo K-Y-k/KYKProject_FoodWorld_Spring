@@ -47,6 +47,8 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
+                .area(boardDto.getArea())
+                .menuName(boardDto.getMenuName())
                 .fileAttached(0)
                 .build();
     }
@@ -58,6 +60,8 @@ public class BoardUploadForm {
                 .member(member)
                 .boardType(boardType)
                 .subType(subType)
+                .area(boardDto.getArea())
+                .menuName(boardDto.getMenuName())
                 .fileAttached(1)
                 .build();
     }

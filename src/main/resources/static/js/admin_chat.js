@@ -232,8 +232,8 @@ function getChatMessageItem(chatMessage) {
                     </tr>
 
                     <tr>
-                        <td colspan="3">
-                            <h5 style="white-space: normal;">${chatMessage.content}</h5>
+                        <td colspan="3" style="width: 370px; word-break: break-all;">
+                            <span>${chatMessage.content}</span>
                         </td>
                     </tr>
                     <tr>

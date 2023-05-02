@@ -10,13 +10,13 @@ let title = document.getElementById('container-title');
 var childContainer = document.getElementById('childContainer');
 childContainer.addEventListener('scroll', function() {
     if (childContainer.scrollTop + childContainer.clientHeight >= childContainer.scrollHeight) {
-        scrollComment(memberId);
+        scrollChild(memberId);
     }
 });
 
 
 // 해당 게시글에 따른 댓글 조회
-function findComment() {
+function findChild() {
     console.log("lastCursorChildId=", lastCursorChildId);
 
     $("#childList").empty();
@@ -95,7 +95,7 @@ function findComment() {
 
 
 // 댓글 관리 창 스크롤 내릴 때의 조회
-function scrollComment(memberId) {
+function scrollChild(memberId) {
     console.log("lastCursorChildId=", lastCursorChildId);
     console.log("childFirst=", childFirst);
     console.log("memberId=", memberId);
@@ -140,7 +140,7 @@ function scrollComment(memberId) {
 
 
 // 삭제
-function deleteComment() {
+function deleteChild() {
     // 클릭한 요소 가져오기
     var childElement = event.target;
     // 클릭한 요소의 data-board-id 속성 값 가져오기
@@ -219,18 +219,22 @@ function getChildItem(child) {
     var comparedDate = dateCompare(date, nowDate);
 
     if (dataType === "board") {
-            let item = `<div style="margin-left: 5px; margin-top: 30px;">${child.id}</div>
+        let item = `<div style="margin-left: 5px; margin-top: 30px;">${child.id}</div>
                         <table style="width: 370px; margin-left: 5px; border: 1px solid black;">
                             <tr>
                                 <td>
-                                    <div style="width: 270px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${child.title}</div>
+                                    <span style="font-size: 15px;"><${child.boardType}></span>
+                                </td>
+
+                                <td>
+                                    <div style="width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${child.title}</div>
                                 </td>
 
                                 <td>
                                     <button class="btn btnEvent"
                                             data-child-id="${child.id}"
                                             data-writer-id="${child.writer}"
-                                            onclick="deleteComment()" type="button"
+                                            onclick="deleteChild()" type="button"
                                             style="float:right; width: 80px; background-color: #007bff; color: #ffffff;">
                                             삭제
                                     </button>
@@ -238,8 +242,8 @@ function getChildItem(child) {
                             </tr>
 
                             <tr>
-                                <td colspan="3">
-                                    <span style="white-space: normal;">${child.content}</h5>
+                                <td colspan="3" style="width: 370px; word-break: break-all;">
+                                    <span>${child.content}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -254,60 +258,23 @@ function getChildItem(child) {
     }
     else if (dataType === "comment") {
         let item = `<div style="margin-left: 5px; margin-top: 30px;">${child.id}</div>
-                     <table style="width: 370px; margin-left: 5px; border: 1px solid black;">
-                        <tr>
-                            <td>
-                                <img src="/profileImageUpload/${child.member.profileFile.storedFileName}"
-                                     class="rounded-circle"
-                                     style="width: 50px; height: 50px;">
-                            </td>
-
-                            <td>
-                                <span>${child.member.name}</span>
-                            </td>
-
-                            <td>
-                                <button class="btn btnEvent"
-                                        data-child-id="${child.id}"
-                                        data-writer-id="${child.member.name}"
-                                        onclick="deleteComment()" type="button"
-                                        style="float:right; width: 80px; background-color: #007bff; color: #ffffff;">
-                                        삭제
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="3">
-                                <h5 style="white-space: normal;">${child.content}</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <span id="date" style="float: right; font-size: 15px;">${comparedDate}</span>
-                            </td>
-                        </tr>
-                    </table>`;
-
-        console.log("가져온 요소의 출력 결과", item);
-        return item;
-    }
-    if (dataType === "menu") {
-            let item = `<div style="margin-left: 5px; margin-top: 30px;">${child.id}</div>
                         <table style="width: 370px; margin-left: 5px; border: 1px solid black;">
                             <tr>
                                 <td>
-                                    <span>${child.category}</span>
+                                    <img src="/profileImageUpload/${child.member.profileFile.storedFileName}"
+                                        class="rounded-circle"
+                                        style="width: 50px; height: 50px;">
                                 </td>
 
                                 <td>
-                                    <span>${child.franchises}</span>
+                                    <span>${child.member.name}</span>
                                 </td>
 
                                 <td>
                                     <button class="btn btnEvent"
                                             data-child-id="${child.id}"
-                                            onclick="deleteComment()" type="button"
+                                            data-writer-id="${child.member.name}"
+                                            onclick="deleteChild()" type="button"
                                             style="float:right; width: 80px; background-color: #007bff; color: #ffffff;">
                                             삭제
                                     </button>
@@ -315,8 +282,45 @@ function getChildItem(child) {
                             </tr>
 
                             <tr>
+                                <td colspan="3" style="width: 370px; word-break: break-all;">
+                                    <span>${child.content}</span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td colspan="3">
-                                    <span style="white-space: normal;">${child.menuName}</h5>
+                                    <span id="date" style="float: right; font-size: 15px;">${comparedDate}</span>
+                                </td>
+                            </tr>
+                        </table>`;
+
+        console.log("가져온 요소의 출력 결과", item);
+        return item;
+    }
+    else if (dataType === "menu") {
+        let item = `<div style="margin-left: 5px; margin-top: 30px;">${child.id}</div>
+                        <table style="width: 370px; margin-left: 5px; border: 1px solid black;">
+                            <tr>
+                                <td>
+                                    <span style="font-size: 15px;"><${child.category}></span>
+                                </td>
+
+                                <td>
+                                    <div style="width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${child.franchises}</div>
+                                </td>
+
+                                <td>
+                                    <button class="btn btnEvent"
+                                            data-child-id="${child.id}"
+                                            onclick="deleteChild()" type="button"
+                                            style="float:right; width: 80px; background-color: #007bff; color: #ffffff;">
+                                            삭제
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 370px; word-break: break-all;">
+                                    <span>${child.menuName}</span>
                                 </td>
                             </tr>
                             <tr>

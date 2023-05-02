@@ -32,6 +32,7 @@ public class MucstarUploadForm {
 
     public Board toSaveFileEntity(Member member, MucstarUploadForm boardDto) {
         return Board.builder()
+                .title("먹스타그램 게시글")
                 .content(content)
                 .writer(member.getName())
                 .member(member)

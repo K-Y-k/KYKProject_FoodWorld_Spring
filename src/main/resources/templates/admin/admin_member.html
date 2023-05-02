@@ -152,21 +152,21 @@
                     <a th:data-member-id="${member.id}"
                        th:data-writer-id="${member.name}"
                        data-type-id="board" style="text-decoration-line: none;"
-                       href="#" onclick="findComment()" th:text="${#lists.size(member.boards)}"></a>
+                       href="#" onclick="findChild()" th:text="${#lists.size(member.boards)}"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">
                     <a th:data-member-id="${member.id}"
                        th:data-writer-id="${member.name}"
                        data-type-id="comment" style="text-decoration-line: none;"
-                       href="#" onclick="findComment()" th:text="${#lists.size(member.comments)}"></a>
+                       href="#" onclick="findChild()" th:text="${#lists.size(member.comments)}"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">
                     <a th:data-member-id="${member.id}"
                        th:data-writer-id="${member.name}"
                        data-type-id="menu" style="text-decoration-line: none;"
-                       href="#" onclick="findComment()" th:text="${#lists.size(member.menuRecommends)}"></a>
+                       href="#" onclick="findChild()" th:text="${#lists.size(member.menuRecommends)}"></a>
                 </td>
 
                 <td class="col-md-1" style="text-align: center; margin: 0 auto;">
