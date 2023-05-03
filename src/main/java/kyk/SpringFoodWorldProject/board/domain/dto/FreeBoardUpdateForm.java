@@ -1,9 +1,13 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
+import kyk.SpringFoodWorldProject.board.domain.entity.Board;
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 
 /**
@@ -26,5 +30,9 @@ public class FreeBoardUpdateForm {
     private String boardType;
 
     private String subType;
+
+    private List<MultipartFile> attachFiles;
+
+    private List<MultipartFile> imageFiles;
 
 }

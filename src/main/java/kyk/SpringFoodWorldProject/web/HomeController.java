@@ -48,15 +48,17 @@ public class HomeController {
                                  @ModelAttribute("loginForm") LoginForm form,
                                  Model model) {
 
+        // 각 게시판 인기글 조회
         List<Board> freeBoards = boardService.popularBoardList("자유게시판");
         List<Board> recommendBoards = boardService.popularBoardList("추천게시판");
         List<Board> muckstarBoards = boardService.popularBoardList("먹스타그램");
 
-        // 댓글 개수 가져오는 작업
+        // 각 게시판 댓글 개수 가져오는 작업
         findCommentCount(freeBoards);
         findCommentCount(recommendBoards);
         findCommentCount(muckstarBoards);
 
+        // 각 게시판 모델링
         model.addAttribute("freeBoards", freeBoards);
         model.addAttribute("recommendBoards", recommendBoards);
         model.addAttribute("muckstarBoards", muckstarBoards);
@@ -81,9 +83,24 @@ public class HomeController {
     @PostMapping("/")
     public String login(@Valid @ModelAttribute LoginForm form,
                         BindingResult bindingResult,
-                        HttpServletRequest request) {
+                        HttpServletRequest request, Model model) {
         // 검증 실패 : 오류가 있으면 폼으로 반환
         if (bindingResult.hasErrors()) {
+            // 각 게시판 인기글 조회
+            List<Board> freeBoards = boardService.popularBoardList("자유게시판");
+            List<Board> recommendBoards = boardService.popularBoardList("추천게시판");
+            List<Board> muckstarBoards = boardService.popularBoardList("먹스타그램");
+
+            // 각 게시판 댓글 개수 가져오는 작업
+            findCommentCount(freeBoards);
+            findCommentCount(recommendBoards);
+            findCommentCount(muckstarBoards);
+
+            // 각 게시판 모델링
+            model.addAttribute("freeBoards", freeBoards);
+            model.addAttribute("recommendBoards", recommendBoards);
+            model.addAttribute("muckstarBoards", muckstarBoards);
+
             return "main";
         }
 

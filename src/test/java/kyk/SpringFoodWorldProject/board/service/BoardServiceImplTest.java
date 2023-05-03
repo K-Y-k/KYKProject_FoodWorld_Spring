@@ -89,7 +89,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
 
         // when : Dto의 id는 어차피 db에 저장되는 것이 아니므로 아무거나 넣어도 됨
@@ -108,12 +108,12 @@ class BoardServiceImplTest {
      * 글 수정 테스트
      */
     @Test
-    void updateBoard() {
+    void updateBoard() throws IOException {
         // given
-        FreeBoardUpdateForm updateDto = new FreeBoardUpdateForm(1L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기");
+        FreeBoardUpdateForm updateDto = new FreeBoardUpdateForm(1L, "수정한 제목", "수정한 내용", "자유게시판", "사는얘기", null, null);
 
         // when : 기존에 생성된 게시글 중의 id를 하나 넣음
-        Long updateBoardId = boardService.updateBoard(updateDto.getId(), updateDto);
+        Long updateBoardId = boardService.updateBoard(updateDto.getId(), updateDto, null, null);
         Board updateBoard = boardService.findById(updateBoardId).get();
 
         // then
@@ -234,7 +234,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
@@ -273,7 +273,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
@@ -308,7 +308,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(27L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
@@ -352,7 +352,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 
@@ -389,7 +389,7 @@ class BoardServiceImplTest {
                 "Hello, World!".getBytes()
         );
 
-        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), Collections.singletonList(imageFile.getOriginalFilename()), Collections.singletonList(""), 0);
+        BoardUploadForm boardDto = new BoardUploadForm(29L, "등록한 제목", "등록한 내용", "자유게시판", "사는얘기", null, null, Collections.singletonList(imageFile), Collections.singletonList(attachFile), 0);
 
         Long uploadBoardId = boardService.upload(savedMember.getId(), boardDto);
 

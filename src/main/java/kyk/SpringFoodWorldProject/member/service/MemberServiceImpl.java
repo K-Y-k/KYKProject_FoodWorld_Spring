@@ -1,6 +1,5 @@
 package kyk.SpringFoodWorldProject.member.service;
 
-import kyk.SpringFoodWorldProject.board.domain.dto.MucstarUploadForm;
 import kyk.SpringFoodWorldProject.board.domain.entity.Board;
 import kyk.SpringFoodWorldProject.board.domain.entity.BoardFile;
 import kyk.SpringFoodWorldProject.board.repository.BoardFileRepository;
@@ -9,14 +8,15 @@ import kyk.SpringFoodWorldProject.member.domain.dto.JoinForm;
 import kyk.SpringFoodWorldProject.member.domain.dto.UpdateForm;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import kyk.SpringFoodWorldProject.member.domain.entity.ProfileFile;
+import kyk.SpringFoodWorldProject.exception.DuplicatedMemberLoginIdException;
+import kyk.SpringFoodWorldProject.exception.DuplicatedMemberNameException;
+import kyk.SpringFoodWorldProject.exception.MemberNotFoundException;
 import kyk.SpringFoodWorldProject.member.repository.MemberRepository;
-import kyk.SpringFoodWorldProject.member.repository.ProfileFileRepository;
 import kyk.SpringFoodWorldProject.menu.domain.entity.MenuRecommend;
 import kyk.SpringFoodWorldProject.menu.repository.MenuRecommendRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class MemberServiceImpl implements MemberService {
     public Long join(JoinForm form) {
         Member memberEntity = form.toEntity();
 
-        // 중복 회원 검증 로직
+        // 닉네임/아이디 중복 회원 검증 로직
         validateDuplicateMember(memberEntity);
 
         Member savedMember = memberRepository.saveMember(memberEntity);
@@ -102,9 +102,14 @@ public class MemberServiceImpl implements MemberService {
         // 문제가 있으면 EXCEPTION
         // 같은 로그인 아이디가 있는지 찾음
         // 반환형태가 Optional<Member>이므로 이렇게 예와처리 가능
+        memberRepository.findByName(memberEntity.getName())
+                .ifPresent(m-> {
+                    throw new DuplicatedMemberNameException("이미 존재하는 닉네임입니다.");
+                });
+
         memberRepository.findByLoginId(memberEntity.getLoginId())
                 .ifPresent(m-> {
-                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                    throw new DuplicatedMemberLoginIdException("이미 존재하는 아이디입니다.");
                 });
     }
 
@@ -116,7 +121,7 @@ public class MemberServiceImpl implements MemberService {
         // 람다를 활용하여 위 코드를 축약한 것
         return memberRepository.findByLoginId(loginId)
                 .filter(m -> m.getPassword().equals(password))
-                .orElse(null);
+                .orElseThrow(() -> new MemberNotFoundException("아이디 또는 패스워드가 일치하지 않습니다."));
     }
 
 

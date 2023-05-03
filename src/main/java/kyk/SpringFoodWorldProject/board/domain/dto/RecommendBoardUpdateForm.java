@@ -1,11 +1,13 @@
 package kyk.SpringFoodWorldProject.board.domain.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -30,5 +32,9 @@ public class RecommendBoardUpdateForm {
     private String area;
 
     private String menuName;
+
+    private List<MultipartFile> attachFiles;
+
+    private List<MultipartFile> imageFiles;
 
 }

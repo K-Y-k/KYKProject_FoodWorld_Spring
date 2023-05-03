@@ -1,6 +1,7 @@
 package kyk.SpringFoodWorldProject.board.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import kyk.SpringFoodWorldProject.board.domain.dto.FreeBoardUpdateForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +41,12 @@ public class BoardFile extends BaseTimeEntity {
                  .board(board)
                  .attachedType(attachedType)
                  .build();
+    }
+
+    public void updateBoardFile(String originalFileName, String storedFileName, String attachedType){
+        this.originalFileName = originalFileName;
+        this.storedFileName = storedFileName;
+        this.attachedType = attachedType;
     }
 
 

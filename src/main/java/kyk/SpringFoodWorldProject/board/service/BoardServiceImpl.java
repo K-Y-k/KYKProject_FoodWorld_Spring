@@ -203,10 +203,147 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
-    public Long updateBoard(Long boardId, FreeBoardUpdateForm updateParam) {
+    public Long updateBoard(Long boardId, FreeBoardUpdateForm freeBoardUpdateForm, RecommendBoardUpdateForm recommendBoardUpdateForm, MuckstarUpdateForm muckstarUpdateForm) throws IOException {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
-        findBoard.updateBoard(updateParam.getTitle(), updateParam.getContent(), updateParam.getSubType());
+
+        String attached;
+        int attachedCount = 0;
+        int imageCount = 0;
+
+        List<BoardFile> findBoardFiles = boardFileRepository.findByBoard(findBoard);
+
+        // 자유게시판, 추천게시판읜 경우 첨부파일, 이미지 파일 둘다 처리해야하고 각 오는 DTO폼도 달라서 게시판별로 처리
+        if (findBoard.getBoardType().equals("자유게시판") || findBoard.getBoardType().equals("추천게시판")) {
+            for (BoardFile boardFile : findBoardFiles) {
+                // 첨부파일일 때의 수정 처리
+                if (boardFile.getAttachedType().equals("attached")) {
+                    // 기존 실제 첨부파일 삭제
+                    Path beforeAttachPath = Paths.get(attachFileLocation + "\\" + boardFile.getStoredFileName());
+                    try {
+                        Files.deleteIfExists(beforeAttachPath);
+                    } catch (DirectoryNotEmptyException e) {
+                        log.info("디렉토리가 비어있지 않습니다");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 새로 받아온 첨부파일 재갱신
+                    if (findBoard.getBoardType().equals("자유게시판")){
+                        // 새로 받아온 첨부파일 이름
+                        String attachOriginalFilename = freeBoardUpdateForm.getAttachFiles().get(attachedCount).getOriginalFilename();
+                        
+                        // 파일에 이름을 붙일 랜덤으로 식별자 지정
+                        UUID uuid = UUID.randomUUID();
+                        String attachStoredFileName = uuid + "_" + attachOriginalFilename;
+                        String savePath = attachFileLocation;
+                        
+                        // 새로 받아온 실제 첨부파일 디렉토리에 저장
+                        MultipartFile updateAttachFile = freeBoardUpdateForm.getAttachFiles().get(attachedCount);
+                        updateAttachFile.transferTo(new File(savePath, attachStoredFileName));
+
+                        // 각 게시글 엔티티와 파일 엔티티의 DB 업데이트
+                        findBoard.updateBoard(freeBoardUpdateForm.getTitle(), freeBoardUpdateForm.getContent(), freeBoardUpdateForm.getSubType());
+                        boardFile.updateBoardFile(attachOriginalFilename, attachStoredFileName, "attached");
+                        
+                        // 인덱스가 서로 다르므로 첨부파일 전용 카운트 갱신
+                        attachedCount++;
+                    } else if (findBoard.getBoardType().equals("추천게시판")){
+                        String attachOriginalFilename = recommendBoardUpdateForm.getAttachFiles().get(attachedCount).getOriginalFilename();
+
+                        UUID uuid = UUID.randomUUID();
+                        String attachStoredFileName = uuid + "_" + attachOriginalFilename;
+                        String savePath = attachFileLocation;
+
+                        MultipartFile updateAttachFile = recommendBoardUpdateForm.getAttachFiles().get(attachedCount);
+                        updateAttachFile.transferTo(new File(savePath, attachStoredFileName));
+
+                        findBoard.updateRecommendBoard(recommendBoardUpdateForm.getTitle(), recommendBoardUpdateForm.getContent(), recommendBoardUpdateForm.getSubType(), recommendBoardUpdateForm.getArea(), recommendBoardUpdateForm.getMenuName());
+                        boardFile.updateBoardFile(attachOriginalFilename, attachStoredFileName, "attached");
+
+                        attachedCount++;
+                    } else {
+
+                    }
+                } else { // 이미지 파일일 때의 수정처리
+                    // 기존 이미지 파일 삭제
+                    Path beforeImagePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
+                    try {
+                        Files.deleteIfExists(beforeImagePath);
+                    } catch (DirectoryNotEmptyException e) {
+                        log.info("디렉토리가 비어있지 않습니다");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 새로 받아온 이미지 파일 재갱신
+                    if (findBoard.getBoardType().equals("자유게시판")){
+                        // 새로 받아온 이미지 파일 이름
+                        String imageOriginalFilename = freeBoardUpdateForm.getImageFiles().get(imageCount).getOriginalFilename();
+
+                        // 파일에 이름을 붙일 랜덤으로 식별자 지정
+                        UUID uuid = UUID.randomUUID();
+                        String imageStoredFileName = uuid + "_" + imageOriginalFilename;
+                        String savePath = imageFileLocation;
+
+                        // 새로 받아온 실제 이미지 파일 디렉토리에 저장
+                        MultipartFile updateImageFile = freeBoardUpdateForm.getImageFiles().get(imageCount);
+                        updateImageFile.transferTo(new File(savePath, imageStoredFileName));
+
+                        // 각 게시글 엔티티와 파일 엔티티의 DB 업데이트
+                        findBoard.updateBoard(freeBoardUpdateForm.getTitle(), freeBoardUpdateForm.getContent(), freeBoardUpdateForm.getSubType());
+                        boardFile.updateBoardFile(imageOriginalFilename, imageStoredFileName, "none");
+
+                        // 인덱스가 서로 다르므로 첨부파일 전용 카운트 갱신
+                        imageCount++;
+                    } else if (findBoard.getBoardType().equals("추천게시판")){
+                        String imageOriginalFilename = recommendBoardUpdateForm.getImageFiles().get(imageCount).getOriginalFilename();
+
+                        UUID uuid = UUID.randomUUID();
+                        String imageStoredFileName = uuid + "_" + imageOriginalFilename;
+                        String savePath = imageFileLocation;
+
+                        MultipartFile updateImageFile = recommendBoardUpdateForm.getImageFiles().get(imageCount);
+                        updateImageFile.transferTo(new File(savePath, imageStoredFileName));
+
+                        findBoard.updateBoard(recommendBoardUpdateForm.getTitle(), recommendBoardUpdateForm.getContent(), recommendBoardUpdateForm.getSubType());
+                        boardFile.updateBoardFile(imageOriginalFilename, imageStoredFileName, "none");
+
+                        imageCount++;
+                    }
+                }
+            }
+        }
+        else { // 먹스타그램인 경우는 이미지 파일만 있으므로 이미지 파일만 처리
+            for (BoardFile boardFile : findBoardFiles) {
+                // 기존 이미지 파일 삭제
+                Path beforeFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
+                try {
+                    Files.deleteIfExists(beforeFilePath);
+                } catch (DirectoryNotEmptyException e) {
+                    log.info("디렉토리가 비어있지 않습니다");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // 새로 받아온 이미지 파일 이름
+                String imageOriginalFilename = muckstarUpdateForm.getImageFiles().get(imageCount).getOriginalFilename();
+
+                // 파일에 이름을 붙일 랜덤으로 식별자 지정
+                UUID uuid = UUID.randomUUID();
+                String imageStoredFileName = uuid + "_" + imageOriginalFilename;
+                String savePath = imageFileLocation;
+
+                // 새로 받아온 실제 이미지 파일 디렉토리에 저장
+                MultipartFile updateImageFile = muckstarUpdateForm.getImageFiles().get(imageCount);
+                updateImageFile.transferTo(new File(savePath, imageStoredFileName));
+
+                findBoard.updateBoard(muckstarUpdateForm.getTitle(), muckstarUpdateForm.getContent(), muckstarUpdateForm.getSubType());
+                boardFile.updateBoardFile(imageOriginalFilename, imageStoredFileName, "none");
+
+                imageCount++;
+            }
+        }
 
         log.info("수정완료");
         return findBoard.getId();

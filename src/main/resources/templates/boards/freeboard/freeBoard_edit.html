@@ -7,6 +7,8 @@
         href="../css/bootstrap.min.css" rel="stylesheet">
   <!--css 적용-->
   <link rel="stylesheet" type="text/css" href="../css/boards/board/board_upload_style.css" th:href="@{/css/boards/board/board_upload_style.css}">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -107,14 +109,40 @@
         <textarea class="form-control mt-2" id="content" name="content" th:field="*{content}" rows="20"
                   th:errorclass="field-error"></textarea> <!--textarea는 th:value가 안되어 th:text로-->
 
+        <span>첨부파일: </span>
+        <div class="attachedFile">
+          <div th:each="boardFile : *{boardFiles}"
+               th:if="${boardFile.attachedType == 'attached'}"
+               th:text="${boardFile.originalFileName}"></div>
+        </div>
+        <input id="input-attachFile" class="form-control mt-2" type="file" name="attachFiles" multiple>
+
+        <span>이미지 파일: </span>
+        <div class="imageFile">
+          <div th:each="boardFile : *{boardFiles}"
+               th:if="${boardFile.attachedType == 'none'}"
+               th:text="${boardFile.originalFileName}"></div>
+        </div>
+        <input id="input-imageFile" class="form-control mt-2" type="file" name="imageFiles" multiple> <!--name을 컨트롤러의 매개변수 이름과 동일해야한다-->
+
+
         <button class="btn btn-danger mt-3" id="send" type="submit">글 수정완료</button>
         <button class="btn btn-danger mt-3"
                 th:onclick="|location.href='@{/boards/freeBoard/{boardId}(boardId=*{id})}'|"
                 type="button">취소
         </button>
+
       </div>
     </form>
 </section>
+
+<!--jquery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+</script>
+
+<script type="text/javascript" th:src="@{/js/board_edit.js}"></script>
 
 </body>
 </html>

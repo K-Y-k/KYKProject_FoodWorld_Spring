@@ -386,13 +386,13 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
                        @Valid @ModelAttribute("updateForm") FreeBoardUpdateForm updateParam, BindingResult bindingResult,
-                       Model model) {
+                       Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("boardId", boardId);
             return "boards/freeboard/freeBoard_edit";
         }
 
-        boardService.updateBoard(boardId, updateParam);
+        boardService.updateBoard(boardId, updateParam, null, null);
         return "redirect:/boards/freeBoard/{boardId}";
     }
 

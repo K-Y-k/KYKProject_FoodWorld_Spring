@@ -34,8 +34,6 @@ public class BoardUploadForm {
 
     private List<MultipartFile> imageFiles;
     private List<MultipartFile> attachFiles;
-    private List<String> originalFileName;
-    private List<String> storedFileName;
     private int fileAttached;
 
 
