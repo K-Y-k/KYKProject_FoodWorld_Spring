@@ -126,9 +126,9 @@
                     <img th:if="${profileFile != null}"
                          th:src="@{|/profileImageUpload/${profileFile.storedFileName}|}"
                          class="rounded-circle"
-                         style="float: left; width: 3vw; height: 5vh;">
+                         style="float: left; width: 50px; height: 50px;">
 
-                    <a th:href="@{|/members/profile/${board.member.id}|}" style="text-decoration-line: none;"><h5 th:text="${board.writer}" style="left: 5%; margin-top: 4%;"></h5></a>
+                    <a th:href="@{|/members/profile/${board.member.id}|}" style="text-decoration-line: none;"><h5 th:text="${board.writer}" style="margin-left: 20px; margin-top: 4%;"></h5></a>
                 </div>
 
                 <div class="col" style="margin-left: 55%;">
@@ -151,14 +151,14 @@
             <br>
 
             <div class="input-group">
-                <button class="btn btnEvent" id="like_btn" style="margin-left: 1.5%;"
+                <button class="btn btnEvent" id="like_btn" style="margin-left: 5px;"
                         th:onclick="|location.href='@{/boards/muckstarBoard/{boardId}/like(boardId=${board.id})}'|"
                         type="button">
-                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 2.3vw; height: 3vh;">
+                    <img src="/image/muckstargram_img/favorite_icon.PNG" style="width: 37px; height: 32px;">
                 </button>
 
                 <span class="like"
-                      style="font-weight: 400; font-size: 20px; margin-left: 2%; margin-top: 0.5%;"
+                      style="font-weight: 400; font-size: 20px; margin-top: 0.5%;"
                       th:text="${likeCount}"></span>
             </div>
 
@@ -166,9 +166,9 @@
 
             <div class="input-group">
                 <img src="/image/muckstargram_img/comment_icon.PNG"
-                     style="width: 2.5vw; height: 3.5vh; margin-left: 3%;">
-                <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 0.5%;" th:text="'(' + ${commentCount}+ ')'"></div>
-                <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 1.5%;" th:text="0"></div>
+                     style="width: 35px; height: 35px; margin-left: 18px;">
+                <div th:if="${comments != null}" class="comment" style="font-weight: 400; font-size: 20px; margin-left: 10px;" th:text="'(' + ${commentCount}+ ')'"></div>
+                <div th:if="${comments == null}" style="font-weight: 400; font-size: 20px; margin-left: 15px;" th:text="0"></div>
             </div>
 
             <br>

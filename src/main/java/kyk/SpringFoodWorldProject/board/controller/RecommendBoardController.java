@@ -359,18 +359,18 @@ public class RecommendBoardController {
      */
     @PostMapping("/recommendBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
-                       @Valid @ModelAttribute("updateForm") RecommendBoardUpdateForm updateParam, BindingResult bindingResult,
-                       Model model) {
+                       @Valid @ModelAttribute("updateForm") RecommendBoardUpdateForm recommendBoardUpdateForm, BindingResult bindingResult,
+                       Model model) throws IOException {
 
         if (bindingResult.hasErrors()) {
-            log.info("지역={}", updateParam.getArea());
-            log.info("메뉴={}", updateParam.getMenuName());
+            log.info("지역={}", recommendBoardUpdateForm.getArea());
+            log.info("메뉴={}", recommendBoardUpdateForm.getMenuName());
 
             model.addAttribute("boardId", boardId);
             return "boards/recommendBoard/recommendBoard_edit";
         }
 
-        boardService.recommendUpdateBoard(boardId, updateParam);
+        boardService.updateBoard(boardId, null, recommendBoardUpdateForm, null);
         return "redirect:/boards/recommendBoard/{boardId}";
     }
 

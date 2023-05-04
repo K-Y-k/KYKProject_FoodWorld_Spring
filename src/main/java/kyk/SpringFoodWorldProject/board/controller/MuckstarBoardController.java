@@ -324,13 +324,13 @@ public class MuckstarBoardController {
     @PostMapping("/muckstarBoard/{boardId}/edit")
     public String edit(@PathVariable Long boardId,
                        @Valid @ModelAttribute("updateForm") MuckstarUpdateForm updateParam, BindingResult bindingResult,
-                       Model model) {
+                       Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("boardId", boardId);
             return "boards/muckstarBoard/muckstarBoard_edit";
         }
 
-        boardService.muckstarUpdateBoard(boardId, updateParam);
+        boardService.updateBoard(boardId, null, null, updateParam);
         return "redirect:/boards/muckstarBoard/{boardId}";
     }
 

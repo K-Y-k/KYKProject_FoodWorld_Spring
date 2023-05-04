@@ -126,7 +126,8 @@
           <hr>
           <br>
 
-          <select th:if="${board.fileAttached == 1 and boardFiles.get(0).attachedType == 'attached' and session.loginMember != null}"
+          <!--회원일 때-->
+          <select th:if="${board.fileAttached == 1 and #lists.contains(boardFiles.![attachedType], 'attached') and session.loginMember != null}"
                   onchange="if(this.value) location.href=(this.value);"
                   style="width: 10vw; margin-left: 70%;" class="form-select">
               <option selected disabled style="display: none;">첨부 파일</option>
@@ -137,7 +138,8 @@
               <option selected disabled style="display: none;">첨부 파일</option>
           </select>
 
-          <select th:if="${board.fileAttached == 1 and boardFiles.get(0).attachedType == 'attached' and session.loginMember == null}"
+          <!--비회원일 때-->
+          <select th:if="${board.fileAttached == 1 and #lists.contains(boardFiles.![attachedType], 'attached') and session.loginMember == null}"
                   style="width: 10vw; margin-left: 70%;" class="form-select">
               <option selected disabled style="display: none;">첨부 파일</option>
               <option th:each="attachFile : ${boardFiles}"
