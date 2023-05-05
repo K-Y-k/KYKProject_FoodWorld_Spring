@@ -37,4 +37,10 @@ public interface MemberRepository {
 
     void delete(Long memberId);
 
+    int checkName(String memberName);
+    int checkLoginId(String memberLoginId);
+
+    int updateCheckName(String memberName, Long memberId);
+    int updateCheckLoginId(String memberLoginId, Long memberId);
+
 }

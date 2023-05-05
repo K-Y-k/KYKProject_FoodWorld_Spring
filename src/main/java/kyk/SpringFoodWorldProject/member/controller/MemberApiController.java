@@ -32,6 +32,43 @@ public class MemberApiController {
     private final MemberServiceImpl memberService;
 
 
+
+    /**
+     * 회원 닉네임 중복 검사
+     */
+    @GetMapping("/api/checkName")
+    public ResponseEntity<?> checkName(@RequestParam(value = "memberName") String memberName,
+                                       @RequestParam(value = "getMemberId") Long memberId) {
+        log.info("memberId={}", memberId);
+        int result;
+
+        if (memberId == 0) { // 회원가입중에 중복검사인 경우
+            result = memberService.checkName(memberName);
+        } else { // 프로필 수정에서 중복검사인 경우
+            result = memberService.updateCheckName(memberName, memberId);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * 회원 로그인 아이디 중복 검사
+     */
+    @GetMapping("/api/checkLoginId")
+    public ResponseEntity<?> checkLoginId(@RequestParam(value = "memberLoginId") String memberLoginId,
+                                          @RequestParam(value = "getMemberId") Long memberId) {
+        int result;
+
+        if (memberId == null) { // 회원가입중에 중복검사인 경우
+            result = memberService.checkLoginId(memberLoginId);
+        } else { // 프로필 수정에서 중복검사인 경우
+            result = memberService.updateCheckLoginId(memberLoginId, memberId);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
     /**
      * 현재 회원 프로필의 회원의 팔로워 조회
      */
@@ -51,6 +88,7 @@ public class MemberApiController {
         }
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
+
 
     /**
      * 현재 회원과 연관된 팔로워 추천

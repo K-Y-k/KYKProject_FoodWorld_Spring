@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -102,13 +103,15 @@ public class MemberServiceImpl implements MemberService {
         // 문제가 있으면 EXCEPTION
         // 같은 로그인 아이디가 있는지 찾음
         // 반환형태가 Optional<Member>이므로 이렇게 예와처리 가능
+        log.info("memberEntityId={}", memberEntity.getId());
+
         memberRepository.findByName(memberEntity.getName())
-                .ifPresent(m-> {
+                .ifPresent(m -> {
                     throw new DuplicatedMemberNameException("이미 존재하는 닉네임입니다.");
                 });
 
         memberRepository.findByLoginId(memberEntity.getLoginId())
-                .ifPresent(m-> {
+                .ifPresent(m -> {
                     throw new DuplicatedMemberLoginIdException("이미 존재하는 아이디입니다.");
                 });
     }
@@ -148,30 +151,34 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public Long changeProfile(Long memberId, UpdateForm form) throws IOException {
-        Member member = memberRepository.findById(memberId).get();
-        
-        // 현재 회원의 기존 프로필 사진을 찾고 실제 저장되었던 디렉토리의 프로필 사진을 삭제
-        ProfileFile findMemberProfile = memberRepository.findProfileByMember(member);
-        Path beforeAttachPath = Paths.get(profileLocation + "\\" + findMemberProfile.getStoredFileName());
-        try {
-            Files.deleteIfExists(beforeAttachPath);
-        } catch (DirectoryNotEmptyException e) {
-            log.info("디렉토리가 비어있지 않습니다");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        // 이번에 새로 수정한 프로필 사진을 실제 디렉토리에 저장하고 DB의 프로필 사진 경로 업데이트
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 조회 실패: " + memberId));
+
         MultipartFile imageFile = form.getProfileImage();
+
+        // 새로 받아온 프로필 사진이 있으면
         if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
-            member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
-            profileImageUpload(form, member);
-        } else {
-            member.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
+            // 현재 회원의 기존 프로필 사진을 찾고 실제 저장되었던 디렉토리의 프로필 사진을 삭제
+            ProfileFile findMemberProfile = memberRepository.findProfileByMember(findMember);
+            Path beforeAttachPath = Paths.get(profileLocation + "\\" + findMemberProfile.getStoredFileName());
+            try {
+                Files.deleteIfExists(beforeAttachPath);
+            } catch (DirectoryNotEmptyException e) {
+                log.info("디렉토리가 비어있지 않습니다");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // DB 내용 변경 및 프로필 사진 새로 생성
+            findMember.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
+            profileImageUpload(form, findMember);
+        } else { // 새로 받은 프로필 사진이 없으면
+            findMember.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
         }
 
         log.info("회원 프로필 변경");
-        return member.getId();
+        return findMember.getId();
     }
 
     @Override
@@ -183,6 +190,7 @@ public class MemberServiceImpl implements MemberService {
     public Page<Member> findByNameContaining(String memberSearchKeyword, Pageable pageable) {
         return memberRepository.findByNameContaining(memberSearchKeyword, pageable);
     }
+
 
     /**
      * 회원 탈퇴 및 추방 : 현재 회원과 관련된 물리 실제 파일들도 같이 삭제처리를 해야한다!
@@ -265,6 +273,86 @@ public class MemberServiceImpl implements MemberService {
 
         // DB 삭제처리 : CASCADE 설정으로 회원 엔티티가 삭제되면 연관 매핑된 엔티티는 모두 삭제된다.
         memberRepository.delete(memberId);
+    }
+
+    @Override
+    public int checkName(String memberName) {
+        // 문자열에 빈 공백 검사
+        for (int i = 0; i < memberName.length(); i++) {
+            char nameChar = memberName.charAt(i);
+            if (nameChar == ' ') {
+                return 2;
+            }
+        }
+
+        // 문자열 길이 검사
+        int nameLength = memberName.length();
+        if (nameLength < 2 || nameLength > 7) {
+            return 3;
+        }
+        else { // 중복 검사
+            return memberRepository.checkName(memberName);
+        }
+    }
+
+    @Override
+    public int checkLoginId(String memberLoginId) {
+        // 문자열에 빈 공백 검사
+        for (int i = 0; i < memberLoginId.length(); i++) {
+            char nameChar = memberLoginId.charAt(i);
+            if (nameChar == ' ') {
+                return 2;
+            }
+        }
+
+        // 문자열 길이 검사
+        int loginIdLength = memberLoginId.length();
+        if (loginIdLength < 3 || loginIdLength > 10) {
+            return 3;
+        }
+        else { // 중복 검사
+            return memberRepository.checkLoginId(memberLoginId);
+        }
+    }
+
+    @Override
+    public int updateCheckName(String memberName, Long memberId) {
+        // 문자열에 빈 공백 검사
+        for (int i = 0; i < memberName.length(); i++) {
+            char nameChar = memberName.charAt(i);
+            if (nameChar == ' ') {
+                return 2;
+            }
+        }
+
+        // 문자열 길이 검사
+        int loginIdLength = memberName.length();
+        if (loginIdLength < 3 || loginIdLength > 10) {
+            return 3;
+        }
+        else { // 중복 검사
+            return memberRepository.updateCheckName(memberName, memberId);
+        }
+    }
+
+    @Override
+    public int updateCheckLoginId(String memberLoginId, Long memberId) {
+        // 문자열에 빈 공백 검사
+        for (int i = 0; i < memberLoginId.length(); i++) {
+            char nameChar = memberLoginId.charAt(i);
+            if (nameChar == ' ') {
+                return 2;
+            }
+        }
+
+        // 문자열 길이 검사
+        int loginIdLength = memberLoginId.length();
+        if (loginIdLength < 3 || loginIdLength > 10) {
+            return 3;
+        }
+        else { // 중복 검사
+            return memberRepository.updateCheckLoginId(memberLoginId, memberId);
+        }
     }
 
     private void profileImageUpload(UpdateForm form, Member member) throws IOException {

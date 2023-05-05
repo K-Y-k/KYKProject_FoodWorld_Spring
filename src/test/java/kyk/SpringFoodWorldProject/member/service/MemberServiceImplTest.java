@@ -111,7 +111,7 @@ class MemberServiceImplTest {
         Member savedMember = memberRepository.saveMember(member1);
         memberService.login(savedMember.getLoginId(), savedMember.getPassword());
 
-        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw", "hello", null, "yes");
+        UpdateForm form = new UpdateForm(savedMember.getId(), "changeName", "changeId", "changePw", "hello", null);
 
         // when
         Long updateMemberId = memberService.changeProfile(savedMember.getId(), form);

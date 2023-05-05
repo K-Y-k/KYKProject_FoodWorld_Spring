@@ -1,5 +1,6 @@
 package kyk.SpringFoodWorldProject.member.domain.dto;
 
+import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,31 +31,6 @@ public class UpdateForm {
     private String introduce;
 
     private MultipartFile profileImage;
-    private String fileAttached;
-
-
-//    public Board toSaveEntity(Member member, BoardUploadForm boardDto) {
-//        return Board.builder()
-//                .title(title)
-//                .content(content)
-//                .writer(member.getName())
-//                .member(member)
-//                .boardType(boardType)
-//                .subType(subType)
-//                .fileAttached(0)
-//                .build();
-//    }
-//    public Board toSaveFileEntity(Member member, BoardUploadForm boardDto) {
-//        return Board.builder()
-//                .title(title)
-//                .content(content)
-//                .writer(member.getName())
-//                .member(member)
-//                .boardType(boardType)
-//                .subType(subType)
-//                .fileAttached(1)
-//                .build();
-//    }
 
 
     public UpdateForm(String name, String loginId, String password, String introduce, MultipartFile profileImage, String fileAttached) {
@@ -63,6 +39,14 @@ public class UpdateForm {
         this.password = password;
         this.introduce = introduce;
         this.profileImage = profileImage;
-        this.fileAttached = fileAttached;
+    }
+
+    public Member toEntity() {
+        return Member.builder()
+                .name(name)
+                .loginId(loginId)
+                .password(password)
+                .introduce(introduce)
+                .build();
     }
 }

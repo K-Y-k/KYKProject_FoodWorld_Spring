@@ -201,23 +201,29 @@
                 </button>
 
                 <button type="submit" class="btn btn-primary"
-                        style="width: 100px; height: 35px; margin-left: 150px;" id="unfollow"
+                        style="margin-left: 150px;" id="unfollow"
                         th:if="${session.loginMember != null and session.loginMember.id != member.id and unFollow != null}"
                         th:onclick="clicked()">언팔로우
                 </button>
 
                 <button type="submit" class="btn btn-primary"
-                        style="width: 100px; height: 35px; margin-left: 150px;" id="chat"
+                        style="margin-left: 150px;" id="chat"
                         th:if="${session.loginMember != null and session.loginMember.id != member.id}"
                         th:onclick="|location.href='@{/chat/matchingRoom/{memberId}(memberId=${member.id})}'|">채팅하기
                 </button>
 
-                <div style="margin-left: 550px;"
+
+                <div style="margin-left: 470px;"
                      th:if="${session.loginMember != null and session.loginMember.id == member.id}">
                     <button type="submit" class="btn btn-primary"
-                            style="width: 120px; height: 35px;" id="profile-update"
+                            id="profile-update"
                             th:onclick="|location.href='@{/members/profile/{memberId}/edit(memberId=${session.loginMember.id})}'|">
                         프로필 수정
+                    </button>
+
+                    <button type="submit" class="btn btn-primary"
+                            th:onclick="|location.href='@{/members/profile/{memberId}/delete(memberId=${session.loginMember.id})}'|">
+                        회원탈퇴
                     </button>
                 </div>
 

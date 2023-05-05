@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -49,13 +50,45 @@ public class MemberController {
      *  회원 저장 기능
      */
     @PostMapping("/join")
-    public String save(@Valid @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute("joinForm") JoinForm form,
+                       BindingResult bindingResult,
+                       Model model) {
         if (bindingResult.hasErrors()) {
             return "members/member_join";
         }
+        
+        // 문자열에 빈 공백 있는지 검사
+        String memberName = form.getName();
+        String loginId = form.getLoginId();
+        String password = form.getPassword();
+
+        String messages = checkSpace(memberName, model, "닉네임에 빈 공간이 올 수 없습니다!");
+        if (messages != null) return messages;
+
+        String messages1 = checkSpace(loginId, model, "아이디에 빈 공간이 올 수 없습니다!");
+        if (messages1 != null) return messages1;
+
+        String messages2 = checkSpace(password, model, "비밀번호에 빈 공간이 올 수 없습니다!");
+        if (messages2 != null) return messages2;
+
 
         memberService.join(form);
-        return "redirect:/";
+        model.addAttribute("message", "회원가입 되었습니다!");
+        model.addAttribute("redirectUrl", "/");
+        return "messages";
+    }
+
+    // 문자열에 빈 공백 있는지 검사 메서드
+    private static String checkSpace(String memberName, Model model, String attributeValue) {
+        for (int i = 0; i < memberName.length(); i++) {
+            char nameChar = memberName.charAt(i);
+            if (nameChar == ' ') {
+                model.addAttribute("message", attributeValue);
+                model.addAttribute("redirectUrl", "/members/join");
+                return "messages";
+            }
+        }
+        return null;
     }
 
 
@@ -84,12 +117,6 @@ public class MemberController {
         Member loginMember = memberService.login(loginForm.getLoginId(), loginForm.getPassword()); // 폼에 입력한 아이디 패스워드 가져와서 멤버로 저장
         log.info("login? {}", loginMember);
 
-        // null 값이면 로그인 실패 글로벌 오류(오브젝트 오류) 처리 : 글로벌 오류는 DB의 값에서 처리하는 이런 경우도 있어 자바코드로 구현하는게 바람직하다.
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "members/member_login";
-        }
-
         // 로그인 성공 처리
         // 세션을 생성해서 세션에 로그인 회원 정보를 보관한다.
         HttpSession session = request.getSession();
@@ -108,7 +135,7 @@ public class MemberController {
     public String logout(HttpServletRequest request) { // SessionManager에서 request로 사용
         // request.getSession( ) 안에 false는 현재 세션이 있으면 기존 세션 반환, 세션이 없으면 null을 반환
         //                            true는 현재 세션이 있으면 기존 세션 반환, 세션이 없으면 새로운 세션 생성
-        HttpSession session = request.getSession(false); // 로그아웃은 없으면 생성할 필요 없기에 false를 넣음
+        HttpSession session = request.getSession(false); // 로그아웃은 없으면 새로운 세션을 생성할 필요 없기에 false를 넣음
 
         if (session != null) { // 세션이 있으면
             session.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
@@ -198,11 +225,19 @@ public class MemberController {
 
 
     /**
-     *  프로필 수정 폼
+     * 프로필 수정 폼
      */
     @GetMapping("/profile/{memberId}/edit")
-    public String memberProfileUpdateForm(@PathVariable Long memberId,
-                                    Model model) {
+    public String memberProfileUpdateForm(@SessionAttribute(name = LoginSessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                                          @PathVariable Long memberId,
+                                          Model model) {
+        // 비회원이나 다른 회원이 접근 대비 제한
+        if (loginMember == null || !Objects.equals(loginMember.getId(), memberId)) {
+            model.addAttribute("message", "회원님의 프로필이 아닙니다!");
+            model.addAttribute("redirectUrl", "/");
+            return "messages";
+        }
+
         Member member = memberService.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
 
@@ -222,13 +257,38 @@ public class MemberController {
      */
     @PostMapping("/profile/{memberId}/edit")
     public String memberProfileUpdateForm(@PathVariable Long memberId,
-                                @Valid @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
-                                HttpServletRequest request) throws IOException {
+                                          @Valid @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
+                                          Model model,
+                                          HttpServletRequest request) throws IOException {
         if (bindingResult.hasErrors()) {
+            Member member = memberService.findById(memberId).orElseThrow(() ->
+                    new IllegalArgumentException("회원 가져오기 실패: 회원을 찾지 못했습니다." + memberId));
+
+            // 프로필 사진 가져오기
+            ProfileFile profileFile = member.getProfileFile();
+            if (profileFile != null && !profileFile.getStoredFileName().isEmpty()) {
+                model.addAttribute("profileFile", profileFile);
+            }
+
             return "members/member_profileUpdate";
         }
 
-        // 업데이트 적용 아이디를 반환한 것을 가져온 이유는 아래 새로 재갱신하기 위해서
+        // 문자열에 빈 공백 있는지 검사
+        String memberName = form.getName();
+        String loginId = form.getLoginId();
+        String password = form.getPassword();
+
+        String messages = checkSpace(memberName, model, "닉네임에 빈 공간이 올 수 없습니다!");
+        if (messages != null) return messages;
+
+        String messages1 = checkSpace(loginId, model, "아이디에 빈 공간이 올 수 없습니다!");
+        if (messages1 != null) return messages1;
+
+        String messages2 = checkSpace(password, model, "비밀번호에 빈 공간이 올 수 없습니다!");
+        if (messages2 != null) return messages2;
+
+
+        // 업데이트 적용된 회원의 아이디를 반환한 것을 가져온 이유는 아래 새로 바뀐 내용으로 재갱신하기 위해서
         Long changeMemberId = memberService.changeProfile(memberId, form);
 
 
@@ -248,5 +308,29 @@ public class MemberController {
 
         return "redirect:/";
     }
+
+
+    /**
+     * 회원 탈퇴
+     */
+    @GetMapping("/profile/{memberId}/delete")
+    public String memberUnregister(@PathVariable Long memberId,
+                                   HttpServletRequest request,
+                                   Model model) {
+        memberService.delete(memberId);
+
+        // request.getSession( ) 안에 false는 현재 세션이 있으면 기존 세션 반환, 세션이 없으면 null을 반환
+        //                            true는 현재 세션이 있으면 기존 세션 반환, 세션이 없으면 새로운 세션 생성
+        HttpSession session = request.getSession(false); // 회원탈퇴는 없으면 새로운 세션을 생성할 필요 없기에 false를 넣음
+
+        if (session != null) { // 세션이 있으면
+            session.invalidate(); // 해당 세션이랑 그 안의 데이터를 모두 지운다.
+        }
+
+        model.addAttribute("message", "회원탈퇴 하였습니다.");
+        model.addAttribute("redirectUrl", "/");
+        return "messages";
+    }
+
 
 }

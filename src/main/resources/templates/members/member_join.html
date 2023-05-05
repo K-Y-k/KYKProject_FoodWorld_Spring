@@ -115,23 +115,31 @@
     <div class="container mt-3">
       <form action="" th:action th:object="${joinForm}" method="post">
         <div class="mb-3">
-          <input type="text" th:field="*{name}" class="form-control" placeholder="닉네임(3자리 이상)">
+          <span style="display: flex;">
+            <input type="text" id="member-name" th:field="*{name}" class="form-control" placeholder="닉네임(3자리 이상)" oninput="clearBtnByName();">
+            <button class="btn btn-primary" type="button" onclick="check_Name();"
+                    style="width: 150px;">중복확인</button>
+          </span>
           <div class="field-error" style="color: red;" th:errors="*{name}"></div>
         </div>
         <div class="mb-3">
-          <input type="text" th:field="*{loginId}" class="form-control" placeholder="아이디(3자리 이상)">
+          <span style="display: flex;">
+            <input type="text" id="member-loginId" th:field="*{loginId}" class="form-control" placeholder="아이디(3자리 이상)" oninput="clearBtnByLoginId();">
+            <button class="btn btn-primary" type="button" onclick="check_LoginId();"
+                    style="width: 150px;">중복확인</button>
+          </span>
           <div class="field-error" style="color: red;" th:errors="*{loginId}"></div>
         </div>
         <div class="mb-3">
           <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호(3자리 이상)"
-                 th:errorclass="field-error">
+                 th:errorclass="field-error" style="width: 350px;">
           <div class="field-error" style="color: red;" th:errors="*{password}"></div>
         </div>
 
         <br>
 
         <div class="col">
-          <button class="w-100 btn btn-primary" id="register" type="submit">가입하기</button>
+          <button class="w-100 btn btn-primary" id="register-btn" type="submit" disabled>닉네임/아이디 중복확인을 해주세요!</button>
           <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='index.html'"
                   th:onclick="|location.href='@{/}'|"
                   type="button">취소
@@ -144,4 +152,130 @@
 
 </div>
 </body>
+
+<!--bootstrapjs-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous">
+</script>
+
+<!--jquery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+</script>
+
+<script>
+let checkedName = false;
+let checkedLoginId = false;
+
+function check_Name() {
+    let memberName = $("#member-name").val()
+
+    $.ajax({
+		url: '/members/api/checkName',
+		type: "GET",
+		dataType: "json",
+		data: {memberName, getMemberId: 0},
+		success: function(result) {
+		    console.log(JSON.stringify(result))
+
+		    if (result === 1) {
+		    	alert("중복되는 닉네임입니다.")
+
+		        checkedName = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else if (result === 2) {
+		        alert("빈 공백이 올 수 없습니다.")
+
+		        checkedName = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else if (result === 3) {
+		        alert("최소 2글자이상 최대 7글자입니다.")
+
+		        checkedName = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else {
+		        alert("사용 가능한 닉네임입니다.")
+
+		        checkedName = true;
+		        if (checkedName === true && checkedLoginId === true) {
+		        	$("#register-btn").text("가입하기");
+		            $("#register-btn").attr("disabled", false);
+		        }
+		    }
+	    },
+	    error: function (error) {
+            console.log("오류", error);
+        }
+	});
+}
+
+function check_LoginId() {
+    let memberLoginId = $("#member-loginId").val()
+
+    $.ajax({
+		url: '/members/api/checkLoginId',
+		type: "GET",
+		dataType: "json",
+		data: {memberLoginId, getMemberId: 0},
+		success: function(result) {
+		    console.log(JSON.stringify(result))
+
+		    if (result === 1) {
+		    	alert("중복되는 아이디입니다.")
+
+		    	checkedLoginId = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else if (result === 2) {
+		        alert("빈 공백이 올 수 없습니다.")
+
+		    	checkedLoginId = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else if (result === 3) {
+		        alert("최소 3글자이상 최대 10글자입니다.")
+
+		    	checkedLoginId = false;
+		        $("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+		        $("#register-btn").attr("disabled", true);
+		    }
+		    else {
+		        alert("사용가능한 아이디입니다.")
+		        checkedLoginId = true;
+
+		        if (checkedName === true && checkedLoginId === true) {
+		            $("#register-btn").text("가입하기");
+		            $("#register-btn").attr("disabled", false);
+		        }
+		    }
+	    },
+	    error: function (error) {
+            console.log("오류", error);
+        }
+	});
+}
+
+function clearBtnByName() {
+    checkedName = false;
+	$("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+	$("#register-btn").attr("disabled", true);
+}
+
+function clearBtnByLoginId() {
+    checkedLoginId = false;
+	$("#register-btn").text("닉네임/아이디 중복확인을 해주세요!");
+	$("#register-btn").attr("disabled", true);
+}
+</script>
+
 </html>

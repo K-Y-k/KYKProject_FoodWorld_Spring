@@ -89,4 +89,24 @@ public class SpringDataJpaMemberRepository implements MemberRepository {
         memberRepository.deleteById(memberId);
     }
 
+    @Override
+    public int checkName(String memberName) {
+        return memberRepository.checkName(memberName);
+    }
+
+    @Override
+    public int checkLoginId(String memberLoginId) {
+        return memberRepository.checkLoginId(memberLoginId);
+    }
+
+    @Override
+    public int updateCheckName(String memberName, Long memberId) {
+        return memberRepository.updateCheckName(memberName, memberId);
+    }
+
+    @Override
+    public int updateCheckLoginId(String memberLoginId, Long memberId) {
+        return memberRepository.updateCheckLoginId(memberLoginId, memberId);
+    }
+
 }
