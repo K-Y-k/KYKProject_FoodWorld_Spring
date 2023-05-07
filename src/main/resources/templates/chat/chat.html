@@ -108,7 +108,6 @@
         <ul id="chat-list" class="list-group"> <!--채팅방 목록-->
           <div th:each="chatRoom : ${member1ChatRoom}">
               <li id="list-item" style="border: 1px solid black; text-align: center; height: 120px;">
-                <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}">
                 <table style="width: 288px; height: 118px;">
                   <tr>
                     <td>
@@ -124,12 +123,14 @@
                       <table>
                         <tr>
                           <td>
+                            <a th:href="@{/chat/room(roomId=${chatRoom.roomId})}">
                             <span th:if="${session.loginMember.id != chatRoom.member1.id}"
                                   th:text="${chatRoom.member1.name}"
                                   style="text-decoration-line: none;"></span>
                             <span th:if="${session.loginMember.id != chatRoom.member2.id}"
                                   th:text="${chatRoom.member2.name}"
                                   style="text-decoration-line: none;"></span>
+                            </a>
                           </td>
 
                           <td th:if="${chatRoom.chatMessages.size() > 0 and chatRoom.chatMessages != null}">
@@ -158,7 +159,6 @@
                     </td>
                   </tr>
                 </table>
-                </a>
               </li>
           </div>
         </ul>

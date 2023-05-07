@@ -103,6 +103,7 @@ function sendMessage() {
 function onMessageReceived(payload) {
     console.log("payload 정보 : " + payload);
     var chat = JSON.parse(payload.body);
+    console.log("chat.type : " + chat.type);
 
     if (chat.type == 'ENTER') {       // enter라면
         let enterMessage = `<li style="list-style-type: none; text-align: center; color: white;">`
@@ -119,16 +120,21 @@ function onMessageReceived(payload) {
         $('#chatContent').append(leaveMessage);
         chatContent.scrollTop = chatContent.scrollHeight;
 
+        console.log("채팅 메시지의 chat.senderId : ", chat.senderId)
+        console.log("현재 userId : ", userId)
+
         // 연결 끊기: 해당 클라이언트만 연결을 끊고 URL 변경
         if (chat.senderId == userId) {
             stompClient.disconnect(() => {
-                window.location.href = "http://localhost:8080/chat";
+                window.location.replace("http://localhost:8080/chat");
             });
         }
 
         // 마지막 회원까지 퇴장하여 채팅방이 삭제된 경우 마지막 큻라이언트 회원 이동 처리
-        if (chat.message.equals('채팅방 삭제')) {
-            window.location.href = "http://localhost:8080/chat";
+        if (chat.message === '채팅방 삭제') {
+            stompClient.disconnect(() => {
+                window.location.replace("http://localhost:8080/chat");
+            });
         }
 
     } else {                           // talk라면
@@ -223,10 +229,10 @@ function createTime(date){
     return formattedTime;
 }
 
-var button = document.getElementById('leave_btn');
-  button.addEventListener('click', function(event) {
-    event.preventDefault(); // 기본 동작인 <a>의 이동 중지
-
-    // 내가 원하는 동작 실행
-    onLeave();
-  });
+//var button = document.getElementById('leave_btn');
+//  button.addEventListener('click', function(event) {
+//    event.preventDefault(); // 기본 동작인 <a>의 이동 중지
+//
+//    // 내가 원하는 동작 실행
+//    onLeave();
+//  });

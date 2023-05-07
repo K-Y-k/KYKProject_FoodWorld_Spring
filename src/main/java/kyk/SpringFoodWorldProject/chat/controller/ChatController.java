@@ -46,6 +46,10 @@ public class ChatController {
      */
     @MessageMapping("/chat/enterUser")
     public void enterUser(@Payload ChatMessageDto messageDto) {
+        // 프로필 사진 갱신
+        String profileLocation = memberService.findProfileLocation(messageDto.getSenderId());
+        messageDto.setSenderProfile(profileLocation);
+
         // 이전에 이 채팅방을 입장한 적이 있는지 확인
         Optional<ChatMessage> isEnter = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getSenderId());
 
@@ -74,7 +78,7 @@ public class ChatController {
         chatService.saveChatMessage(messageDto);
 
 
-        // 만약 회원이 퇴장을 했는데 기존 채팅방에 머문 상대가 다시 메시지를 보내면
+        // 만약 회원이 퇴장을 했는데 기존 채팅방에 머문 상대가 다시 메시지를 보낸 경우이면
         // 다시 채팅방이 생성하도록 퇴장 메시지 삭제
         ChatRoom findMembersChatRoom1 = chatService.findMembersChatRoom(messageDto.getSenderId(), messageDto.getReceiverId());
         ChatRoom findMembersChatRoom2 = chatService.findMembersChatRoom(messageDto.getReceiverId(), messageDto.getSenderId());
@@ -93,16 +97,31 @@ public class ChatController {
      */
     @MessageMapping("/chat/leaveUser")
     public void leaveUser(@Payload ChatMessageDto messageDto) {
+        // 상대가 퇴장한 메시지가 있는지 조회
         Optional<ChatMessage> youIsLeave = chatService.findEnterMessage(messageDto.getRoomId(), messageDto.getType(), messageDto.getReceiverId());
+
+        log.info("youIsLeave={}", youIsLeave.isPresent());
 
         // 상대방도 이미 퇴장한 상태라면 채팅방을 아예 지움
         if (youIsLeave.isPresent()) {
+            // 프로필 사진 갱신 
+            String profileLocation = memberService.findProfileLocation(messageDto.getSenderId());
+            messageDto.setSenderProfile(profileLocation);
+
+            // 채팅방 삭제, 먼저 삭제해야 리다이렉트할 때 채팅방이 남지 않는다!
             ChatRoom findChatRoom = chatService.findRoomByRoomId(messageDto.getRoomId());
             chatService.delete(findChatRoom);
+            
+            // 퇴장 메시지 전송
             messageDto.setMessage("채팅방 삭제");
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
         }
         else { // 상대방이 퇴장하지 않은 상태이면
+            // 프로필 사진 갱신 
+            String profileLocation = memberService.findProfileLocation(messageDto.getSenderId());
+            messageDto.setSenderProfile(profileLocation);
+            
+            // 퇴장 메시지 전송
             messageDto.setMessage(messageDto.getSender() + " 퇴장하였습니다");
             template.convertAndSend("/sub/chat/room/" + messageDto.getRoomId(), messageDto);
             chatService.saveChatMessage(messageDto);
