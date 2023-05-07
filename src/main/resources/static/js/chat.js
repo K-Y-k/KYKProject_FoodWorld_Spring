@@ -222,3 +222,11 @@ function createTime(date){
 
     return formattedTime;
 }
+
+var button = document.getElementById('leave_btn');
+  button.addEventListener('click', function(event) {
+    event.preventDefault(); // 기본 동작인 <a>의 이동 중지
+
+    // 내가 원하는 동작 실행
+    onLeave();
+  });
