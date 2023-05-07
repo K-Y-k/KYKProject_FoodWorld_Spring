@@ -146,6 +146,7 @@
                         <tr>
                           <td style="width: 200px;">
                             <span th:if="${chatRoom.chatMessages.size() > 0 and chatRoom.chatMessages != null}"
+                                  th:id="'content-' + ${chatRoom.roomId}"
                                   th:text="${chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).content}"
                                   style="float: left;"></span>
                           </td>
@@ -252,7 +253,7 @@
     </div>
  </div> 
 
- <div style= "position: absolute; top: 25%; left: 75%; display: inline;">
+ <div style= "position: absolute; top: 25%; margin-left: 1350px; display: inline;">
   <img src = "/image/chat_img/chat_background2.PNG" style="margin-top: 10px; width: 450px;">
  </div>
 </div>

@@ -105,6 +105,12 @@ function onMessageReceived(payload) {
     var chat = JSON.parse(payload.body);
     console.log("chat.type : " + chat.type);
 
+    // 채팅방에 최근 보낸 메시지로 실시간 업데이트
+    var contentId = "content-" + roomId;
+    console.log("contentId=", contentId)
+    var contentElement = document.getElementById(contentId);
+    contentElement.textContent = chat.message;
+
     if (chat.type == 'ENTER') {       // enter라면
         let enterMessage = `<li style="list-style-type: none; text-align: center; color: white;">`
                              + chat.message +

@@ -30,7 +30,9 @@ public class ChatRoomRepositoryCustomImpl implements ChatRoomRepositoryCustom {
     }
 
 
-
+    /**
+     * 현재 회원이 속해있는 채팅방 리스트 찾기
+     */
     @Override
     public List<ChatRoom> findMemberChatRoom(Long memberId) {
         List<ChatRoom> findMemberChatRoom = queryFactory.selectFrom(chatRoom)
@@ -43,6 +45,9 @@ public class ChatRoomRepositoryCustomImpl implements ChatRoomRepositoryCustom {
         return findMemberChatRoom;
     }
 
+    /**
+     * 검색한 회원의 페이징 처리된 채팅방 리스트 가져오기
+     */
     @Override
     public Page<ChatRoom> searchChatRoomByMember(String memberSearchKeyword, Pageable pageable) {
         QueryResults<ChatRoom> results = queryFactory.selectDistinct(chatRoom)
