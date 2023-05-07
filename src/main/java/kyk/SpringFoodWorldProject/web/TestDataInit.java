@@ -60,13 +60,20 @@ public class TestDataInit {
         profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember3));
 
         followRepository.save(new Follow(savedMember2, savedMember3));
+        int memberCount1 = 1;
+        while (memberCount1 < 17) {
+            Member savedMember = memberRepository.saveMember(new Member("aa친구"+memberCount1, "a"+memberCount1, "a"+memberCount1, "customer"));
+            profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember));
+            followRepository.save(new Follow(savedMember, savedMember3));
+            memberCount1++;
+        }
 
-        int memberCount = 1;
-        while (memberCount < 17) {
-            Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount, "a"+memberCount, "a"+memberCount, "customer"));
+        int memberCount2 = 1;
+        while (memberCount2 < 17) {
+            Member savedMember = memberRepository.saveMember(new Member("테스터1"+memberCount2, "a"+memberCount2, "a"+memberCount2, "customer"));
             profileFileRepository.save(new ProfileFile("user_icon.PNG","user_icon.PNG", savedMember));
             followRepository.save(new Follow(savedMember, savedMember2));
-            memberCount++;
+            memberCount2++;
         }
 
 

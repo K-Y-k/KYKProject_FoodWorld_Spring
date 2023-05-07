@@ -57,9 +57,10 @@ public class MemberApiController {
     @GetMapping("/api/checkLoginId")
     public ResponseEntity<?> checkLoginId(@RequestParam(value = "memberLoginId") String memberLoginId,
                                           @RequestParam(value = "getMemberId") Long memberId) {
+        log.info("memberId={}", memberId);
         int result;
 
-        if (memberId == null) { // 회원가입중에 중복검사인 경우
+        if (memberId == 0) { // 회원가입중에 중복검사인 경우
             result = memberService.checkLoginId(memberLoginId);
         } else { // 프로필 수정에서 중복검사인 경우
             result = memberService.updateCheckLoginId(memberLoginId, memberId);

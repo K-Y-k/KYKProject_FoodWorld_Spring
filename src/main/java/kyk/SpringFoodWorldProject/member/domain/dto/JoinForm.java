@@ -27,11 +27,9 @@ public class JoinForm {
     @Size(min = 3, max = 10, message = "최소 3글자, 최대 10글자입니다.")
     private String password;
 
-    private String profileLocation = "/image/muckstargram_img/comment_icon.PNG";
-
 
     // 생성자 레벨에 @Builder을 작성해주게되면
-    // 해당 필드 값들에 대해서 위와같은 Builder class를 자동으로 생성해준다.
+    // 해당 필드 값들에 대해서는 Builder class를 자동으로 생성해준다.
     @Builder
     public JoinForm(String name, String loginId, String password) {
         this.name = name;

@@ -100,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void validateDuplicateMember(Member memberEntity) {
-        // 문제가 있으면 EXCEPTION
+        // 중복이 있으면 EXCEPTION
         // 같은 로그인 아이디가 있는지 찾음
         // 반환형태가 Optional<Member>이므로 이렇게 예와처리 가능
         log.info("memberEntityId={}", memberEntity.getId());
@@ -120,8 +120,8 @@ public class MemberServiceImpl implements MemberService {
      * 로그인 기능
      */
     @Override
-    public Member login(String loginId, String password) {        // 로그인 실패 시 null로 반환
-        // 람다를 활용하여 위 코드를 축약한 것
+    public Member login(String loginId, String password) {        // 로그인 실패 시 MemberNotFoundException으로 반환
+        // 람다를 활용하여 축약한 것
         return memberRepository.findByLoginId(loginId)
                 .filter(m -> m.getPassword().equals(password))
                 .orElseThrow(() -> new MemberNotFoundException("아이디 또는 패스워드가 일치하지 않습니다."));
@@ -151,7 +151,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public Long changeProfile(Long memberId, UpdateForm form) throws IOException {
-
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new IllegalArgumentException("회원 조회 실패: " + memberId));
 
@@ -161,14 +160,7 @@ public class MemberServiceImpl implements MemberService {
         if (imageFile.getOriginalFilename() != null && !imageFile.getOriginalFilename().isBlank()) {
             // 현재 회원의 기존 프로필 사진을 찾고 실제 저장되었던 디렉토리의 프로필 사진을 삭제
             ProfileFile findMemberProfile = memberRepository.findProfileByMember(findMember);
-            Path beforeAttachPath = Paths.get(profileLocation + "\\" + findMemberProfile.getStoredFileName());
-            try {
-                Files.deleteIfExists(beforeAttachPath);
-            } catch (DirectoryNotEmptyException e) {
-                log.info("디렉토리가 비어있지 않습니다");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            deleteBeforeFile(profileLocation, findMemberProfile.getStoredFileName());
 
             // DB 내용 변경 및 프로필 사진 새로 생성
             findMember.changeProfile(form.getName(), form.getLoginId(), form.getPassword(), form.getIntroduce());
@@ -202,14 +194,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 현재 회원의 기존 프로필 사진을 찾고 실제 저장되었던 디렉토리의 프로필 사진을 삭제
         ProfileFile findMemberProfile = memberRepository.findProfileByMember(findMember);
-        Path beforeProfilePath = Paths.get(profileLocation + "\\" + findMemberProfile.getStoredFileName());
-        try {
-            Files.deleteIfExists(beforeProfilePath);
-        } catch (DirectoryNotEmptyException e) {
-            log.info("디렉토리가 비어있지 않습니다");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        deleteBeforeFile(profileLocation, findMemberProfile.getStoredFileName());
 
 
         // 현재 회원이 작성했던 게시글을 찾고
@@ -223,35 +208,14 @@ public class MemberServiceImpl implements MemberService {
             if (board.getBoardType().equals("자유게시판") || board.getBoardType().equals("추천게시판")) {
                 for (BoardFile boardFile : findBoardFiles) {
                     if (boardFile.getAttachedType().equals("attached")) {
-                        Path beforeAttachPath = Paths.get(attachFileLocation + "\\" + boardFile.getStoredFileName());
-                        try {
-                            Files.deleteIfExists(beforeAttachPath);
-                        } catch (DirectoryNotEmptyException e) {
-                            log.info("디렉토리가 비어있지 않습니다");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        deleteBeforeFile(attachFileLocation, boardFile.getStoredFileName());
                     } else {
-                        Path beforeImageFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
-                        try {
-                            Files.deleteIfExists(beforeImageFilePath);
-                        } catch (DirectoryNotEmptyException e) {
-                            log.info("디렉토리가 비어있지 않습니다");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        deleteBeforeFile(imageFileLocation, boardFile.getStoredFileName());
                     }
                 }
             } else { // 먹스타그램은 이미지 파일만 삭제
                 for (BoardFile boardFile : findBoardFiles) {
-                    Path beforeImageFilePath = Paths.get(imageFileLocation + "\\" + boardFile.getStoredFileName());
-                    try {
-                        Files.deleteIfExists(beforeImageFilePath);
-                    } catch (DirectoryNotEmptyException e) {
-                        log.info("디렉토리가 비어있지 않습니다");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    deleteBeforeFile(imageFileLocation, boardFile.getStoredFileName());
                 }
             }
         }
@@ -260,19 +224,24 @@ public class MemberServiceImpl implements MemberService {
         // 메뉴 랜덤 추천 파일도 삭제 처리
         Page<MenuRecommend> findMenus = menuRecommendRepository.findByMemberId(null, memberId);
         for (MenuRecommend findMenu : findMenus) {
-            Path beforeMenuFilePath = Paths.get(menuRecommendLocation+"\\"+findMenu.getStoredFileName());
-            try {
-                Files.deleteIfExists(beforeMenuFilePath);
-            } catch (DirectoryNotEmptyException e) {
-                log.info("디렉토리가 비어있지 않습니다");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            deleteBeforeFile(menuRecommendLocation, findMenu.getStoredFileName());
         }
 
 
         // DB 삭제처리 : CASCADE 설정으로 회원 엔티티가 삭제되면 연관 매핑된 엔티티는 모두 삭제된다.
         memberRepository.delete(memberId);
+    }
+
+    // 이전 파일 삭제 처리 메서드
+    private void deleteBeforeFile(String beforeFileLocation, String file) {
+        Path beforeFilePath = Paths.get(beforeFileLocation + "\\" + file);
+        try {
+            Files.deleteIfExists(beforeFilePath);
+        } catch (DirectoryNotEmptyException e) {
+            log.info("디렉토리가 비어있지 않습니다");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
