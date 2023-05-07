@@ -277,7 +277,7 @@ public class RecommendBoardController {
         commentService.updateComment(commentId, commentUpdateDto);
 
         redirectAttributes.addAttribute("boardId", boardId);
-        return "redirect:/boards/freeBoard/{boardId}";
+        return "redirect:/boards/recommendBoard/{boardId}";
     }
 
     /**

@@ -81,38 +81,16 @@ public class HomeController {
      * 로그인 기능
      */
     @PostMapping("/")
-    public String login(@Valid @ModelAttribute LoginForm form,
-                        BindingResult bindingResult,
-                        HttpServletRequest request, Model model) {
-        // 검증 실패 : 오류가 있으면 폼으로 반환
-        if (bindingResult.hasErrors()) {
-            // 각 게시판 인기글 조회
-            List<Board> freeBoards = boardService.popularBoardList("자유게시판");
-            List<Board> recommendBoards = boardService.popularBoardList("추천게시판");
-            List<Board> muckstarBoards = boardService.popularBoardList("먹스타그램");
+    public String login(@ModelAttribute LoginForm form,
+                        HttpServletRequest request) {
+        log.info("로그인 아이디={}", form.getLoginId());
+        log.info("로그인 패스워드={}", form.getLoginId());
 
-            // 각 게시판 댓글 개수 가져오는 작업
-            findCommentCount(freeBoards);
-            findCommentCount(recommendBoards);
-            findCommentCount(muckstarBoards);
 
-            // 각 게시판 모델링
-            model.addAttribute("freeBoards", freeBoards);
-            model.addAttribute("recommendBoards", recommendBoards);
-            model.addAttribute("muckstarBoards", muckstarBoards);
-
-            return "main";
-        }
-
-        // 성공 로직 : 로그인 기능 적용후 멤버에 저장
+        // 성공시 로그인 기능 적용후 멤버에 저장 틀릴시 예외처리
         Member loginMember = memberService.login(form.getLoginId(), form.getPassword()); // 폼에 입력한 아이디 패스워드 가져와서 멤버로 저장
         log.info("login? {}", loginMember);
 
-        // null 값이면 로그인 실패 글로벌 오류(오브젝트 오류) 처리 : 글로벌 오류는 DB의 값에서 처리하는 이런 경우도 있어 자바코드로 구현하는게 바람직하다.
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "main";
-        }
 
         // 로그인 성공 처리
         // HttpSession 객체에  request.getSession()로 담으면 됨

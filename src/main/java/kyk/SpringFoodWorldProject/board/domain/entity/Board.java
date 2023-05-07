@@ -64,7 +64,7 @@ public class Board extends BaseTimeEntity{
     private List<Comment> comments = new ArrayList<>();
 
     @Builder.Default
-    @JsonIgnoreProperties({"board"})
+    @JsonIgnore
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
