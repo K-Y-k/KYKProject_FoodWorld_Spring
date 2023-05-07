@@ -3,6 +3,7 @@ package kyk.SpringFoodWorldProject.board.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kyk.SpringFoodWorldProject.comment.domain.entity.Comment;
+import kyk.SpringFoodWorldProject.like.domain.entity.Like;
 import kyk.SpringFoodWorldProject.member.domain.entity.Member;
 import lombok.*;
 
@@ -61,6 +62,11 @@ public class Board extends BaseTimeEntity{
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("id asc") // 정렬
     private List<Comment> comments = new ArrayList<>();
+
+    @Builder.Default
+    @JsonIgnoreProperties({"board"})
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     private int fileAttached;
 
