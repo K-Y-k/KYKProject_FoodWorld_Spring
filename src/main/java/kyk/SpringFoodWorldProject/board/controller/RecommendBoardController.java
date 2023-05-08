@@ -366,6 +366,10 @@ public class RecommendBoardController {
             log.info("지역={}", recommendBoardUpdateForm.getArea());
             log.info("메뉴={}", recommendBoardUpdateForm.getMenuName());
 
+            Board board = boardService.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+
+            model.addAttribute("updateForm", board);
             model.addAttribute("boardId", boardId);
             return "boards/recommendBoard/recommendBoard_edit";
         }

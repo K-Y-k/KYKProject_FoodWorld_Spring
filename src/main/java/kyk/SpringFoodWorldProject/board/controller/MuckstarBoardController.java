@@ -326,6 +326,10 @@ public class MuckstarBoardController {
                        @Valid @ModelAttribute("updateForm") MuckstarUpdateForm updateParam, BindingResult bindingResult,
                        Model model) throws IOException {
         if (bindingResult.hasErrors()) {
+            Board board = boardService.findById(boardId).orElseThrow(() ->
+                    new IllegalArgumentException("게시글 가져오기 실패: 게시글을 찾지 못했습니다." + boardId));
+
+            model.addAttribute("updateForm", board);
             model.addAttribute("boardId", boardId);
             return "boards/muckstarBoard/muckstarBoard_edit";
         }

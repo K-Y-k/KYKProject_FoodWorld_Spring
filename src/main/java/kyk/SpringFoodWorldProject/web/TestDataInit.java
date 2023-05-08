@@ -242,15 +242,10 @@ public class TestDataInit {
 
 
         // 채팅방 데이터 추가 2
-        ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("dasasfas", savedMember1, savedMember2));
+        ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("dasasfas", savedMember1, savedMember3));
         ChatRoom savedRoom3 = chatRoomRepository.save(new ChatRoom("vavzsxvzxv", savedMember2, savedMember3));
 
         // 채팅 메시지 데이터 추가 5
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕1"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕2"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕3"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕4"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕5"));
 
     }
 
