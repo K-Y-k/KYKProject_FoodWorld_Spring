@@ -1,5 +1,5 @@
-# :rocket: KYKProject_FoodWorld_Spring
-지금까지 배운 스프링과 DB를 활용한 CRUD 개인 프로젝트: 음식 커뮤니티 웹 사이트 리뉴얼
+# :rocket: FoodWorld_Project
+지금까지 배운 스프링 MVC와 DB, JPA와 queryDsl을 활용한 CRUD 개인 프로젝트: 음식 커뮤니티 웹 사이트 리뉴얼
 
 - 개발 인원: 1명
 
