@@ -138,7 +138,7 @@
                        style="color: black; text-decoration-line: none; display: inline-block; overflow: hidden;"></a>
 
                     <a th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|${board.title}|"
-                       style="color: black; text-decoration-line: none; display: inline-block; width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
+                       style="color: black; text-decoration-line: none; display: inline-block; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
 
                     <span th:if="${board.commentCount != 0}" style="color: red; text-decoration-line: none; display: inline-block; overflow: hidden;"
                           th:href="@{|/boards/freeBoard/${board.id}|}" th:text="|[${board.commentCount}]|"></span>

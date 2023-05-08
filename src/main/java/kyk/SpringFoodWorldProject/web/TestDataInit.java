@@ -78,69 +78,138 @@ public class TestDataInit {
 
 
         Random random = new Random();
-        int lowerBound = 50;
+        int lowerBound = 50;           // 좋아요 랜덤 범위 50~1000
         int upperBound = 1000;
 
-        int lowerBound2 = 100;
+        int lowerBound2 = 100;         // 조회수 랜덤 범위 100~10000
         int upperBound2 = 10000;
 
 
         // 게시글 데이터 추가 총 50
         // 자유게시판 글 20 및 댓글 19
-        Board savedBoard1 = boardRepository.save(new Board("자유게시판.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "자유게시판","사는얘기", null, null, 0, 0));
+        Board savedBoard1 = boardRepository.save(new Board("자유dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "자유게시판","사는얘기", null, null, 0, 0));
         int boardCount = 1;
+        int commentCount;
         while (boardCount < 20) {
+            commentCount = 0;
+
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
             int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("샘플 제목" + (boardCount + 2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
-            commentService.saveComment(savedMember2.getId(), savedBoard1.getId(), new CommentUploadDto(1L,"안녕하세요"+boardCount));
+            Board savceBoard = boardRepository.save(new Board("샘플 제목" + (boardCount + 2), "샘플 내용입니다." + boardCount, "ddd", savedMember2, "자유게시판", "사는얘기", null, null, randomCount, randomLikeCount));
+            while (commentCount < random.nextInt(20)+1) {
+                commentService.saveComment(savedMember2.getId(), savceBoard.getId(), new CommentUploadDto(1L,"안녕하세요"+commentCount));
+                commentCount++;
+            }
+
             boardCount++;
         }
 
         // 식당추천게시판 글 20
         int boardCount2 = 1;
+        int commentCount2;
         while (boardCount2 < 20) {
+            commentCount2 = 0;
+
             int randomLikeCount = lowerBound + random.nextInt(upperBound - lowerBound + 1);
             int randomCount = lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1);
 
-            boardRepository.save(new Board("추천 식당 샘플" + (boardCount2+2), "샘플 내용입니다." + boardCount2, "ddd", savedMember2, "추천게시판", "식당", "서울시", null, randomCount, randomLikeCount));
-            boardRepository.save(new Board("추천 메뉴 샘플", "내용", "aaa", savedMember3, "추천게시판","메뉴", null, "한식", 0, 0));
+            Board savedBoard11 = boardRepository.save(new Board("식당 추천 샘플" + (boardCount2), "샘플 내용입니다." + boardCount2, "ddd", savedMember2, "추천게시판", "식당", "서울시", null, randomCount, randomLikeCount));
+            Board savedBoard22 = boardRepository.save(new Board("메뉴 추천 샘플" + (boardCount2 + 2), "내용", "aaa", savedMember3, "추천게시판", "메뉴", null, "한식", randomCount, randomLikeCount));
+
+            while (commentCount2 < random.nextInt(10)) {
+                commentService.saveComment(savedMember2.getId(), savedBoard11.getId(), new CommentUploadDto(1L,"안녕하세요"+commentCount2));
+                commentService.saveComment(savedMember2.getId(), savedBoard22.getId(), new CommentUploadDto(1L,"안녕하세요"+commentCount2));
+                commentCount2++;
+            }
+
             boardCount2++;
         }
         Board savedBoard = boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "추천게시판","식당", "부산시", null, 0, 0));
+        boardRepository.save(new Board("식당추천합니다.dddddddddddddddddddddddddddddddddddd", "내용", "aaa", savedMember3, "추천게시판","메뉴", null, "중식", 0, 0));
 
+        
+        
         // 먹스타그램 글 10
         Board savedMuckstar1 = boardRepository.save(new Board("먹스타그램 게시글1", "내용1", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar1.jpg", savedMuckstar1));
+        int muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar1.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar2 = boardRepository.save(new Board("먹스타그램 게시글2", "내용2", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar2.jpg", savedMuckstar2));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar2.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar3 = boardRepository.save(new Board("먹스타그램 게시글3", "내용3", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar3.jpg", savedMuckstar3));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar3.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar4 = boardRepository.save(new Board("먹스타그램 게시글4", "내용4", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar4.jpg", savedMuckstar4));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar4.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar5 = boardRepository.save(new Board("먹스타그램 게시글5", "내용5", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar5.jpg", savedMuckstar5));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar5.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar6 = boardRepository.save(new Board("먹스타그램 게시글6", "내용6", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar6.jpg", savedMuckstar6));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar6.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar7 = boardRepository.save(new Board("먹스타그램 게시글7", "내용7", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar7.jpg", savedMuckstar7));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar7.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar8 = boardRepository.save(new Board("먹스타그램 게시글8", "내용8", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar8.jpg", savedMuckstar8));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar8.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         Board savedMuckstar9 = boardRepository.save(new Board("먹스타그램 게시글9", "내용9", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
         boardFileRepository.save(new BoardFile("example_muckstar9.jpg", savedMuckstar9));
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar9.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
-        Board savedMuckstar10 = boardRepository.save(new Board("먹스타그램 게시글10", "내용10", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, lowerBound + random.nextInt(upperBound - lowerBound + 1), lowerBound2 + random.nextInt(upperBound2 - lowerBound2 + 1)));
+        Board savedMuckstar10 = boardRepository.save(new Board("먹스타그램 게시글10", "내용10", "ddd", savedMember2, "먹스타그램", "말머리 선택", null, null, 0, 0));
         boardFileRepository.save(new BoardFile("example_muckstar10.jpg", savedMuckstar10));
-
+        muckstarCommentCount = 0;
+        while (muckstarCommentCount < random.nextInt(10)) {
+            commentService.saveComment(savedMember2.getId(), savedMuckstar10.getId(), new CommentUploadDto(1L,"안녕하세요"+muckstarCommentCount));
+            muckstarCommentCount++;
+        }
 
         // 댓글 데이터 추가 3
         commentService.saveComment(savedMember2.getId(), savedBoard.getId(), new CommentUploadDto(1L,"안녕하세요1"));
@@ -173,15 +242,15 @@ public class TestDataInit {
 
 
         // 채팅방 데이터 추가 2
-        ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("a", savedMember1, savedMember2));
-        ChatRoom savedRoom3 = chatRoomRepository.save(new ChatRoom("c", savedMember1, savedMember3));
+        ChatRoom savedRoom1 = chatRoomRepository.save(new ChatRoom("dasasfas", savedMember1, savedMember2));
+        ChatRoom savedRoom3 = chatRoomRepository.save(new ChatRoom("vavzsxvzxv", savedMember2, savedMember3));
 
         // 채팅 메시지 데이터 추가 5
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
-        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember2.getId(), savedMember1.getId(), "안녕"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕1"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕2"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕3"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕4"));
+        chatMessageRepository.save(new ChatMessage(TALK, savedRoom1, savedMember2.getName(), savedMember3.getId(), savedMember1.getId(), "안녕5"));
 
     }
 
