@@ -29,6 +29,11 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
     }
 
     @Override
+    public List<ChatMessage> findTALKMessage(String roomId) {
+        return chatMessageRepository.findTALKMessage(roomId);
+    }
+
+    @Override
     public void deleteByLeaveMessage(String roomId, Long memberId){
         chatMessageRepository.deleteByLeaveMessage(roomId, memberId);
     }

@@ -25,6 +25,12 @@ public interface ChatMessageRepository {
 
 
     /**
+     * 대화 메시지 조회
+     */
+    List<ChatMessage> findTALKMessage(String roomId);
+
+
+    /**
      * 해당 방에 현재 회원이 퇴장했던 메시지가 저장되어있으면 삭제
      */
     void deleteByLeaveMessage(String roomId, Long memberId);

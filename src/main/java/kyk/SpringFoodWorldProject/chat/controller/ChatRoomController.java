@@ -93,9 +93,9 @@ public class ChatRoomController {
         ChatRoom targetChatRoom = chatService.findRoomByRoomId(roomId);
         model.addAttribute("targetChatRoom", targetChatRoom);
 
-        // 클릭한 방의 메시지 가져오기
-        List<ChatMessage> chatMessage = targetChatRoom.getChatMessages();
-        model.addAttribute("chatMessage", chatMessage);
+        // 클릭한 방의 대화 메시지 가져오기
+        List<ChatMessage> chatMessages = chatService.findTALKMessage(roomId);
+        model.addAttribute("chatMessages", chatMessages);
 
         // 현재 회원의 전체 채팅방 리스트
         List<ChatRoom> member1ChatRoom = chatService.findMember1ChatRoom(loginMember.getId());

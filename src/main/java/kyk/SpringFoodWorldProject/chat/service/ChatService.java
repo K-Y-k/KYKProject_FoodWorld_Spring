@@ -109,6 +109,11 @@ public class ChatService {
        return chatMessageRepository.findEnterMessage(roomId, messageType, senderId);
     }
 
+    // 대화 매시지들 조회
+    public List<ChatMessage> findTALKMessage(String roomId) {
+        return chatMessageRepository.findTALKMessage(roomId);
+    }
+
     // 해당 회원의 퇴장한 메시지 삭제
     public void deleteLeaveMessage(String roomId, Long memberId) {
         chatMessageRepository.deleteByLeaveMessage(roomId, memberId);

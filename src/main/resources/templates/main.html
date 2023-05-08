@@ -457,7 +457,7 @@
                         <!--채팅 기록-->
                         <ul class="list-group chat-content" id="chatContent" style="width: 350px; height: 230px; overflow-y: scroll; padding: 10px;">
                             <!--DB에 저장된 채팅 메시지-->
-                            <div th:each="chatMessage : ${chatMessage}">
+                            <div th:each="chatMessage : ${chatMessages}">
                                 <!--현재 회원이 보낸 것이면-->
                                 <li th:if="${#strings.equals(chatMessage.messageType, 'TALK') and chatMessage.senderId == session.loginMember.id}"
                                     style="margin-left: 40px; max-width: 280px; margin-top: 3%; list-style-type: none;">
