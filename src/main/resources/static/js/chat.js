@@ -109,7 +109,9 @@ function onMessageReceived(payload) {
     var contentId = "content-" + roomId;
     console.log("contentId=", contentId)
     var contentElement = document.getElementById(contentId);
-    contentElement.textContent = chat.message;
+    if (contentElement != null) {
+        contentElement.textContent = chat.message;
+    }
 
     if (chat.type == 'ENTER') {       // enter라면
         let enterMessage = `<li style="list-style-type: none; text-align: center; color: white;">`

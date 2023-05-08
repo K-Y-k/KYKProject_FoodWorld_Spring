@@ -145,10 +145,13 @@
 
                         <tr>
                           <td style="width: 200px;">
-                            <span th:if="${chatRoom.chatMessages.size() > 0 and chatRoom.chatMessages != null}"
+                            <span th:if="${chatRoom.chatMessages != null and chatRoom.chatMessages.size() > 0}"
                                   th:id="'content-' + ${chatRoom.roomId}"
                                   th:text="${chatRoom.chatMessages.get(chatRoom.chatMessages.size() - 1).content}"
                                   style="float: left;"></span>
+                            <span th:if="${chatRoom.chatMessages == null or chatRoom.chatMessages.size() == 0}"
+                                  th:id="'content-' + ${chatRoom.roomId}"
+                                  style="float: left;">채팅방이 생성되었습니다.</span>
                           </td>
                           <td>
                             <button class="btn btn-primary" type="submit" id="leave_btn" th:onclick="onLeave();" style="font-size: 10px; width: 60px; height: 3vh; float: right;">
