@@ -46,7 +46,11 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCustom {
                 .orderBy(follow.id.desc())
                 .fetchOne();
 
-        return findFollower.getId();
+        if (findFollower != null) {
+            return findFollower.getId();
+        } else {
+            return 0L;
+        }
     }
 
     /**

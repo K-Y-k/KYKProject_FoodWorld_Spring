@@ -55,7 +55,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 .orderBy(board.id.desc())
                 .fetchOne();
 
-        return findBoard.getId();
+        if (findBoard != null) {
+            return findBoard.getId();
+        } else {
+            return 0L;
+        }
     }
 
     @Override
@@ -69,7 +73,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
                 .orderBy(board.id.desc())
                 .fetchOne();
 
-        return findBoard.getId();
+        if (findBoard != null) {
+            return findBoard.getId();
+        } else {
+            return 0L;
+        }
     }
 
 
