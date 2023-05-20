@@ -116,7 +116,7 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 
 
 ## <b id="9"> 📒 프로젝트 관련 추가 포스팅 </b>
-- 🔗 [프로젝트 명세서](https://blog.naver.com/kyk7777_/222975254105)
+- 🔗 <a href="https://blog.naver.com/kyk7777_/222975254105" target="_blank">프로젝트 명세서</a>
 - 🔗 [구조 설계 / 오라클 서버 세팅 / 스프링 세팅](https://blog.naver.com/kyk7777_/222975254105)
 - 🔗 [회원 가입 / 로그인, 로그아웃 / 유효성 검사 / 회원 탈퇴](https://blog.naver.com/kyk7777_/222978032496)
 - 🔗 [게시판 CRUD / 조회수 증가](https://blog.naver.com/kyk7777_/222979729796)
