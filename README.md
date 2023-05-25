@@ -82,7 +82,46 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 
 
 ## <b id="6"> ✔️ 주요 기능 </b>
+- ### 회원가입 / 유효성 검사
+  - 닉네임, 아이디, 비밀번호는 기본적으로 글자 수 제한, 문자열 내 빈 공백 여부를 확인하고
+    
+    닉네임, 아이디는 추가로 중복의 유효성 검사 가 진행되어야 회원가입이 됩니다.
+    
+    <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/538457da-0746-435f-b42c-1dcb3f415426.gif" width="50%"/>
+    
+ - ### 게시판 메인 페이징, 무한 스크롤 조회 / 파라미터 필터링 조회 / 검색
+   - 자유/추천게시판의 메인은 페이징 처리를 하였고 검색한 파라미터에 따른 필터링 조회를 합니다.
+   - 검색을 하면 키워드에 따른 게시글만 조회를 합니다.
+  
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/8c3a5f1e-fc17-413d-b709-29bb35c0f44d.gif" width="50%"/>
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/a49f04e3-20a3-4121-b3b8-7269b910bd89.gif" width="50%"/>
 
+   - 먹스타그램의 메인은 무한 스크롤로 페이징 하였습니다.
+    
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/26be98d9-7e2e-45e3-9c44-9b3344034daa.gif" width="50%"/>
+     
+ - ### 게시글 등록, 파일 업로드
+   - 게시글의 등록은 각 게시판에 맞는 구성과 유효성 검사를 적용하였고 다중 파일 업로드가 가능합니다.
+  
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/2a6ed952-10c4-4775-bd7d-e933ed2bde39.gif" width="50%"/>
+
+ - ### 게시글 상세 조회 / 좋아요 / 파일 다운로드
+   - 등록한 게시글을 조회할 수 있고 좋아요, 파일 다운로드가 가능합니다.
+   - 좋아요 기능은 각 게시글에 회원 당 1번만 적용이 가능하고 취소할 수도 있습니다.
+    
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/cadb3a1b-2888-4b50-934a-aa7504ddb25d.gif" width="50%"/>
+     
+ - ### 게시글 수정 / 삭제
+   - 게시글 수정은 일반 필드는 연관 편의 메서드 방식으로 수정하였고, 파일 부분은 기존 파일 삭제하고 새로 받은 파일로 재 생성합니다.
+   - 게시글 삭제도 DB 삭제뿐만이 아닌 실제 파일도 찾아 삭제 처리합니다.
+    
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/9fb75739-6071-4c37-ba65-e3581d85d1af.gif" width="50%"/>   
+     
+ - ### 댓글 조회 / 등록 / 수정 / 삭제
+   - 댓글을 페이징 된 형식으로 조회하고 작성한 회원의 댓글을 수정, 삭제할 수 있습니다.
+   - 댓글 수정 중에 다른 댓글로 수정하면 기존 수정 댓글 폼을 취소합니다.
+
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/2750055e-8404-4550-8d88-eb1fe98c6a7a" width="50%"/>   
 
 ## <b id="7"> 🔥 어려웠던 점 및 극복 </b>
 ### 1. Slice 페이징의 한계
