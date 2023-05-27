@@ -122,6 +122,37 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 
      <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/2750055e-8404-4550-8d88-eb1fe98c6a7a" width="50%"/>   
 
+ - ### 프로필 조회, 수정
+   - 회원의 프로필을 조회할 수 있습니다. 현재 회원의 프로필일 경우 프로필 수정/회원 탈퇴를 할 수 있고
+   - 수정은 유효성검증이 회원가입과 동일합니다.
+
+     <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/ec3a2dd6-afce-466f-8e82-17849966a83c" width="50%"/>   
+
+  - ### 팔로우, 팔로우 추천 리스트
+    - 다른 회원의 프로필일 경우 팔로우/언팔로우를 할 수 있고 팔로우를 하게 되면, 
+
+      팔로우 추천 리스트에 팔로우한 회원을 팔로우한 회원들 또는 팔로우한 회원이 팔로우한 회원 기준으로 추천합니다.
+     
+      <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/65639e5e-6c08-4963-a56d-c1fa0c7eda15" width="50%"/>   
+
+  - ### 메뉴 랜덤 추첨, CRUD
+    - 모든 회원들이 등록했던 메뉴들 중 메뉴 카테고리를 선택하고 랜덤으로 추첨할 수 있습니다.
+    - 메인은 현재 회원이 등록했던 메뉴들을 페이징 조회, 회원이 원하는 메뉴를 등록, 등록했던 메뉴를 수정/삭제할 수 있습니다. 
+     
+      <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/fc6748e3-f74c-44f6-82c1-0bb0e3b8a125" width="50%"/>   
+
+  - ### 실시간 1 대 1 채팅
+    - 상대 회원 프로필에서 채팅하기를 누르면 채팅방이 생성되어 실시간으로 채팅을 주고 받을 수 있고 채팅 내역은 DB에 저장합니다. 
+    - 1명의 유저가 채팅방을 퇴장한 후 다른 유저가 채팅방을 퇴장하지 않았으면 메시지 전송 시 퇴장한 유저를 다시 기존 채팅방으로 초대
+
+      <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/93f693e1-a7e1-4c9f-8c2a-aa9dd0a63f6f" width="50%"/>   
+
+  - ### Admin 페이지
+    - 관리자 역할을 부여 받은 회원은 회원, 게시판, 댓글, 메뉴, 채팅방, 채팅 메시지를 관리할 수 있습니다.
+
+      <img src="https://github.com/K-Y-k/KYKProject_FoodWorld_Spring/assets/102020649/d14a7f9f-9cb7-450c-ae92-502a2e69e80c" width="50%"/>   
+ 
+
 ## <b id="7"> 🔥 어려웠던 점 및 극복 </b>
 ### 1. Slice 페이징의 한계
 - Slice 페이징은 현재 받아온 엔티티의 id보다 <(작은 것)부터 가져와야 하는데 그렇게 되면 첫 페이지의 첫 데이터를 가져오지 못합니다. 그렇다고 <=(작거나 같음)으로 설정하면 끝의 데이터 후 다음 페이지에서 끝의 데이터가 한번 또 나오게 됩니다.
