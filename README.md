@@ -5,6 +5,12 @@
 
 - 개발 기간: 2023.01 ~ 2023.04
 
+- AWS로 마이그레이션 및 배포 기간: 2023.09
+
+- AWS로 마이그레이션 및 배포 github: https://github.com/K-Y-k/FoodWorld_AWS
+
+- URL: http://ec2-15-165-148-241.ap-northeast-2.compute.amazonaws.com
+
 
 # :page_facing_up: 목차
 - <a href="#0"> 어떤 프로젝트인가요?(프로젝트의 목적) </a> 
@@ -41,7 +47,7 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 
 ## <b id="2"> 🛠 사용 기술 </b>
 ### <b id="2.1"> FrontEnd </b>
-- #### 언어 / 프레임워크 / 라이브러리
+- #### Language / FrameWork / Library
   * Html/Css
   * Javascript
   * Bootstrap 5.2
@@ -49,7 +55,7 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
   * Thymeleaf
 
 ### <b id="2.2"> BackEnd </b>
-- #### 언어 / 프레임워크 / 라이브러리
+- #### Language / FrameWork / Library
   * Java 11 openjdk
   * SpringBoot 2.7.7
   * Jpa(Spring Data JPA)
@@ -58,7 +64,7 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 - #### Build tool
   * Gradle 7.6
 
-- #### Server
+- #### Emebedded Web Server
   * Apache Tomcat 9.0
   
 - #### Database
@@ -70,7 +76,7 @@ Spring과 관련된 Spring 기초, HTTP 네트워크, MVC 패턴, DB 연결, JPA
 
 
 ## <b id="3"> 🔑 E-R 다이어그램 </b>
-<img src="https://user-images.githubusercontent.com/102020649/236933959-3cf3eab5-5a8d-4c73-8366-788c5c452221.png" width="800" height="500"/>
+<img src="https://github.com/K-Y-k/FoodWorld_AWS/assets/102020649/72b0ca9c-96ca-491d-82bd-c5b674b4d1cd.png" width="800" height="500"/>
 
 
 ## <b id="4"> ⚙️ 아키텍처 구성 </b>
