@@ -9,7 +9,9 @@
 
 - AWS 환경으로 마이그레이션 및 배포 GitHub: https://github.com/K-Y-k/FoodWorld_AWS
 
-- URL: http://ec2-15-165-148-241.ap-northeast-2.compute.amazonaws.com
+- URL      : http://ec2-15-165-148-241.ap-northeast-2.compute.amazonaws.com
+  
+- API 문서 : https://documenter.getpostman.com/view/24388769/2s9YJW6RuN
 
 
 # :page_facing_up: 목차
